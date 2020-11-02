@@ -1,0 +1,6 @@
+pluginname=Hilfskraft-Stundenzettel
+pluginclassname=HilfskraftStundenzettel
+origin=virtUOS
+version=1.0
+studipMinVersion=3.5
+studipMaxVersion=4.2.99
