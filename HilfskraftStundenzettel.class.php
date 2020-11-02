@@ -26,11 +26,11 @@ class HilfskraftStundenzettel extends StudipPlugin implements SystemPlugin
             $navigation->setImage(Icon::create('edit', 'navigation'));
             $navigation->setURL(PluginEngine::getURL($this, array(), 'index'));
             
-            //$item = new Navigation(_('Übersicht'), PluginEngine::getURL($this, array(), 'index'));
-            //$navigation->addSubNavigation('index', $item);
+            $item = new Navigation(_('Übersicht'), PluginEngine::getURL($this, array(), 'index'));
+            $navigation->addSubNavigation('index', $item);
             
-            $item = new Navigation(_('Studentische MitarbeiterInnen'), PluginEngine::getURL($this, array(), 'index/members'));
-            $navigation->addSubNavigation('members', $item);
+            //$item = new Navigation(_('Studentische MitarbeiterInnen'), PluginEngine::getURL($this, array(), 'index/members'));
+            //$navigation->addSubNavigation('members', $item);
             
             Navigation::addItem('tools/hilfskraft-stundenverwaltung', $navigation);  
         }    

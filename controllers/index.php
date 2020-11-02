@@ -1,6 +1,6 @@
 <?php
 
-require_once __DIR__ . '/../models/...class.php';
+//require_once __DIR__ . '/../models/...class.php';
 
 class IndexController extends StudipController {
 
