@@ -29,8 +29,8 @@ class HilfskraftStundenzettel extends StudipPlugin implements SystemPlugin
             $item = new Navigation(_('Übersicht'), PluginEngine::getURL($this, array(), 'index'));
             $navigation->addSubNavigation('index', $item);
             
-            //$item = new Navigation(_('Studentische MitarbeiterInnen'), PluginEngine::getURL($this, array(), 'index/members'));
-            //$navigation->addSubNavigation('members', $item);
+            $item = new Navigation(_('Stundenzettel verwalten'), PluginEngine::getURL($this, array(), 'timesheet'));
+            $navigation->addSubNavigation('timesheets', $item);
             
             Navigation::addItem('tools/hilfskraft-stundenverwaltung', $navigation);  
         }    
@@ -39,6 +39,15 @@ class HilfskraftStundenzettel extends StudipPlugin implements SystemPlugin
     public function initialize ()
     {
         
+    }
+    
+    public function getCommentOptions ()
+    {
+        return array(
+            'Krank',
+            'Urlaub',
+            'Feiertag'
+        );
     }
 
     public function perform($unconsumed_path)
