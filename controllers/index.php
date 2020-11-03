@@ -26,7 +26,7 @@ class IndexController extends StudipController {
                         $this->url_for('index'))
               ->setActive($action === 'index');
         $this->inst_id = $inst_id;
-        $this->entries = StundenzettelStumiContract::findByInst_Id($inst_id);
+        $this->contracts = StundenzettelStumiContract::findByInst_Id($inst_id);
 
         Sidebar::get()->addWidget($views);
 
