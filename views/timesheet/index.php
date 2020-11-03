@@ -4,9 +4,9 @@ use Studip\Button, Studip\LinkButton;
 ?>
 
 
-    <h2>Name: </h2>
-    <h2>Einrichtung: </h2>
-    <h2>Monat: </h2>
+    <h2>Name, Vorname der Hilfskraft: <?= User::findOneByUser_Id($stumi_id)->username ?></h2>
+    <h2>Fachbereich/Organisationseinheit: <?= Institute::find($inst_id)->name ?></h2>
+    <h2>Monat/Jahr: <?= $timesheet->month ?>/<?= $timesheet->year ?> </h2>
 
 <form name="entry" method="post" onsubmit="return validateForm()" action="<?= $controller->url_for('index/save', $entry->id) ?>" <?= $dialog_attr ?> class="default collapsable">
     <?= CSRFProtection::tokenTag() ?>
@@ -24,45 +24,77 @@ use Studip\Button, Studip\LinkButton;
                 
             </tr>
             
-            <?php for ($i = 1; $i <= 31; $i++) : ?>
-            <tr name ='id' >
-                <td>
-                   <?= $i ?>
-                </td>
-                <td >
-                    <input type='text' class='size-s studip-timepicker' id ='' name ='' value='' placeholder="hh:mm" >
-                </td>
-                <td>
-                    <input type='text' id ='' name ='?>'
-                           
-                           value ='' >
-                </td>
-                <td>
-                    <input type='text' class='size-s studip-timepicker' id ='' name ='' value='' placeholder="hh:mm" >
-                    
-                </td>
-                <td>
-                   <input type='text' id ='' name ='?>'
-                           
-                           value ='' >
-                </td>
-                <td>
-                   <input type='date' id ='' name ='' value='<?= date('Y-m-d', time())?>' >
-                </td>
-                <td>
-                   <select  name =''>
-                        <option selected value=""> -- </option>
-                        <?php foreach ($plugin->getCommentOptions() as $entry_value): ?>
-                            <option value="<?=$entry_value?>"><?= $entry_value ?></option>
-                        <?php endforeach ?>
-                    </select>
-                </td>
-                <td>
-                   <input type='text' id ='' name ='?>'
-                           
-                           value ='' >
-                </td>
-            </tr>
+            <?php $days_per_month = 31; ?>
+            <?php $j = 0; ?>
+                  
+         
+            <?php for ($i = 1; $i <= $days_per_month; $i++) : ?>
+                <?php if ($records[$j]['day'] == $i ) : ?>
+                    <tr name ='id' >
+                        <td>
+                           <?= $i ?>
+                        </td>
+                        <td >
+                            <input type='text' class='size-s studip-timepicker' id ='' name ='' value='<?= $records[$j]['begin'] ?>' placeholder="hh:mm" >
+                        </td>
+                        <td>
+                            <input type='text' id ='' name ='?>' value ='<?= $records[$j]['break'] ?>' >
+                        </td>
+                        <td>
+                            <input type='text' class='size-s studip-timepicker' id ='' name ='' value='<?= $records[$j]['end'] ?>' placeholder="hh:mm" >
+                        </td>
+                        <td>
+                           <input type='text' id ='' name ='' value ='' >
+                        </td>
+                        <td>
+                           <input type='date' id ='' name ='' value='' >
+                        </td>
+                        <td>
+                           <select  name =''>
+                                <option selected value=""> -- </option>
+                                <?php foreach ($plugin->getCommentOptions() as $entry_value): ?>
+                                    <option value="<?=$entry_value?>"><?= $entry_value ?></option>
+                                <?php endforeach ?>
+                            </select>
+                        </td>
+                        <td>
+                           <input type='text' id ='' name ='' value ='' >
+                        </td>
+                    </tr>
+                    <?php $j++; ?>
+                <?php else: ?>
+                <tr name ='id' >
+                    <td>
+                       <?= $i ?>
+                    </td>
+                    <td >
+                        <input type='text' class='size-s studip-timepicker' id ='' name ='' value='' placeholder="hh:mm" >
+                    </td>
+                    <td>
+                        <input type='text' id ='' name ='?>' value ='' >
+                    </td>
+                    <td>
+                        <input type='text' class='size-s studip-timepicker' id ='' name ='' value='' placeholder="hh:mm" >
+                    </td>
+                    <td>
+                       <input type='text' id ='' name ='' value ='' >
+                    </td>
+                    <td>
+                       <input type='date' id ='' name ='' value='' >
+                    </td>
+                    <td>
+                       <select  name =''>
+                            <option selected value=""> -- </option>
+                            <?php foreach ($plugin->getCommentOptions() as $entry_value): ?>
+                                <option value="<?=$entry_value?>"><?= $entry_value ?></option>
+                            <?php endforeach ?>
+                        </select>
+                    </td>
+                    <td>
+                       <input type='text' id ='' name ='' value ='' >
+                    </td>
+                </tr>
+                <?php endif ?>
             <?php endfor ?>
         </table>
 
