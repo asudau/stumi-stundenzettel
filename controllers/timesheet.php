@@ -18,7 +18,7 @@ class TimesheetController extends StudipController {
 
     }
 
-    public function index_action($inst_id = '477d184367f48cc210f74bb4f779c7b7')
+    public function index_action($stumi_id='4f9fba21e13a1a4d5858591f7c145e69', $inst_id = '477d184367f48cc210f74bb4f779c7b7')
     {
         Navigation::activateItem('tools/hilfskraft-stundenverwaltung/timesheets');
 //        $views = new ViewsWidget();
@@ -26,15 +26,18 @@ class TimesheetController extends StudipController {
 //                        $this->url_for('index'))
 //              ->setActive($action === 'index');
         $this->inst_id = $inst_id;
-        $this->entries = StundenzettelStumiContract::findByInst_Id($inst_id);
+        $this->stumi_id = $stumi_id;
+        $timesheet_id = '477d184367f48cc210f74bb4f779c724';
+        $this->timesheet = StundenzettelTimesheet::find($timesheet_id);
+        $this->records = StundenzettelRecord::findByTimesheet_Id($timesheet_id, 'ORDER BY day ASC');
 
         //Sidebar::get()->addWidget($views);
 
     }
     
-    public function pdf_action($inst_id = '477d184367f48cc210f74bb4f779c7b7')
+    public function pdf_action($timesheet_id = '477d184367f48cc210f74bb4f779c724')
     {
-        $timesheet = new StundenzettelTimesheet();
+        $timesheet = StundenzettelTimesheet::find($timesheet_id);
         $this->path = $timesheet->build_pdf();
     }
     
