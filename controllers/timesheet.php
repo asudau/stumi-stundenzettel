@@ -2,7 +2,7 @@
 
 //require_once __DIR__ . '/../models/...class.php';
 
-class IndexController extends StudipController {
+class TimesheetController extends StudipController {
 
     public function __construct($dispatcher)
     {
@@ -14,21 +14,21 @@ class IndexController extends StudipController {
     public function before_filter(&$action, &$args)
     {
         parent::before_filter($action, $args);
-        PageLayout::setTitle(_("Studentische MitarbeiterInnen - Übersicht"));
+        PageLayout::setTitle(_("Stundenzettel verwalten"));
 
     }
 
     public function index_action($inst_id = '477d184367f48cc210f74bb4f779c7b7')
     {
-        Navigation::activateItem('tools/hilfskraft-stundenverwaltung/index');
-        $views = new ViewsWidget();
-        $views->addLink(_('Übersicht über Studentische MitarbeiterInnen'),
-                        $this->url_for('index'))
-              ->setActive($action === 'index');
+        Navigation::activateItem('tools/hilfskraft-stundenverwaltung/timesheets');
+//        $views = new ViewsWidget();
+//        $views->addLink(_('Stundenzettel verwalten'),
+//                        $this->url_for('index'))
+//              ->setActive($action === 'index');
         $this->inst_id = $inst_id;
         $this->entries = StundenzettelStumiContract::findByInst_Id($inst_id);
 
-        Sidebar::get()->addWidget($views);
+        //Sidebar::get()->addWidget($views);
 
     }
     
