@@ -32,6 +32,12 @@ class TimesheetController extends StudipController {
 
     }
     
+    public function pdf_action($inst_id = '477d184367f48cc210f74bb4f779c7b7')
+    {
+        $timesheet = new StundenzettelTimesheet();
+        $this->path = $timesheet->build_pdf();
+    }
+    
     // customized #url_for for plugins
     public function url_for($to = '')
     {
