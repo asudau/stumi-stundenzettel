@@ -40,7 +40,7 @@ class StundenzettelTimesheet extends \SimpleORMap
         global $STUDIP_BASE_PATH, $TMP_PATH;
         require_once $STUDIP_BASE_PATH.'/vendor/tcpdf/tcpdf.php';
         //require_once $STUDIP_BASE_PATH.'/public/plugins_packages/elan-ev/Zertifikats_Plugin/models/zertifikatpdf.class.php';
-     
+        $line_height = 3;
         
         // create new PDF document
         $pdf = new Tcpdf(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'ISO-8859-1', false);
@@ -48,8 +48,51 @@ class StundenzettelTimesheet extends \SimpleORMap
         $pdf->setPrintFooter(false);
 
         $pdf->AddPage();
-        $pdf->Image($GLOBALS['ABSOLUTE_PATH_STUDIP'] . '/' . PluginEngine::getPlugin('HilfskraftStundenzettel')->getPluginPath().'/assets/images/formblatt.png', 0, 0, 1200, 1550, '', '', '', false, 300);
+        $pdf->Image($GLOBALS['ABSOLUTE_PATH_STUDIP'] . '/' . 
+                    PluginEngine::getPlugin('HilfskraftStundenzettel')->getPluginPath().
+                '/assets/images/formblatt.png', 0, 0, 1200, 1550, '', '', '', false, 300);
+        
+        $records = StundenzettelRecord::findByTimesheet_Id($this->id, 'ORDER BY day ASC');
+
+        $pdf->SetY(45);
+        $pdf->SetX(90);
             
+        // Set font
+        $pdf->SetFont('helvetica', '', 10);
+        //$this->SetTextColor(0,127,75);
+        // Page number
+        $pdf->Cell(0, 0, studip_utf8encode(Institute::find($this->inst_id)->name ), 0, 1, 'L', 0, '', 0, false, 'C', 'C');
+        $pdf->Ln(28);
+        $pdf->SetFont('helvetica', '', 9.5);
+        
+        //$this->Cell(0, 0, $content, 0, 1, 'L', 0, '', 0, false, 'C', 'C');
+        foreach ($records as $record){
+            $content = $record->begin . '  ' . $record->break . '  ' . $record->end . '  ' . $record->sum . '  ' .
+                    $record->defined_comment . '  ' . $record->comment . '   ' . $record->entry_mktime ;
+            $pdf->SetX(44);
+            $pdf->Write($line_height, $record->begin);
+            $pdf->SetX(61);
+            $pdf->Write($line_height, $record->break);
+            $pdf->SetX(74);
+            $pdf->Write($line_height, $record->end);
+            $pdf->SetX(94);
+            $pdf->Write($line_height, $record->calculate_sum());
+            $pdf->SetX(114);
+            $pdf->Write($line_height, date('d.m.Y', $record->entry_mktime));
+            $pdf->SetX(144);
+            $pdf->Write($line_height, 'comment  ' . $record->defined_comment . ' ' . $record->comment);
+            
+            $pdf->Ln();
+//            $pdf->Cell(0, 0, $record->begin, 0, 1, 'L', 0, '', 0, false, 'C', 'C');
+//            $pdf->Cell(0, 0, $record->break, 0, 1, 'L', 0, '', 0, false, 'C', 'C');
+//            $pdf->Cell(0, 0, $record->end, 0, 1, 'L', 0, '', 0, false, 'C', 'C');
+//            $pdf->Cell(0, 0, $record->sum, 0, 1, 'L', 0, '', 0, false, 'C', 'C');
+//            $pdf->Cell(0, 0, $record->defined_comment, 0, 1, 'L', 0, '', 0, false, 'C', 'C');
+//            $pdf->Cell(0, 0, $record->comment, 0, 1, 'L', 0, '', 0, false, 'C', 'C');
+//            $pdf->Cell(0, 0, $record->entry_mktime, 0, 1, 'L', 0, '', 0, false, 'C', 'C');
+            
+        }
+
 //        $pdf->SetTopMargin(40);
 //        $pdf->SetLeftMargin(20);
 //        $pdf->SetRightMargin(20);
@@ -76,8 +119,10 @@ class StundenzettelTimesheet extends \SimpleORMap
         $fileid = time();   
         //$pdf->Output('/tmp/zertifikat'. $fileid, 'F');
         //return '/tmp/zertifikat'. $fileid;
-        $pdf->Output( $TMP_PATH .'/zertifikat' . $fileid, 'F');
-        return $TMP_PATH . '/zertifikat' . $fileid;
+        //$pdf->Output( $TMP_PATH .'/zertifikat' . $fileid, 'D');
+        $pdf->Output( 'Stundenzettel' . $fileid, 'D');
+        //return $TMP_PATH . '/zertifikat' . $fileid;
         //exit("delivering pdf file");
     }
+    
 }
