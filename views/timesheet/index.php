@@ -6,20 +6,32 @@ use Studip\Button, Studip\LinkButton;
 
     <h2>Name, Vorname der Hilfskraft: <?= User::findOneByUser_Id($stumi_id)->username ?></h2>
     <h2>Fachbereich/Organisationseinheit: <?= Institute::find($inst_id)->name ?></h2>
-    <h2>Monat/Jahr: <?= $timesheet->month ?>/<?= $timesheet->year ?> </h2>
+    <h2>Monat/Jahr: 
+        <select  name ='month[<?= $i ?>]'>
+            <?php foreach ($plugin->getMonths() as $entry_value): ?>
+                <option <?= ($timesheet->month == $entry_value) ? 'selected' : '' ?> value="<?=$entry_value?>"><?= $entry_value ?></option>
+            <?php endforeach ?>
+        </select>
+        <select  name ='year[<?= $i ?>]'>
+            <?php foreach ($plugin->getYears() as $entry_value): ?>
+                <option <?= ($timesheet->year == $entry_value) ? 'selected' : '' ?> value="<?=$entry_value?>"><?= $entry_value ?></option>
+            <?php endforeach ?>
+        </select>
+        
+    </h2>
 
-<form name="entry" method="post" onsubmit="return validateForm()" action="<?= $controller->url_for('index/save', $entry->id) ?>" <?= $dialog_attr ?> class="default collapsable">
+<form name="entry" method="post" onsubmit="return validateForm()" action="<?= $controller->url_for('index/save_timesheet', $timesheet->id) ?>" <?= $dialog_attr ?> class="default collapsable">
     <?= CSRFProtection::tokenTag() ?>
     
         <table class='sortable-table default'>
             <tr>
                 <th style='width:10px'>Tag</th>
-                <th style='width:200px'>Beginn</th>
-                <th style='width:200px'>Pause</th>
-                <th style='width:200px'>Ende</th>
-                <th style='width:200px'>Dauer</th>
-                <th style='width:200px'>Aufgezeichnet am</th>
-                <th style='width:150px'>Bemerkung</th>
+                <th style='width:110px'>Beginn</th>
+                <th style='width:110px'>Pause</th>
+                <th style='width:110px'>Ende</th>
+                <th style='width:110px'>Dauer</th>
+                <th style='width:110px'>Aufgezeichnet am</th>
+                <th style='width:110px'>Bemerkung</th>
                 <th style='width:200px'>sonstige Bemerkung</th>
                 
             </tr>
@@ -30,27 +42,27 @@ use Studip\Button, Studip\LinkButton;
          
             <?php for ($i = 1; $i <= $days_per_month; $i++) : ?>
                 <?php if ($records[$j]['day'] == $i ) : ?>
-                    <tr name ='id' >
+                    <tr id ='entry[<?= $i ?>]' >
                         <td>
                            <?= $i ?>
                         </td>
                         <td >
-                            <input type='text' class='size-s studip-timepicker' id ='' name ='' value='<?= $records[$j]['begin'] ?>' placeholder="hh:mm" >
+                            <input type='text' class='begin size-s studip-timepicker' id ='' name ='begin[<?= $i ?>]' value='<?= $records[$j]['begin'] ?>' placeholder="hh:mm" >
                         </td>
                         <td>
-                            <input type='text' id ='' name ='?>' value ='<?= $records[$j]['break'] ?>' >
+                            <input type='text' class='break' name ='break[<?= $i ?>]' value ='<?= $records[$j]['break'] ?>' placeholder="hh:mm">
                         </td>
                         <td>
-                            <input type='text' class='size-s studip-timepicker' id ='' name ='' value='<?= $records[$j]['end'] ?>' placeholder="hh:mm" >
+                            <input type='text' class='end size-s studip-timepicker' id ='' name ='end[<?= $i ?>]' value='<?= $records[$j]['end'] ?>' placeholder="hh:mm" >
                         </td>
                         <td>
-                           <input type='text' id ='' name ='' value ='' >
+                           <input type='text' readonly class='sum' name ='sum[<?= $i ?>]' value ='' >
                         </td>
                         <td>
-                           <input type='date' id ='' name ='' value='' >
+                           <input type='date' class='entry_mktime' name ='entry_mktime[<?= $i ?>]' value='' >
                         </td>
                         <td>
-                           <select  name =''>
+                           <select  name ='defined_comment[<?= $i ?>]'>
                                 <option selected value=""> -- </option>
                                 <?php foreach ($plugin->getCommentOptions() as $entry_value): ?>
                                     <option value="<?=$entry_value?>"><?= $entry_value ?></option>
@@ -58,32 +70,32 @@ use Studip\Button, Studip\LinkButton;
                             </select>
                         </td>
                         <td>
-                           <input type='text' id ='' name ='' value ='' >
+                           <input type='text' id ='' name ='comment[<?= $i ?>]' value ='' >
                         </td>
                     </tr>
                     <?php $j++; ?>
                 <?php else: ?>
-                <tr name ='id' >
+                <tr id ='entry[<?= $i ?>]' >
                     <td>
                        <?= $i ?>
                     </td>
                     <td >
-                        <input type='text' class='size-s studip-timepicker' id ='' name ='' value='' placeholder="hh:mm" >
+                        <input type='text' class='begin' id ='' name ='begin[<?= $i ?>]' value='' placeholder="hh:mm" >
                     </td>
                     <td>
-                        <input type='text' id ='' name ='?>' value ='' >
+                        <input type='text' class ='break' name ='break[<?= $i ?>]' value ='' placeholder="hh:mm">
                     </td>
                     <td>
-                        <input type='text' class='size-s studip-timepicker' id ='' name ='' value='' placeholder="hh:mm" >
+                        <input type='text' class='end' name ='end[<?= $i ?>]' value='' placeholder="hh:mm" >
                     </td>
                     <td>
-                       <input type='text' id ='' name ='' value ='' >
+                       <input type='text' readonly class ='sum' name ='sum[<?= $i ?>]' value ='' >
                     </td>
                     <td>
-                       <input type='date' id ='' name ='' value='' >
+                       <input type='date' class ='entry_mktime' name ='entry_mktime[<?= $i ?>]' value='' >
                     </td>
                     <td>
-                       <select  name =''>
+                       <select  name ='defined_comment[<?= $i ?>]'>
                             <option selected value=""> -- </option>
                             <?php foreach ($plugin->getCommentOptions() as $entry_value): ?>
                                 <option value="<?=$entry_value?>"><?= $entry_value ?></option>
@@ -91,7 +103,7 @@ use Studip\Button, Studip\LinkButton;
                         </select>
                     </td>
                     <td>
-                       <input type='text' id ='' name ='' value ='' >
+                       <input type='text' class ='comment' name ='comment[<?= $i ?>]' value ='' >
                     </td>
                 </tr>
                 <?php endif ?>
@@ -103,8 +115,99 @@ use Studip\Button, Studip\LinkButton;
         <?= Button::create(_('Übernehmen')) ?>
     </footer>
 </form>
+    
+<script>
+    
+    function calculate_sums(begin, end, brk){
+        alert(begin);
+    }
+    
+    function calculate_sum(begin, end, brk){
+        
+        if (begin && end){
+            if (!brk) {
+              brk = '00:00';  
+            }
+            var begin_array = begin.split(':');
+            var end_array = end.split(':');
+            var break_array = brk.split(':');
 
+            var begin_minutes = begin_array[1];
+            var begin_hours = begin_array[0];
 
+            var end_minutes = end_array[1];
+            var end_hours = end_array[0];
+
+            var break_minutes = break_array[1];
+            var break_hours = break_array[0];
+
+            var minutes_total = 0;
+            var hours_total = 0;
+
+            if ((+begin_minutes + +break_minutes) >= 60) {
+                begin_hours = +begin_hours + 1;
+                begin_minutes = (+begin_minutes + +break_minutes) - 60;
+            } else {
+                begin_minutes = +begin_minutes + +break_minutes;
+            }
+            begin_hours = +begin_hours + +break_hours;
+
+            if ((+end_minutes + (60 - +begin_minutes)) >= 60) {
+                minutes_total = (+end_minutes + (60 - +begin_minutes)) - 60;
+            } else {
+                end_hours -= 1;
+                minutes_total = +end_minutes + (60 - +begin_minutes);
+            }
+
+            hours_total = +end_hours - +begin_hours;
+            return (hours_total + ':' + minutes_total);
+        }
+   
+    }
+    
+    
+    var inputs, index;
+   
+    inputs = document.getElementsByClassName('begin');
+    for (index = 0; index < inputs.length; ++index) {
+        inputs[index].onchange = function () {
+            var name = this.getAttribute("name");
+            var rec_index = name.substring(5, 9);
+            var begin = document.getElementsByName('begin' + rec_index)[0].value;
+            var end = document.getElementsByName('end' + rec_index)[0].value;
+            var brk = document.getElementsByName('break' + rec_index)[0].value;
+            document.getElementsByName('sum' + rec_index)[0].value = calculate_sum(begin, end, brk);
+        };
+    }
+    
+    inputs = document.getElementsByClassName('end');
+    for (index = 0; index < inputs.length; ++index) {
+        inputs[index].onchange = function () {
+            var name = this.getAttribute("name");
+            var rec_index = name.substring(3, 7);
+            var begin = document.getElementsByName('begin' + rec_index)[0].value;
+            var end = document.getElementsByName('end' + rec_index)[0].value;
+            var brk = document.getElementsByName('break' + rec_index)[0].value;
+            document.getElementsByName('sum' + rec_index)[0].value = calculate_sum(begin, end, brk);
+        };
+    }
+    
+    inputs = document.getElementsByClassName('break');
+    for (index = 0; index < inputs.length; ++index) {
+        inputs[index].onchange = function () {
+            var name = this.getAttribute("name");
+            var rec_index = name.substring(5, 9);
+            var begin = document.getElementsByName('begin' + rec_index)[0].value;
+            var end = document.getElementsByName('end' + rec_index)[0].value;
+            var brk = document.getElementsByName('break' + rec_index)[0].value;
+            var res = calculate_sum(begin, end, brk);
+            document.getElementsByName('sum' + rec_index)[0].value = res;
+        };
+    }
+
+</script>
+        
+        
 <script>
 
     function validateForm() {
@@ -116,7 +219,7 @@ use Studip\Button, Studip\LinkButton;
     }
 }
 
-    var inputs, index;
+    
 
     inputs = document.getElementsByTagName('select');
     for (index = 0; index < inputs.length; ++index) {
@@ -128,10 +231,15 @@ use Studip\Button, Studip\LinkButton;
         };
     }
 
-    inputs = document.getElementsByTagName('input');
+    inputs = document.getElementsByTagName('begin');
     for (index = 0; index < inputs.length; ++index) {
         // deal with inputs[index] element.
-        inputs[index].onkeyup = function () {
+        inputs[index].onchange = function () {
+            alert('test');
+            var begin = document.getElementsByName('begin[1]')[0].value;
+            var end = document.getElementsByName('end[1]')[0].value;
+            document.getElementsByName('sum[1]')[0].value = begin + end;
+            document.getElementsByName('sum[1]')[0].removeAttribute("disabled");
             if (this.value != ''){
                 document.getElementsByName(this.getAttribute("name"))[0].classList.remove("needs_fill");
             }
@@ -212,17 +320,7 @@ use Studip\Button, Studip\LinkButton;
         }
     };
 
-    $(function() {
-            $('.mydate-picker').datepicker( {
-            changeMonth: true,
-            changeYear: true,
-            showButtonPanel: true,
-            dateFormat: 'MM yy',
-            onClose: function(dateText, inst) {
-                $(this).datepicker('setDate', new Date(inst.selectedYear, inst.selectedMonth, 1));
-            }
-            });
-        });
+    
 
 
 </script>

@@ -49,6 +49,16 @@ class HilfskraftStundenzettel extends StudipPlugin implements SystemPlugin
             'Feiertag'
         );
     }
+    
+    public function getMonths ()
+    {
+        return array('01', '02','03','04','05','06','07','08','09','10','11','12');
+    }
+    
+    public function getYears ()
+    {
+        return array( '2020', '2021','2022','2023','2024','2025','2026','2027');
+    }
 
     public function perform($unconsumed_path)
     {
