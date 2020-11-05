@@ -35,32 +35,14 @@ class StundenzettelRecord extends \SimpleORMap
     }
     
     function calculate_sum(){
-        $begin_array = explode(':', $this->begin);
-        $end_array = explode(':', $this->end);
-        $break_array = explode(':', $this->break);
+        $begintime = strtotime($this->begin);
+        $endtime = strtotime($this->end);
+        $breaktime = strtotime($this->break);
         
-        $minutes_total = 0;
-        $hours_total = 0;
-        
-        //Pause auf Startzeit addieren
-        if ((intval($begin_array[1]) + intval($break_array[1])) >= 60) {
-            $begin_array[0] = intval($begin_array[0]) + 1;
-            $begin_array[1] = (intval($begin_array[1]) + intval($break_array[1])) - 60;
-        } else {
-            $begin_array[1] = intval($begin_array[1]) + intval($break_array[1]);
-        }
-        $begin_array[0] = intval($begin_array[0]) + intval($break_array[0]);
-        
-        //Differenz aus korrigiertem Start und Ende
-        if (($end_array[1] + (60 - $begin_array[1])) >= 60) {
-            $minutes_total = ($end_array[1] + (60 - $begin_array[1])) - 60;
-        } else {
-            $end_array[0] -= 1;
-            $minutes_total = $end_array[1] + (60 - $begin_array[1]);
-        }
-        
-        $hours_total = $end_array[0] - $begin_array[0];
-        return ($hours_total . ':' . $minutes_total);
-   
+        $sum = $endtime - $begintime - $breaktime;
+        //return date('h:i', $sum);
+        $minutes = ($sum/60)%60;
+        $hours = floor(($sum/60)/ 60);
+        return sprintf("%02s", $hours) . ':' . sprintf("%02s", $minutes);
     }
 }
