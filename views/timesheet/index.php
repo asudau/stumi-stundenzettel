@@ -120,9 +120,7 @@ use Studip\Button, Studip\LinkButton;
     
 <script>
     
-    function calculate_sums(begin, end, brk){
-        alert(begin);
-    }
+
     
     function calculate_sum(begin, end, brk){
         
@@ -167,6 +165,19 @@ use Studip\Button, Studip\LinkButton;
    
     }
     
+    function autofill_row(row_index){
+        var begin = document.getElementsByName('begin' + row_index)[0].value;
+        var end = document.getElementsByName('end' + row_index)[0].value;
+        var brk = document.getElementsByName('break' + row_index)[0].value;
+        var res = calculate_sum(begin, end, brk);
+        document.getElementsByName('sum' + row_index)[0].value = res;
+    }
+    
+    function set_mktime(row_index){
+        let today = new Date().toISOString().slice(0, 10);
+        document.getElementsByName('entry_mktime' + row_index)[0].value = today;
+    }
+    
     
     var inputs, index;
    
@@ -175,10 +186,8 @@ use Studip\Button, Studip\LinkButton;
         inputs[index].onchange = function () {
             var name = this.getAttribute("name");
             var rec_index = name.substring(5, 9);
-            var begin = document.getElementsByName('begin' + rec_index)[0].value;
-            var end = document.getElementsByName('end' + rec_index)[0].value;
-            var brk = document.getElementsByName('break' + rec_index)[0].value;
-            document.getElementsByName('sum' + rec_index)[0].value = calculate_sum(begin, end, brk);
+            autofill_row(rec_index);
+            set_mktime(rec_index);
         };
     }
     
@@ -187,10 +196,8 @@ use Studip\Button, Studip\LinkButton;
         inputs[index].onchange = function () {
             var name = this.getAttribute("name");
             var rec_index = name.substring(3, 7);
-            var begin = document.getElementsByName('begin' + rec_index)[0].value;
-            var end = document.getElementsByName('end' + rec_index)[0].value;
-            var brk = document.getElementsByName('break' + rec_index)[0].value;
-            document.getElementsByName('sum' + rec_index)[0].value = calculate_sum(begin, end, brk);
+            autofill_row(rec_index);
+            set_mktime(rec_index);
         };
     }
     
@@ -199,11 +206,8 @@ use Studip\Button, Studip\LinkButton;
         inputs[index].onchange = function () {
             var name = this.getAttribute("name");
             var rec_index = name.substring(5, 9);
-            var begin = document.getElementsByName('begin' + rec_index)[0].value;
-            var end = document.getElementsByName('end' + rec_index)[0].value;
-            var brk = document.getElementsByName('break' + rec_index)[0].value;
-            var res = calculate_sum(begin, end, brk);
-            document.getElementsByName('sum' + rec_index)[0].value = res;
+            autofill_row(rec_index);
+            set_mktime(rec_index);
         };
     }
 

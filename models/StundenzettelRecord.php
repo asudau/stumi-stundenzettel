@@ -39,10 +39,14 @@ class StundenzettelRecord extends \SimpleORMap
         $endtime = strtotime($this->end);
         $breaktime_pts = explode(':', $this->break);
         
+        if( $begintime > 0 && $endtime > 0 ) {
         $sum = $endtime - $begintime - $breaktime_pts[0]*3600 - $breaktime_pts[1]*60;
         //return date('h:i', $sum);
         $minutes = ($sum/60)%60;
         $hours = floor(($sum/60)/ 60);
         return sprintf("%02s", $hours) . ':' . sprintf("%02s", $minutes);
+        } else {
+            return '';
+        }
     }
 }

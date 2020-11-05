@@ -78,7 +78,7 @@ class StundenzettelTimesheet extends \SimpleORMap
             $pdf->SetX(94);
             $pdf->Write($line_height, $record->calculate_sum());
             $pdf->SetX(114);
-            $pdf->Write($line_height, date('d.m.Y', $record->entry_mktime));
+            $pdf->Write($line_height, ($record->begin) ? date('d.m.Y', strtotime($record->entry_mktime)) : '');
             $pdf->SetX(144);
             $pdf->Write($line_height, $record->defined_comment . ' ' . $record->comment);
             
