@@ -24,8 +24,8 @@
 
         <br/></td>
         <td></td>
-        <td><?= date('Y-m-d',$contract->contract_begin) ?></td>
-        <td><?= date('Y-m-d', $contract->contract_end) ?></td>
+        <td><?= date('d.m.Y',$contract->contract_begin) ?></td>
+        <td><?= date('d.m.Y', $contract->contract_end) ?></td>
         <td><?= $contract->contract_hours ?></td>
         <td><?= User::findOneByUser_Id($contract->supervisor)->username ?></td>
         <td>
