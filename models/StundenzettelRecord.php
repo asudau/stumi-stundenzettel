@@ -37,9 +37,9 @@ class StundenzettelRecord extends \SimpleORMap
     function calculate_sum(){
         $begintime = strtotime($this->begin);
         $endtime = strtotime($this->end);
-        $breaktime = strtotime($this->break);
+        $breaktime_pts = explode(':', $this->break);
         
-        $sum = $endtime - $begintime - $breaktime;
+        $sum = $endtime - $begintime - $breaktime_pts[0]*360 - $breaktime_pts[1]*60;
         //return date('h:i', $sum);
         $minutes = ($sum/60)%60;
         $hours = floor(($sum/60)/ 60);
