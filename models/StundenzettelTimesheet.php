@@ -62,7 +62,7 @@ class StundenzettelTimesheet extends \SimpleORMap
         //$this->SetTextColor(0,127,75);
         // Page number
         $pdf->Cell(0, 0, studip_utf8encode(Institute::find($this->inst_id)->name ), 0, 1, 'L', 0, '', 0, false, 'C', 'C');
-        $pdf->Ln(28);
+        $pdf->Ln(32);
         $pdf->SetFont('helvetica', '', 9.5);
         
         //$this->Cell(0, 0, $content, 0, 1, 'L', 0, '', 0, false, 'C', 'C');
@@ -80,7 +80,7 @@ class StundenzettelTimesheet extends \SimpleORMap
             $pdf->SetX(114);
             $pdf->Write($line_height, date('d.m.Y', $record->entry_mktime));
             $pdf->SetX(144);
-            $pdf->Write($line_height, 'comment  ' . $record->defined_comment . ' ' . $record->comment);
+            $pdf->Write($line_height, $record->defined_comment . ' ' . $record->comment);
             
             $pdf->Ln();
 //            $pdf->Cell(0, 0, $record->begin, 0, 1, 'L', 0, '', 0, false, 'C', 'C');
