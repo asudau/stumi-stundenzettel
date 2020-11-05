@@ -20,7 +20,7 @@ use Studip\Button, Studip\LinkButton;
         
     </h2>
 
-<form name="entry" method="post" onsubmit="return validateForm()" action="<?= $controller->url_for('index/save_timesheet', $timesheet->id) ?>" <?= $dialog_attr ?> class="default collapsable">
+<form name="entry" method="post" onsubmit="return validateForm()" action="<?= $controller->url_for('timesheet/save_timesheet', $timesheet->id) ?>" <?= $dialog_attr ?> class="default collapsable">
     <?= CSRFProtection::tokenTag() ?>
     
         <table class='sortable-table default'>
@@ -43,6 +43,7 @@ use Studip\Button, Studip\LinkButton;
             <?php for ($i = 1; $i <= $days_per_month; $i++) : ?>
                 <?php if ($records[$j]['day'] == $i ) : ?>
                     <tr id ='entry[<?= $i ?>]' >
+                        <input type='hidden' name ='record_id[<?= $i ?>]' value='<?= $records[$j]['id'] ?>' >
                         <td>
                            <?= $i ?>
                         </td>
@@ -56,26 +57,27 @@ use Studip\Button, Studip\LinkButton;
                             <input type='text' class='end size-s studip-timepicker' id ='' name ='end[<?= $i ?>]' value='<?= $records[$j]['end'] ?>' placeholder="hh:mm" >
                         </td>
                         <td>
-                           <input type='text' readonly class='sum' name ='sum[<?= $i ?>]' value ='' >
+                           <input type='text' readonly class='sum' name ='sum[<?= $i ?>]' value ='<?= $records[$j]['sum'] ?>' >
                         </td>
                         <td>
-                           <input type='date' class='entry_mktime' name ='entry_mktime[<?= $i ?>]' value='' >
+                           <input type='date' class='entry_mktime' name ='entry_mktime[<?= $i ?>]' value='<?= $records[$j]['entry_mktime'] ?>' >
                         </td>
                         <td>
                            <select  name ='defined_comment[<?= $i ?>]'>
-                                <option selected value=""> -- </option>
+                                <option value=""> -- </option>
                                 <?php foreach ($plugin->getCommentOptions() as $entry_value): ?>
-                                    <option value="<?=$entry_value?>"><?= $entry_value ?></option>
+                                    <option <?= ($records[$j]['defined_comment'] == $entry_value) ? 'selected' : ''?> value="<?=$entry_value?>"><?= $entry_value ?></option>
                                 <?php endforeach ?>
                             </select>
                         </td>
                         <td>
-                           <input type='text' id ='' name ='comment[<?= $i ?>]' value ='' >
+                           <input type='text' id ='' name ='comment[<?= $i ?>]' value ='<?= $records[$j]['comment'] ?>' >
                         </td>
                     </tr>
                     <?php $j++; ?>
                 <?php else: ?>
                 <tr id ='entry[<?= $i ?>]' >
+                    <input type='hidden' name ='record_id[<?= $i ?>]' value='' >
                     <td>
                        <?= $i ?>
                     </td>
@@ -211,7 +213,6 @@ use Studip\Button, Studip\LinkButton;
 <script>
 
     function validateForm() {
-    var e = document.getElementsByName("promotionsfach")[1];
     var value = e.options[e.selectedIndex].value;
         if (value == "NULL") {
         alert("Promotionsfach muss angegeben werden!");

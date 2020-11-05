@@ -35,6 +35,39 @@ class TimesheetController extends StudipController {
 
     }
     
+    public function save_timesheet_action($timesheet_id)
+    {
+        $record_ids_array = Request::getArray('record_id');
+        $begin_array = Request::getArray('begin');
+        $end_array = Request::getArray('end');
+        $break_array = Request::getArray('break');
+        $sum_array = Request::getArray('sum');
+        $mktime_array = Request::getArray('entry_mktime');
+        $defined_comment_array = Request::getArray('defined_comment');
+        $comment_array = Request::getArray('comment');
+        
+        $limit = count($begin_array);
+        for ($i = 1; $i <= $limit; $i++) {
+           
+            $record = StundenzettelRecord::find([$timesheet_id, $i]);
+            if (!$record) {
+                $record = new StundenzettelRecord();
+                $record->timesheet_id = $timesheet_id;
+                $record->day = $i;
+            }
+                $record->begin = $begin_array[$i];
+                $record->end = $end_array[$i];
+                $record->break = $break_array[$i];
+                $record->sum = $sum_array[$i];
+                $record->entry_mktime = $mktime_array[$i];
+                $record->defined_comment = $defined_comment_array[$i];
+                $record->comment = $comment_array[$i];
+                $record->store();         
+        }
+        
+        $this->redirect('timesheet/index');
+    }
+    
     public function pdf_action($timesheet_id = '477d184367f48cc210f74bb4f779c724')
     {
         $timesheet = StundenzettelTimesheet::find($timesheet_id);
