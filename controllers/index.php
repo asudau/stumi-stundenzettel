@@ -15,6 +15,11 @@ class IndexController extends StudipController {
     {
         parent::before_filter($action, $args);
         PageLayout::setTitle(_("Studentische MitarbeiterInnen - Übersicht"));
+        
+        // Check permissions to be on this site
+        if ( !($this->plugin->hasStumiAdminrole() || $this->plugin->hasStumiContract ()) ) {
+            throw new AccessDeniedException(_("Sie haben keine Zugriffsberechtigung"));
+        }
 
     }
 

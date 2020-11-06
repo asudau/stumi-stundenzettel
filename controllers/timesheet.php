@@ -15,6 +15,11 @@ class TimesheetController extends StudipController {
     {
         parent::before_filter($action, $args);
         PageLayout::setTitle(_("Stundenzettel verwalten"));
+        
+        // Check permissions to be on this site
+        if ( !($this->plugin->hasStumiAdminrole() || $this->plugin->hasStumiContract ()) ) {
+            throw new AccessDeniedException(_("Sie haben keine Zugriffsberechtigung."));
+        }
 
     }
 
@@ -58,7 +63,7 @@ class TimesheetController extends StudipController {
                 $record->begin = $begin_array[$i];
                 $record->end = $end_array[$i];
                 $record->break = $break_array[$i];
-                $record->sum = $sum_array[$i];
+                $record->sum = $record->calculate_sum();
                 $record->entry_mktime = $mktime_array[$i];
                 $record->defined_comment = $defined_comment_array[$i];
                 $record->comment = $comment_array[$i];
