@@ -26,10 +26,24 @@ class IndexController extends StudipController {
                         $this->url_for('index'))
               ->setActive($action === 'index');
         $this->inst_id = $inst_id;
-        $this->contracts = StundenzettelStumiContract::findByInst_Id($inst_id);
-
+        
+        $groups = Statusgruppen::findBySQL('`name` LIKE ? AND `range_id` LIKE ?', ['%Studentische%', $inst_id]);
+        foreach ($groups as $group) {
+            foreach ($group->members as $member) {
+                $this->stumis[] = User::find($member->user_id);
+                $this->stumi_contracts[$member->user_id] = StundenzettelStumiContract::findBySQL('`stumi_id` LIKE ? AND `inst_id` LIKE ?', [$member->user_id, $inst_id]);
+            }
+        }
+        
+        
+        
         Sidebar::get()->addWidget($views);
 
+    }
+    
+    public function institute_settings_action(){
+        $groups = Statusgruppen::findByRangeID($inst_id);
+        
     }
     
     // customized #url_for for plugins
