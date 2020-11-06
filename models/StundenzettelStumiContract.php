@@ -18,6 +18,8 @@ class StundenzettelStumiContract extends \SimpleORMap
     protected static function configure($config = array())
     {
         $config['db_table'] = 'stundenzettel_stumi_contracts';
+        
+        parent::configure($config);
     }
  
 }
