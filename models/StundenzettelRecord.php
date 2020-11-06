@@ -18,14 +18,6 @@
 
 class StundenzettelRecord extends \SimpleORMap
 {
-    private static $groups = array(
-        'admin' => 'Zusätzliche Datenfelder für Nutzer mit administratver Freischaltung',
-        'doktorandendaten'=> 'Persönliche Daten',
-        'promotionsdaten' => 'Daten zur Promotion',
-        'ersteinschreibung'=> 'Daten zur Ersteinschreibung',
-        'abschlusspruefung'=> 'Daten zur Promotion berechtigenden Abschlussprüfung',
-        'hzb' => 'Daten zur Hochschulzugangsberechtigung (HZB)'
-        );
     
     protected static function configure($config = array())
     {

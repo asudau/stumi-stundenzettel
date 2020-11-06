@@ -19,15 +19,7 @@
 
 class StundenzettelTimesheet extends \SimpleORMap
 {
-    private static $groups = array(
-        'admin' => 'Zusätzliche Datenfelder für Nutzer mit administratver Freischaltung',
-        'doktorandendaten'=> 'Persönliche Daten',
-        'promotionsdaten' => 'Daten zur Promotion',
-        'ersteinschreibung'=> 'Daten zur Ersteinschreibung',
-        'abschlusspruefung'=> 'Daten zur Promotion berechtigenden Abschlussprüfung',
-        'hzb' => 'Daten zur Hochschulzugangsberechtigung (HZB)'
-        );
-    
+
     protected static function configure($config = array())
     {
         $config['db_table'] = 'stundenzettel_timesheets';
@@ -54,15 +46,24 @@ class StundenzettelTimesheet extends \SimpleORMap
         
         $records = StundenzettelRecord::findByTimesheet_Id($this->id, 'ORDER BY day ASC');
 
-        $pdf->SetY(45);
-        $pdf->SetX(90);
+        $pdf->SetY(42); 
             
         // Set font
         $pdf->SetFont('helvetica', '', 10);
         //$this->SetTextColor(0,127,75);
         // Page number
-        $pdf->Cell(0, 0, studip_utf8encode(Institute::find($this->inst_id)->name ), 0, 1, 'L', 0, '', 0, false, 'C', 'C');
-        $pdf->Ln(32);
+        $pdf->SetX(90);
+        $pdf->Write(5, studip_utf8encode(User::find($this->stumi_id)->nachname . ', ' .  User::find($this->stumi_id)->vorname));
+        $pdf->Ln();
+        $pdf->SetX(90);
+        $pdf->Write(5, studip_utf8encode(Institute::find($this->inst_id)->name ));
+        $pdf->Ln();
+        $pdf->SetX(90);
+        $pdf->Write(6, studip_utf8encode($this->month . '/' . $this->year));
+        $pdf->Ln();
+        $pdf->SetX(90);
+        $pdf->Write(5, studip_utf8encode(StundenzettelStumiContract::find($this->contract_id)->contract_hours));
+        $pdf->Ln(21);
         $pdf->SetFont('helvetica', '', 9.5);
         
         //$this->Cell(0, 0, $content, 0, 1, 'L', 0, '', 0, false, 'C', 'C');
@@ -83,46 +84,12 @@ class StundenzettelTimesheet extends \SimpleORMap
             $pdf->Write($line_height, $record->defined_comment . ' ' . $record->comment);
             
             $pdf->Ln();
-//            $pdf->Cell(0, 0, $record->begin, 0, 1, 'L', 0, '', 0, false, 'C', 'C');
-//            $pdf->Cell(0, 0, $record->break, 0, 1, 'L', 0, '', 0, false, 'C', 'C');
-//            $pdf->Cell(0, 0, $record->end, 0, 1, 'L', 0, '', 0, false, 'C', 'C');
-//            $pdf->Cell(0, 0, $record->sum, 0, 1, 'L', 0, '', 0, false, 'C', 'C');
-//            $pdf->Cell(0, 0, $record->defined_comment, 0, 1, 'L', 0, '', 0, false, 'C', 'C');
-//            $pdf->Cell(0, 0, $record->comment, 0, 1, 'L', 0, '', 0, false, 'C', 'C');
-//            $pdf->Cell(0, 0, $record->entry_mktime, 0, 1, 'L', 0, '', 0, false, 'C', 'C');
             
         }
-
-//        $pdf->SetTopMargin(40);
-//        $pdf->SetLeftMargin(20);
-//        $pdf->SetRightMargin(20);
-       
-//        $x = 35;
-//        $y = 50;
-//        $w = 60;
-//        $h = 60;
-        
-        
-            //$html = $this->htmlentitiesOutsideHTMLTags($note_content[0], ENT_HTML401);
-//            $html = 'Hiermit wird bescheinigt, dass <br><br><br><br><b>Herr/Frau '. $user 
-//                    . '</b><br><br><br>am ' . date("d.m.Y",time()) 
-//                    . '<br><br><br>an der Mitarbeiterschulung der Fa. ' . $institute
-//                    . '</b><br><br><br>zum Thema<br>'
-//                    . '<h1 style="text-align:center">' . $seminar . '</h1>'
-//                    . '<br><br><br><br><br>erfolgreich teilgenommen hat.'
-//                    . '<br><br><br><br><br><br><br><br>Stephan Beume<br>'
-//                    . 'Rechtsanwalt<br>'
-//                    . 'Fachanwalt für Arbeitsrecht<br>'
-//                    . 'Datenschutzbeauftragter (TÜV)<br>';
-//            $pdf->writeHTMLCell('0', '0', '30', '80', studip_utf8encode($html), false, 0, false, 0);
-        
+  
         $fileid = time();   
-        //$pdf->Output('/tmp/zertifikat'. $fileid, 'F');
-        //return '/tmp/zertifikat'. $fileid;
-        //$pdf->Output( $TMP_PATH .'/zertifikat' . $fileid, 'D');
         $pdf->Output( 'Stundenzettel' . $fileid, 'D');
-        //return $TMP_PATH . '/zertifikat' . $fileid;
-        //exit("delivering pdf file");
+      
     }
     
 }
