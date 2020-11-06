@@ -20,8 +20,8 @@ class HilfskraftStundenzettel extends StudipPlugin implements SystemPlugin
         parent::__construct();
         global $perm;
 
-        if(RolePersistence::isAssignedRole($GLOBALS['user']->user_id,
-                                                            self::STUNDENVERWALTUNG_ROLE)){
+        //Personen mit Verwaltungsrolle für Stumis oder Stumis mit in StudIP hinterlegtem Arbeitsvertrag
+        if( $this->hasStumiAdminrole() || $this->hasStumiContract () ){
             $navigation = new Navigation('Hilfskraft-Stundenzettelverwaltung');
             $navigation->setImage(Icon::create('edit', 'navigation'));
             $navigation->setURL(PluginEngine::getURL($this, array(), 'index'));
@@ -33,7 +33,7 @@ class HilfskraftStundenzettel extends StudipPlugin implements SystemPlugin
             $navigation->addSubNavigation('timesheets', $item);
             
             Navigation::addItem('tools/hilfskraft-stundenverwaltung', $navigation);  
-        }    
+        }         
     }
 
     public function initialize ()
@@ -58,6 +58,16 @@ class HilfskraftStundenzettel extends StudipPlugin implements SystemPlugin
     public function getYears ()
     {
         return array( '2020', '2021','2022','2023','2024','2025','2026','2027');
+    }
+    
+    public function hasStumiAdminrole ()
+    {
+        return RolePersistence::isAssignedRole($GLOBALS['user']->user_id, self::STUNDENVERWALTUNG_ROLE);
+    }
+    
+    public function hasStumiContract ()
+    {
+        return StundenzettelStumiContract::findByStumi_id($GLOBALS['user']->user_id);
     }
 
     public function perform($unconsumed_path)
