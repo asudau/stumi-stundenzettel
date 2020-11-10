@@ -20,25 +20,51 @@ class TimesheetController extends StudipController {
         if ( !($this->plugin->hasStumiAdminrole() || $this->plugin->hasStumiContract ()) ) {
             throw new AccessDeniedException(_("Sie haben keine Zugriffsberechtigung."));
         }
+        
+        if ($this->plugin->hasStumiAdminrole ()) {
+            $this->adminrole = true;
+        }
+        if ($this->plugin->hasStumiContract ()) {
+            $this->stumirole = true;
+        }
 
     }
 
-    public function index_action($stumi_id='4f9fba21e13a1a4d5858591f7c145e69', $inst_id = '477d184367f48cc210f74bb4f779c7b7')
+    public function index_action($contract_id)
     {
         Navigation::activateItem('tools/hilfskraft-stundenverwaltung/timesheets');
 //        $views = new ViewsWidget();
 //        $views->addLink(_('Stundenzettel verwalten'),
 //                        $this->url_for('index'))
 //              ->setActive($action === 'index');
+        
+        $this->contract = StundenzettelStumiContract::find($contract_id);
+        $this->timesheets = StundenzettelTimesheet::findByContract_id($contract_id); 
+        
         $this->inst_id = $inst_id;
         $this->stumi_id = $stumi_id;
-        $timesheet_id = '477d184367f48cc210f74bb4f779c724';
-        $this->timesheet = StundenzettelTimesheet::find($timesheet_id);
+        
         $this->records = StundenzettelRecord::findByTimesheet_Id($timesheet_id, 'ORDER BY day ASC');
 
         //Sidebar::get()->addWidget($views);
 
     }
+    
+    public function timesheet_action($timesheet_id)
+    {
+        Navigation::activateItem('tools/hilfskraft-stundenverwaltung/timesheets');
+
+        $this->timesheet = StundenzettelTimesheet::find($timesheet_id);
+        
+        $this->inst_id = $this->timesheet->inst_id;
+        $this->stumi_id = $this->timesheet->stumi_id;
+
+        $this->records = StundenzettelRecord::findByTimesheet_Id($timesheet_id, 'ORDER BY day ASC');
+
+        //Sidebar::get()->addWidget($views);
+
+    }
+    
     
     public function save_timesheet_action($timesheet_id)
     {
