@@ -42,32 +42,33 @@ use Studip\Button, Studip\LinkButton;
             
             <?php $days_per_month = 31; ?>
             <?php $j = 0; ?>
-                  
          
             <?php for ($i = 1; $i <= $days_per_month; $i++) : ?>
                 <?php if ($records[$j]['day'] == $i ) : ?>
-                    <tr id ='entry[<?= $i ?>]' >
+                    <? $holiday = $records[$j]->isHoliday(); ?>
+                    <? $weekend = $records[$j]->isWeekend(); ?>
+                    <tr id ='entry[<?= $i ?>]' class='<?= ($weekend)? 'weekend' : ''?> <?= ($holiday)? 'holiday' : ''?>' >
                         <input type='hidden' name ='record_id[<?= $i ?>]' value='<?= $records[$j]['id'] ?>' >
                         <td>
                            <?= $i ?>
                         </td>
                         <td >
-                            <input type='text' class='begin size-s studip-timepicker' id ='' name ='begin[<?= $i ?>]' value='<?= $records[$j]['begin'] ?>' placeholder="hh:mm" >
+                            <input type='text' <?= ($weekend || $holiday)? 'readonly' : ''?> class='begin size-s studip-timepicker' id ='' name ='begin[<?= $i ?>]' value='<?= $records[$j]['begin'] ?>' placeholder="hh:mm" >
                         </td>
                         <td>
-                            <input type='text' class='break' name ='break[<?= $i ?>]' value ='<?= $records[$j]['break'] ?>' placeholder="hh:mm">
+                            <input type='text' <?= ($weekend || $holiday)? 'readonly' : ''?> class='break' name ='break[<?= $i ?>]' value ='<?= $records[$j]['break'] ?>' placeholder="hh:mm">
                         </td>
                         <td>
-                            <input type='text' class='end size-s studip-timepicker' id ='' name ='end[<?= $i ?>]' value='<?= $records[$j]['end'] ?>' placeholder="hh:mm" >
+                            <input type='text' <?= ($weekend || $holiday)? 'readonly' : ''?> class='end size-s studip-timepicker' id ='' name ='end[<?= $i ?>]' value='<?= $records[$j]['end'] ?>' placeholder="hh:mm" >
                         </td>
                         <td>
                            <input type='text' readonly class='sum' name ='sum[<?= $i ?>]' value ='<?= $records[$j]['sum'] ?>' >
                         </td>
                         <td>
-                           <input type='date' class='entry_mktime' name ='entry_mktime[<?= $i ?>]' value='<?= $records[$j]['entry_mktime'] ?>' >
+                           <input type='date' <?= ($weekend || $holiday)? 'readonly' : ''?> class='entry_mktime' name ='entry_mktime[<?= $i ?>]' value='<?= $records[$j]['entry_mktime'] ?>' >
                         </td>
                         <td>
-                           <select  name ='defined_comment[<?= $i ?>]'>
+                           <select <?= ($weekend || $holiday)? 'readonly' : ''?> name ='defined_comment[<?= $i ?>]'>
                                 <option value=""> -- </option>
                                 <?php foreach ($plugin->getCommentOptions() as $entry_value): ?>
                                     <option <?= ($records[$j]['defined_comment'] == $entry_value) ? 'selected' : ''?> value="<?=$entry_value?>"><?= $entry_value ?></option>
@@ -75,43 +76,46 @@ use Studip\Button, Studip\LinkButton;
                             </select>
                         </td>
                         <td>
-                           <input type='text' id ='' name ='comment[<?= $i ?>]' value ='<?= $records[$j]['comment'] ?>' >
+                           <input type='text' <?= ($records[$j]->isWeekend())? 'readonly' : ''?> id ='' name ='comment[<?= $i ?>]' value ='<?= $records[$j]['comment'] ?>' >
                         </td>
                     </tr>
                     <?php $j++; ?>
                 <?php else: ?>
-                <tr id ='entry[<?= $i ?>]' >
-                    <input type='hidden' name ='record_id[<?= $i ?>]' value='' >
-                    <td>
-                       <?= $i ?>
-                    </td>
-                    <td >
-                        <input type='text' class='begin' id ='' name ='begin[<?= $i ?>]' value='' placeholder="hh:mm" >
-                    </td>
-                    <td>
-                        <input type='text' class ='break' name ='break[<?= $i ?>]' value ='' placeholder="hh:mm">
-                    </td>
-                    <td>
-                        <input type='text' class='end' name ='end[<?= $i ?>]' value='' placeholder="hh:mm" >
-                    </td>
-                    <td>
-                       <input type='text' readonly class ='sum' name ='sum[<?= $i ?>]' value ='' >
-                    </td>
-                    <td>
-                       <input type='date' class ='entry_mktime' name ='entry_mktime[<?= $i ?>]' value='' >
-                    </td>
-                    <td>
-                       <select  name ='defined_comment[<?= $i ?>]'>
-                            <option selected value=""> -- </option>
-                            <?php foreach ($plugin->getCommentOptions() as $entry_value): ?>
-                                <option value="<?=$entry_value?>"><?= $entry_value ?></option>
-                            <?php endforeach ?>
-                        </select>
-                    </td>
-                    <td>
-                       <input type='text' readonly class ='comment' name ='comment[<?= $i ?>]' value ='' >
-                    </td>
-                </tr>
+                    <? $date = $i . '.' . $timesheet->month . '.'  . $timesheet->year; ?>
+                    <? $weekend = StundenzettelRecord::isDateWeekend($date); ?>
+                    <? $holiday = StundenzettelRecord::isDateHoliday($date); ?>
+                    <tr id ='entry[<?= $i ?>]' class='<?= ($weekend)? 'weekend' : ''?> <?= ($holiday)? 'holiday' : ''?>' >
+                        <input type='hidden' name ='record_id[<?= $i ?>]' value='' >
+                        <td>
+                           <?= $i ?>
+                        </td>
+                        <td >
+                            <input type='text' <?= ($weekend || $holiday)? 'readonly' : ''?> class='begin' id ='' name ='begin[<?= $i ?>]' value='' placeholder="hh:mm" >
+                        </td>
+                        <td>
+                            <input type='text' <?= ($weekend || $holiday)? 'readonly' : ''?> class ='break' name ='break[<?= $i ?>]' value ='' placeholder="hh:mm">
+                        </td>
+                        <td>
+                            <input type='text' <?= ($weekend || $holiday)? 'readonly' : ''?> class='end' name ='end[<?= $i ?>]' value='' placeholder="hh:mm" >
+                        </td>
+                        <td>
+                           <input type='text' readonly class ='sum' name ='sum[<?= $i ?>]' value ='' >
+                        </td>
+                        <td>
+                           <input type='date' <?= ($weekend || $holiday)? 'readonly' : ''?> class ='entry_mktime' name ='entry_mktime[<?= $i ?>]' value='' >
+                        </td>
+                        <td>
+                           <select <?= ($weekend)? 'readonly' : ''?>  name ='defined_comment[<?= $i ?>]'>
+                                <option selected value=""> -- </option>
+                                <?php foreach ($plugin->getCommentOptions() as $entry_value): ?>
+                                    <option value="<?=$entry_value?>"><?= $entry_value ?></option>
+                                <?php endforeach ?>
+                            </select>
+                        </td>
+                        <td>
+                           <input type='text' <?= ($weekend || $holiday)? 'readonly' : ''?> class ='comment' name ='comment[<?= $i ?>]' value ='' >
+                        </td>
+                    </tr>
                 <?php endif ?>
             <?php endfor ?>
                 <tr>
@@ -136,6 +140,16 @@ use Studip\Button, Studip\LinkButton;
     
 <? endif ?>    
     
+
+<style>
+    tr.weekend {
+        background-color: #ccc;
+    }
+    tr.holiday {
+        background-color: #6db370;
+    }
+</style>
+
 <script>
     
 
