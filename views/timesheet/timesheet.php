@@ -105,11 +105,23 @@ use Studip\Button, Studip\LinkButton;
                         </select>
                     </td>
                     <td>
-                       <input type='text' class ='comment' name ='comment[<?= $i ?>]' value ='' >
+                       <input type='text' readonly class ='comment' name ='comment[<?= $i ?>]' value ='' >
                     </td>
                 </tr>
                 <?php endif ?>
             <?php endfor ?>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>
+                       <input type='text' class ='comment' name ='' value ='<?= $timesheet->sum ?>' >
+                    </td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
         </table>
 
 

@@ -96,7 +96,11 @@ class TimesheetController extends StudipController {
                 $record->store();         
         }
         
-        $this->redirect('timesheet/index');
+        $timesheet = StundenzettelTimesheet::find($timesheet_id);
+        $timesheet->calculate_sum();
+        
+        PageLayout::postMessage(MessageBox::success(_("Änderungen gespeichert."))); 
+        $this->redirect('timesheet/timesheet/' . $timesheet_id);
     }
     
     public function pdf_action($timesheet_id = '477d184367f48cc210f74bb4f779c724')

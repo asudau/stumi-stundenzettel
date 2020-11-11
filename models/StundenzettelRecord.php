@@ -41,4 +41,9 @@ class StundenzettelRecord extends \SimpleORMap
             return '';
         }
     }
+    
+    function sum_to_seconds(){
+        $sum = explode(':', $this->sum);
+        return $sum[0]*3600 + $sum[1]*60;
+    }
 }
