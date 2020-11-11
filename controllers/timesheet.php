@@ -69,6 +69,27 @@ class TimesheetController extends StudipController {
     public function timesheet_action($timesheet_id)
     {
         Navigation::activateItem('tools/hilfskraft-stundenverwaltung/timesheets');
+        
+        $sidebar = Sidebar::Get();
+        //Sidebar::Get()->setTitle('Stundenzettel von ' . $GLOBALS['user']->username);
+        
+        $actions = new ActionsWidget();
+        $actions->setTitle('Aktionen');
+        $actions->addLink(
+                _('Stundenzettel einreichen'),
+                PluginEngine::getLink($this->plugin, [], 'timesheet/send/' . $timesheet_id ),
+                Icon::create('share', 'new'),
+                ['title' => 'Achtung, anschließend keine Bearbeitung mehr möglich!',
+                    'onclick' => "return confirm('Bearbeitung abschließen und Stundenzettel offiziell einreichen?')"]
+            );
+        if (true) {
+            $actions->addLink(
+                _('PDF-zum Ausdruck generieren'),
+                PluginEngine::getLink($this->plugin, [], 'timesheet/pdf/' . $timesheet_id ),
+                Icon::create('file-pdf', 'clickable')
+            );
+        }
+        $sidebar->addWidget($actions);
 
         $this->timesheet = StundenzettelTimesheet::find($timesheet_id);
         
@@ -119,10 +140,15 @@ class TimesheetController extends StudipController {
         $this->redirect('timesheet/timesheet/' . $timesheet_id);
     }
     
-    public function pdf_action($timesheet_id = '477d184367f48cc210f74bb4f779c724')
+    public function pdf_action($timesheet_id)
     {
         $timesheet = StundenzettelTimesheet::find($timesheet_id);
-        $this->path = $timesheet->build_pdf();
+        if($timesheet){
+            $timesheet->build_pdf();
+        } else {
+            PageLayout::postMessage(MessageBox::success(_("Stundenzettel konnte nicht generiert werden.")));
+            $this->redirect('timesheet/index');
+        }
     }
     
     // customized #url_for for plugins
