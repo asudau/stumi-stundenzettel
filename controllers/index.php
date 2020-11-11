@@ -58,9 +58,75 @@ class IndexController extends StudipController {
             $this->stumi_contracts = StundenzettelStumiContract::findBySQL('`stumi_id` LIKE ? AND `inst_id` LIKE ?', [$this->stumi->user_id, $inst_id]);
                 
         }
+    }
+    
+    public function new_action($inst_id, $stumi_id)
+    {   
+        $this->inst_id = $inst_id;
+        $this->stumi = User::find($stumi_id);
         
+        $this->search = QuickSearch::get('user_id', new StandardSearch('user_id'))
+            ->withButton(array('search_button_name' => 'search_user', 'reset_button_name' => 'reset_search'))
+            ->render();
         
+    }
+    
+    public function edit_action($contract_id)
+    {   
+        $this->contract = StundenzettelStumiContract::find($contract_id);
+        $this->inst_id = $this->contract->inst_id;
+        $this->stumi = User::find($this->contract->stumi_id);
+        $supervisor = User::find($this->contract->supervisor);
         
+        $this->search = QuickSearch::get('user_id', new StandardSearch('user_id'))
+            ->defaultValue($this->contract->supervisor, $supervisor->vorname . ' ' . $supervisor->nachname)
+            ->withButton(array('search_button_name' => 'search_user', 'reset_button_name' => 'reset_search'))
+            ->render();
+
+        $this->render_action('new');
+    }
+    
+    public function save_action($inst_id, $stumi_id, $contract_id)
+    {   
+        if ($this->plugin->hasStumiAdminrole ()) {
+            
+            $this->adminrole = true;
+            $contract = StundenzettelStumiContract::find($contract_id);
+            
+            if (!$contract){
+                $contract = new StundenzettelStumiContract();
+            }
+            
+            //get all stumis an contracts
+            $contract->inst_id = $inst_id;
+            $contract->stumi_id = $stumi_id;
+            $contract->contract_begin = strtotime(Request::get('begin'));
+            $contract->contract_end = strtotime(Request::get('end'));
+            $contract->contract_hours = Request::get('hours');
+            $contract->supervisor = Request::get('user_id');            
+            $contract->store();
+            PageLayout::postMessage(MessageBox::success(_("Vertrag angelegt."))); 
+            
+        } else {
+            PageLayout::postMessage(MessageBox::error(_("Keine Berechtigung."))); 
+        }
+        
+        $this->redirect('index/');
+
+    }
+    
+    public function delete_action($contract_id)
+    {   
+        $contract = StundenzettelStumiContract::find($contract_id);
+            
+        if($contract->delete()){
+            PageLayout::postMessage(MessageBox::success(_("Vertrag gelöscht"))); 
+            
+        } else {
+            PageLayout::postMessage(MessageBox::error(_("Vertrag konnte nicht gelöscht werden"))); 
+        }
+        
+        $this->redirect('index/');
 
     }
     
