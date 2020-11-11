@@ -3,24 +3,28 @@
 use Studip\Button, Studip\LinkButton;
 ?>
 
+<? if (!$timesheet) : ?>
+<? else : ?>
 
     <h2>Name, Vorname der Hilfskraft: <?= User::findOneByUser_Id($stumi_id)->username ?></h2>
     <h2>Fachbereich/Organisationseinheit: <?= Institute::find($inst_id)->name ?></h2>
     <h2>Monat/Jahr: 
-        <select  name ='month[<?= $i ?>]'>
-            <?php foreach ($plugin->getMonths() as $entry_value): ?>
-                <option <?= ($timesheet->month == $entry_value) ? 'selected' : '' ?> value="<?=$entry_value?>"><?= $entry_value ?></option>
-            <?php endforeach ?>
-        </select>
-        <select  name ='year[<?= $i ?>]'>
-            <?php foreach ($plugin->getYears() as $entry_value): ?>
-                <option <?= ($timesheet->year == $entry_value) ? 'selected' : '' ?> value="<?=$entry_value?>"><?= $entry_value ?></option>
-            <?php endforeach ?>
-        </select>
+        <form name="month_select" method="post"  action="<?= $controller->url_for('timesheet/select/' . $timesheet->contract_id) ?>">
+            <select name ='month' onchange="this.form.submit()">
+                <?php foreach ($plugin->getMonths() as $entry_value): ?>
+                    <option <?= ($timesheet->month == $entry_value) ? 'selected' : '' ?> value="<?=$entry_value?>"><?= $entry_value ?></option>
+                <?php endforeach ?>
+            </select>
+            <select  name ='year' onchange="this.form.submit()">
+                <?php foreach ($plugin->getYears() as $entry_value): ?>
+                    <option <?= ($timesheet->year == $entry_value) ? 'selected' : '' ?> value="<?=$entry_value?>"><?= $entry_value ?></option>
+                <?php endforeach ?>
+            </select>
+        </form>
         
     </h2>
 
-<form name="entry" method="post" onsubmit="return validateForm()" action="<?= $controller->url_for('timesheet/save_timesheet', $timesheet->id) ?>" <?= $dialog_attr ?> class="default collapsable">
+<form name="entry" method="post" onsubmit="return validateForm()" action="<?= $controller->url_for('timesheet/save_timesheet', $timesheet->id) ?>" class="default collapsable">
     <?= CSRFProtection::tokenTag() ?>
     
         <table class='sortable-table default'>
@@ -129,6 +133,8 @@ use Studip\Button, Studip\LinkButton;
         <?= Button::create(_('Übernehmen')) ?>
     </footer>
 </form>
+    
+<? endif ?>    
     
 <script>
     

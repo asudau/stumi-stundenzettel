@@ -50,6 +50,22 @@ class TimesheetController extends StudipController {
 
     }
     
+    public function select_action($contract_id)
+    {
+        Navigation::activateItem('tools/hilfskraft-stundenverwaltung/timesheets');
+        $month = Request::get('month');
+        $year = Request::get('year');
+        $this->timesheet = StundenzettelTimesheet::findOneBySQL('`contract_id` LIKE ? AND `month` LIKE ? AND `year` LIKE ?', [$contract_id, $month, $year]);
+        if (!$this->timesheet) {
+            PageLayout::postMessage(MessageBox::error(_("Für diesen Zeitraum exisitert noch kein Stundenzettel."))); 
+            $this->render_action('timesheet');
+        } else {
+            $this->redirect('timesheet/timesheet/' . $this->timesheet->id);
+        }
+        
+    }
+    
+    
     public function timesheet_action($timesheet_id)
     {
         Navigation::activateItem('tools/hilfskraft-stundenverwaltung/timesheets');
