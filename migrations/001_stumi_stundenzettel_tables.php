@@ -1,16 +1,23 @@
 <?php
 
+require_once __DIR__ . '/../constants.inc.php';
+
 class StumiStundenzettelTables extends Migration
 {
     public function description()
     {
-        return 'Add DB tables for Stumi Stundenzettelverwaltung';
+        return 'Add role and DB tables for Stumi Stundenzettelverwaltung';
     }
 
     public function up()
     {
+        
+        $role = new Role();
+        $role->setRolename(\Stundenzettelverwaltung\STUNDENVERWALTUNG_ROLE);
+        $role->setSystemtype(false);
+        RolePersistence::saveRole($role);
+        
         $db = DBManager::get();
-
         //add db-table for stumis
         $db->exec("CREATE TABLE IF NOT EXISTS `stundenzettel_stumi_contracts` (
             `id` varchar(32) NOT NULL,

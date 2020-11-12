@@ -9,11 +9,11 @@
  * @version 1.0
  */
 
+require_once 'constants.inc.php';
 
 class HilfskraftStundenzettel extends StudipPlugin implements SystemPlugin
 {
 
-    const STUNDENVERWALTUNG_ROLE = 'Hilfskraft-Stundenzettelverwaltung';
     
     public function __construct()
     {
@@ -62,7 +62,7 @@ class HilfskraftStundenzettel extends StudipPlugin implements SystemPlugin
     
     public function hasStumiAdminrole ()
     {
-        return RolePersistence::isAssignedRole($GLOBALS['user']->user_id, self::STUNDENVERWALTUNG_ROLE);
+        return RolePersistence::isAssignedRole($GLOBALS['user']->user_id, \Stundenzettelverwaltung\STUNDENVERWALTUNG_ROLE);
     }
     
     public function hasStumiContract ()
