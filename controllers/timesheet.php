@@ -109,7 +109,7 @@ class TimesheetController extends StudipController {
         $begin_array = Request::getArray('begin');
         $end_array = Request::getArray('end');
         $break_array = Request::getArray('break');
-        $sum_array = Request::getArray('sum');
+        //$sum_array = Request::getArray('sum');
         $mktime_array = Request::getArray('entry_mktime');
         $defined_comment_array = Request::getArray('defined_comment');
         $comment_array = Request::getArray('comment');
