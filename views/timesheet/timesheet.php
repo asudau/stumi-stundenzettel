@@ -39,7 +39,7 @@ use Studip\Button, Studip\LinkButton;
                 <th style='width:200px'>sonstige Bemerkung</th>
                 
             </tr>
-            
+            <!-- //TODO -->
             <?php $days_per_month = 31; ?>
             <?php $j = 0; ?>
          
@@ -47,28 +47,30 @@ use Studip\Button, Studip\LinkButton;
                 <?php if ($records[$j]['day'] == $i ) : ?>
                     <? $holiday = $records[$j]->isHoliday(); ?>
                     <? $weekend = $records[$j]->isWeekend(); ?>
+                    <? $date = $records[$j]->getDate(); ?>
+                    <? $is_editable = StundenzettelRecord::isEditable($date); ?>
                     <tr id ='entry[<?= $i ?>]' class='<?= ($weekend)? 'weekend' : ''?> <?= ($holiday)? 'holiday' : ''?>' >
                         <input type='hidden' name ='record_id[<?= $i ?>]' value='<?= $records[$j]['id'] ?>' >
                         <td>
                            <?= $i ?>
                         </td>
                         <td >
-                            <input type='text' <?= ($weekend || $holiday)? 'readonly' : ''?> class='begin size-s studip-timepicker' id ='' name ='begin[<?= $i ?>]' value='<?= $records[$j]['begin'] ?>' placeholder="hh:mm" >
+                            <input type='text' <?= (!$is_editable)? 'readonly' : ''?> class='begin size-s studip-timepicker' id ='' name ='begin[<?= $i ?>]' value='<?= $records[$j]['begin'] ?>' placeholder="hh:mm" >
                         </td>
                         <td>
-                            <input type='text' <?= ($weekend || $holiday)? 'readonly' : ''?> class='break' name ='break[<?= $i ?>]' value ='<?= $records[$j]['break'] ?>' placeholder="hh:mm">
+                            <input type='text' <?= (!$is_editable)? 'readonly' : ''?> class='break' name ='break[<?= $i ?>]' value ='<?= $records[$j]['break'] ?>' placeholder="hh:mm">
                         </td>
                         <td>
-                            <input type='text' <?= ($weekend || $holiday)? 'readonly' : ''?> class='end size-s studip-timepicker' id ='' name ='end[<?= $i ?>]' value='<?= $records[$j]['end'] ?>' placeholder="hh:mm" >
+                            <input type='text' <?= (!$is_editable)? 'readonly' : ''?> class='end size-s studip-timepicker' id ='' name ='end[<?= $i ?>]' value='<?= $records[$j]['end'] ?>' placeholder="hh:mm" >
                         </td>
                         <td>
                            <input type='text' readonly class='sum' name ='sum[<?= $i ?>]' value ='<?= $records[$j]['sum'] ?>' >
                         </td>
                         <td>
-                           <input type='date' <?= ($weekend || $holiday)? 'readonly' : ''?> class='entry_mktime' name ='entry_mktime[<?= $i ?>]' value='<?= $records[$j]['entry_mktime'] ?>' >
+                           <input type='date' <?= (!$is_editable)? 'readonly' : ''?> class='entry_mktime' name ='entry_mktime[<?= $i ?>]' value='<?= $records[$j]['entry_mktime'] ?>' >
                         </td>
                         <td>
-                           <select <?= ($weekend || $holiday)? 'readonly' : ''?> name ='defined_comment[<?= $i ?>]'>
+                           <select <?= (!$is_editable)? 'readonly' : ''?> name ='defined_comment[<?= $i ?>]'>
                                 <option value=""> -- </option>
                                 <?php foreach ($plugin->getCommentOptions() as $entry_value): ?>
                                     <option <?= ($records[$j]['defined_comment'] == $entry_value) ? 'selected' : ''?> value="<?=$entry_value?>"><?= $entry_value ?></option>
@@ -76,7 +78,7 @@ use Studip\Button, Studip\LinkButton;
                             </select>
                         </td>
                         <td>
-                           <input type='text' <?= ($records[$j]->isWeekend())? 'readonly' : ''?> id ='' name ='comment[<?= $i ?>]' value ='<?= $records[$j]['comment'] ?>' >
+                           <input type='text' <?= (!$is_editable)? 'readonly' : ''?> id ='' name ='comment[<?= $i ?>]' value ='<?= $records[$j]['comment'] ?>' >
                         </td>
                     </tr>
                     <?php $j++; ?>
@@ -84,28 +86,29 @@ use Studip\Button, Studip\LinkButton;
                     <? $date = $i . '.' . $timesheet->month . '.'  . $timesheet->year; ?>
                     <? $weekend = StundenzettelRecord::isDateWeekend($date); ?>
                     <? $holiday = StundenzettelRecord::isDateHoliday($date); ?>
+                    <? $is_editable = StundenzettelRecord::isEditable($date); ?>
                     <tr id ='entry[<?= $i ?>]' class='<?= ($weekend)? 'weekend' : ''?> <?= ($holiday)? 'holiday' : ''?>' >
                         <input type='hidden' name ='record_id[<?= $i ?>]' value='' >
                         <td>
                            <?= $i ?>
                         </td>
                         <td >
-                            <input type='text' <?= ($weekend || $holiday)? 'readonly' : ''?> class='begin' id ='' name ='begin[<?= $i ?>]' value='' placeholder="hh:mm" >
+                            <input type='text' <?= (!$is_editable)? 'readonly' : ''?> class='begin' id ='' name ='begin[<?= $i ?>]' value='' placeholder="hh:mm" >
                         </td>
                         <td>
-                            <input type='text' <?= ($weekend || $holiday)? 'readonly' : ''?> class ='break' name ='break[<?= $i ?>]' value ='' placeholder="hh:mm">
+                            <input type='text' <?= (!$is_editable)? 'readonly' : ''?> class ='break' name ='break[<?= $i ?>]' value ='' placeholder="hh:mm">
                         </td>
                         <td>
-                            <input type='text' <?= ($weekend || $holiday)? 'readonly' : ''?> class='end' name ='end[<?= $i ?>]' value='' placeholder="hh:mm" >
+                            <input type='text' <?= (!$is_editable)? 'readonly' : ''?> class='end' name ='end[<?= $i ?>]' value='' placeholder="hh:mm" >
                         </td>
                         <td>
                            <input type='text' readonly class ='sum' name ='sum[<?= $i ?>]' value ='' >
                         </td>
                         <td>
-                           <input type='date' <?= ($weekend || $holiday)? 'readonly' : ''?> class ='entry_mktime' name ='entry_mktime[<?= $i ?>]' value='' >
+                           <input type='date' <?= (!$is_editable)? 'readonly' : ''?> class ='entry_mktime' name ='entry_mktime[<?= $i ?>]' value='' >
                         </td>
                         <td>
-                           <select <?= ($weekend)? 'readonly' : ''?>  name ='defined_comment[<?= $i ?>]'>
+                           <select <?= (!$is_editable)? 'readonly' : ''?>  name ='defined_comment[<?= $i ?>]'>
                                 <option selected value=""> -- </option>
                                 <?php foreach ($plugin->getCommentOptions() as $entry_value): ?>
                                     <option value="<?=$entry_value?>"><?= $entry_value ?></option>
@@ -113,7 +116,7 @@ use Studip\Button, Studip\LinkButton;
                             </select>
                         </td>
                         <td>
-                           <input type='text' <?= ($weekend || $holiday)? 'readonly' : ''?> class ='comment' name ='comment[<?= $i ?>]' value ='' >
+                           <input type='text' <?= ($is_editable)? 'readonly' : ''?> class ='comment' name ='comment[<?= $i ?>]' value ='' >
                         </td>
                     </tr>
                 <?php endif ?>
@@ -206,8 +209,17 @@ use Studip\Button, Studip\LinkButton;
     }
     
     function set_mktime(row_index){
-        let today = new Date().toISOString().slice(0, 10);
+        var today = new Date().toISOString().slice(0, 10);
         document.getElementsByName('entry_mktime' + row_index)[0].value = today;
+    }
+    
+    function getDateofRow(row_index){
+        var month = <?= $timesheet->month ?>;
+        var year = <?= $timesheet->year ?>;
+        var day = row_index;
+        var row_date = new Date(year + '-' + month + '-' + day);
+        return row_date;
+        
     }
     
     

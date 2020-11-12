@@ -86,4 +86,10 @@ class StundenzettelRecord extends \SimpleORMap
     static function isDateHoliday($date){
         return array_key_exists(substr($date, 0, 6), self::$holidays_nds);
     }
+    
+    static function isEditable($date){
+        $date_time = new DateTime($date);
+        $today = new DateTime('now');
+        return (!self::isDateHoliday($date) && !self::isDateWeekend($date) && ($date_time <= $today));
+    }
 }
