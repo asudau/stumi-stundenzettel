@@ -39,7 +39,7 @@ class TimesheetController extends StudipController {
 //              ->setActive($action === 'index');
         
         $this->contract = StundenzettelStumiContract::find($contract_id);
-        $this->timesheets = StundenzettelTimesheet::findByContract_id($contract_id); 
+        $this->timesheets = StundenzettelTimesheet::findByContract_id($contract_id, 'ORDER by `year` ASC, `month` ASC'); 
         
         $this->inst_id = $inst_id;
         $this->stumi_id = $stumi_id;
@@ -55,10 +55,22 @@ class TimesheetController extends StudipController {
         Navigation::activateItem('tools/hilfskraft-stundenverwaltung/timesheets');
         $month = Request::get('month');
         $year = Request::get('year');
+        $contract = StundenzettelStumiContract::find($contract_id);
         $this->timesheet = StundenzettelTimesheet::findOneBySQL('`contract_id` LIKE ? AND `month` LIKE ? AND `year` LIKE ?', [$contract_id, $month, $year]);
         if (!$this->timesheet) {
-            PageLayout::postMessage(MessageBox::error(_("Für diesen Zeitraum exisitert noch kein Stundenzettel."))); 
-            $this->render_action('timesheet');
+            if ( (intval($contract->contract_begin) < strtotime($year . '-' . $month . '-28')) && (strtotime($year . '-' . $month . '-01') < intval($contract->contract_end)) ) {
+                $timesheet = new StundenzettelTimesheet();
+                $timesheet->month = $month;
+                $timesheet->year = $year;
+                $timesheet->contract_id = $contract_id;
+                $timesheet->stumi_id = $contract->stumi_id;
+                $timesheet->inst_id = $contract->inst_id;
+                $timesheet->store();
+                $this->redirect('timesheet/timesheet/' . $timesheet->id);
+            } else {
+                PageLayout::postMessage(MessageBox::error(_("Dieser Monat liegt außerhalb des Vertragszeitraums."))); 
+                $this->render_action('timesheet');
+            }
         } else {
             $this->redirect('timesheet/timesheet/' . $this->timesheet->id);
         }
