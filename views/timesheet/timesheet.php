@@ -48,7 +48,7 @@ use Studip\Button, Studip\LinkButton;
                     <? $weekend = $records[$j]->isWeekend(); ?>
                     <? $date = $records[$j]->getDate(); ?>
                     <? $is_editable = StundenzettelRecord::isEditable($date); ?>
-                    <tr id ='entry[<?= $i ?>]' class='<?= ($weekend)? 'weekend' : ''?> <?= ($holiday)? 'holiday' : ''?>' >
+                    <tr id ='entry[<?= $i ?>]' class='<?= ($weekend)? 'weekend' : ''?> <?= ($holiday)? 'holiday' : ''?> <?= $records[$j]['defined_comment'] ?>' >
                         <input type='hidden' name ='record_id[<?= $i ?>]' value='<?= $records[$j]['id'] ?>' >
                         <td>
                            <?= $i ?>
@@ -104,7 +104,7 @@ use Studip\Button, Studip\LinkButton;
                             <input type='text' <?= (!$is_editable)? 'readonly' : ''?> class='end' name ='end[<?= $i ?>]' value='' placeholder="hh:mm" >
                         </td>
                         <td>
-                           <input type='text' readonly class ='sum' name ='sum[<?= $i ?>]' value ='' >
+                           <input type='text' readonly class ='sum' name ='sum[<?= $i ?>]' value ='<?= (!$weekend && $holiday) ? $timesheet->contract->default_workday_time : ''?>' >
                         </td>
                         <td>
                            <input type='date' <?= (!$is_editable)? 'readonly' : ''?> class ='entry_mktime' name ='entry_mktime[<?= $i ?>]' value='' >
@@ -166,7 +166,26 @@ use Studip\Button, Studip\LinkButton;
 
 <script>
     
-
+    $(function() {
+        inputs = document.getElementsByClassName('Krank');
+        for (index = 0; index < inputs.length; ++index) {
+            var name = inputs[index].getAttribute("id");
+            var rec_index = name.substring(5, 10);
+            disable_timetracking(rec_index);
+        }
+        inputs = document.getElementsByClassName('Urlaub');
+        for (index = 0; index < inputs.length; ++index) {
+            var name = inputs[index].getAttribute("id");
+            var rec_index = name.substring(5, 10);
+            disable_timetracking(rec_index);
+        }
+        inputs = document.getElementsByClassName('holiday');
+        for (index = 0; index < inputs.length; ++index) {
+            var name = inputs[index].getAttribute("id");
+            var rec_index = name.substring(5, 10);
+            disable_timetracking(rec_index);
+        }
+    });
     
     function calculate_sum(begin, end, brk){
         
@@ -242,6 +261,12 @@ use Studip\Button, Studip\LinkButton;
         document.getElementsByName('break' + row_index)[0].style.display = 'none';
     }
     
+    function enable_timetracking(row_index){
+        document.getElementsByName('begin' + row_index)[0].style.removeProperty("display");
+        document.getElementsByName('end' + row_index)[0].style.removeProperty("display");
+        document.getElementsByName('break' + row_index)[0].style.removeProperty("display");
+    }
+    
     function autocalc_sum(row_index){
         var default_workday_time = '<?= $timesheet->contract->default_workday_time ?>';
         document.getElementsByName('sum' + row_index)[0].value = default_workday_time;
@@ -279,14 +304,21 @@ use Studip\Button, Studip\LinkButton;
             set_mktime(rec_index);
         };
     }
-    
+     
+    //handling of Urlaub and Krank
     inputs = document.getElementsByClassName('defined_comment');
     for (index = 0; index < inputs.length; ++index) {
         inputs[index].onchange = function () {
             var name = this.getAttribute("name");
             var rec_index = name.substring(15, 19);
-            disable_timetracking(rec_index);
-            autocalc_sum(rec_index);
+            if(this.value == '')  {
+                enable_timetracking(rec_index);
+                document.getElementsByName('sum' + rec_index)[0].value = '';
+                document.getElementsByName('entry_mktime' + rec_index)[0].value = '';
+            } else {
+                disable_timetracking(rec_index);
+                autocalc_sum(rec_index);
+            }
             document.getElementById('entry' + rec_index).removeAttribute("class");
             document.getElementById('entry' + rec_index).classList.add(this.value);
             set_mktime(rec_index);
@@ -305,18 +337,6 @@ use Studip\Button, Studip\LinkButton;
         return false;
     }
 }
-
-    
-
-//    inputs = document.getElementsByTagName('select');
-//    for (index = 0; index < inputs.length; ++index) {
-//        // deal with inputs[index] element.
-//        inputs[index].onchange = function () {
-//            if (this.value != ''){
-//                document.getElementsByName(this.getAttribute("name"))[0].classList.remove("needs_fill");
-//            }
-//        };
-//    }
 
     inputs = document.getElementsByTagName('begin');
     for (index = 0; index < inputs.length; ++index) {
@@ -372,42 +392,5 @@ use Studip\Button, Studip\LinkButton;
             document.getElementsByName(this.getAttribute("name"))[0].classList.remove("needs_fill");
         }
     };
-
-    //Abschluss(HZB) im Ausland: Staat Pflichtfeld
-    //Abschluss(HZB) im Inland: Staat ausgegraut, Bundesland und Kreis Pflichtfeld
-    //TODO, astatwerte aus tabelle kramen
-    var hzb_art_ids = new Array("41", "52", "15", "56", "25", "58");
-    document.getElementsByName("hzb_art")[1].onchange = function () {
-        if (hzb_art_ids.indexOf(this.value) != -1) {
-            document.getElementsByName("hzb_staat")[1].removeAttribute("disabled");
-            document.getElementsByName("hzb_staat")[0].classList.add("needs_fill");
-            document.getElementsByName("hzb_kreis")[1].setAttribute("disabled", true);
-            document.getElementsByName("hzb_kreis")[0].classList.remove("needs_fill");
-        } else {
-            document.getElementsByName("hzb_staat")[1].setAttribute("disabled", true);
-            document.getElementsByName("hzb_staat")[0].classList.remove("needs_fill");
-            document.getElementsByName("hzb_kreis")[1].removeAttribute("disabled");
-            document.getElementsByName("hzb_kreis")[0].classList.add("needs_fill");
-        }
-        if (this.value != ''){
-            document.getElementsByName(this.getAttribute("name"))[0].classList.remove("needs_fill");
-        }
-    };
-
-    //Abschlusshochschule Auslandshochschulen, dann Staat Pflichtfeld
-    document.getElementsByName("hochschule_abschlusspruefung")[1].onchange = function () {
-        if (this.value == '2'){
-            document.getElementsByName("staat_abschlusspruefung")[1].removeAttribute("disabled");
-        } else {
-            document.getElementsByName("staat_abschlusspruefung")[1].setAttribute("disabled", true);
-            document.getElementsByName("hzb_staat")[0].classList.remove("needs_fill");
-        }
-        if (this.value != ''){
-            document.getElementsByName(this.getAttribute("name"))[0].classList.remove("needs_fill");
-        }
-    };
-
-    
-
 
 </script>
