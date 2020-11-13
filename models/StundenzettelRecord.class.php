@@ -48,7 +48,7 @@ class StundenzettelRecord extends \SimpleORMap
         $begintime = strtotime($this->begin);
         $endtime = strtotime($this->end);
         $breaktime_pts = explode(':', $this->break);
-        if(in_array($this->defined_comment, ['Urlaub', 'Krank', 'Feiertag'] && !$this->isWeekend()) ) {
+        if(in_array($this->defined_comment, ['Urlaub', 'Krank', 'Feiertag']) && !$this->isWeekend() ) {
             $this->sum = $this->timesheet->contract->default_workday_time;
         } else if( $begintime > 0 && $endtime > 0 ) {
             $sum = $endtime - $begintime - $breaktime_pts[0]*3600 - $breaktime_pts[1]*60;
