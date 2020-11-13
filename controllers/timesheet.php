@@ -127,10 +127,10 @@ class TimesheetController extends StudipController {
                 $record->begin = $begin_array[$i];
                 $record->end = $end_array[$i];
                 $record->break = $break_array[$i];
-                $record->sum = $record->calculate_sum();
                 $record->entry_mktime = $mktime_array[$i];
                 $record->defined_comment = ($record->isHoliday()) ? 'Feiertag' : $defined_comment_array[$i];
                 $record->comment = $comment_array[$i];
+                $record->calculate_sum();
                 $record->store();         
         }
         
