@@ -29,5 +29,16 @@ class StundenzettelStumiContract extends \SimpleORMap
         
         parent::configure($config);
     }
+    
+    static function getCurrentContract($user_id) {
+        $contracts = self::findByStumi_id($user_id);
+        $contract_id = '';
+        foreach ($contracts as $contract) {
+            if (intval($contract->contract_begin) < time() && intval($contract->contract_end) > time()) {
+                $contract_id = $contract->id;
+            }
+        }
+        return $contract_id;
+    }
  
 }

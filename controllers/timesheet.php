@@ -34,6 +34,9 @@ class TimesheetController extends StudipController {
     {
         Navigation::activateItem('tools/hilfskraft-stundenverwaltung/timesheets');
         
+        if (!$contract_id && $this->stumirole) {
+            $contract_id = StundenzettelStumiContract::getCurrentContract($GLOBALS['user']->user_id);
+        }
         $this->contract = StundenzettelStumiContract::find($contract_id);
         $this->timesheets = StundenzettelTimesheet::findByContract_id($contract_id, 'ORDER by `year` ASC, `month` ASC'); 
         
