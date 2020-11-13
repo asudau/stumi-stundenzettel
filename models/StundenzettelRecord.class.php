@@ -36,7 +36,11 @@ class StundenzettelRecord extends \SimpleORMap
     protected static function configure($config = array())
     {
         $config['db_table'] = 'stundenzettel_records';
-
+        
+        $config['belongs_to']['timesheet'] = [
+            'class_name'  => 'StundenzettelTimesheet',
+            'foreign_key' => 'timesheet_id',];
+        
         parent::configure($config);
     }
     
