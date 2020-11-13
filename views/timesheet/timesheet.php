@@ -39,8 +39,7 @@ use Studip\Button, Studip\LinkButton;
                 <th style='width:200px'>sonstige Bemerkung</th>
                 
             </tr>
-            <!-- //TODO -->
-            <?php $days_per_month = 31; ?>
+
             <?php $j = 0; ?>
          
             <?php for ($i = 1; $i <= $days_per_month; $i++) : ?>

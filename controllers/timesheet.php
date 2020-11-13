@@ -92,6 +92,7 @@ class TimesheetController extends StudipController {
         $sidebar->addWidget($actions);
 
         $this->timesheet = StundenzettelTimesheet::find($timesheet_id);
+        $this->days_per_month = cal_days_in_month(CAL_GREGORIAN, $this->timesheet->month, $this->timesheet->year);
         
         $this->inst_id = $this->timesheet->inst_id;
         $this->stumi_id = $this->timesheet->stumi_id;
