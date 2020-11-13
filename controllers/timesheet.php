@@ -33,10 +33,6 @@ class TimesheetController extends StudipController {
     public function index_action($contract_id)
     {
         Navigation::activateItem('tools/hilfskraft-stundenverwaltung/timesheets');
-//        $views = new ViewsWidget();
-//        $views->addLink(_('Stundenzettel verwalten'),
-//                        $this->url_for('index'))
-//              ->setActive($action === 'index');
         
         $this->contract = StundenzettelStumiContract::find($contract_id);
         $this->timesheets = StundenzettelTimesheet::findByContract_id($contract_id, 'ORDER by `year` ASC, `month` ASC'); 
@@ -45,8 +41,6 @@ class TimesheetController extends StudipController {
         $this->stumi_id = $stumi_id;
         
         $this->records = StundenzettelRecord::findByTimesheet_Id($timesheet_id, 'ORDER BY day ASC');
-
-        //Sidebar::get()->addWidget($views);
 
     }
     
@@ -111,8 +105,6 @@ class TimesheetController extends StudipController {
 
         $this->records = StundenzettelRecord::findByTimesheet_Id($timesheet_id, 'ORDER BY day ASC');
 
-        //Sidebar::get()->addWidget($views);
-
     }
     
     
@@ -122,7 +114,6 @@ class TimesheetController extends StudipController {
         $begin_array = Request::getArray('begin');
         $end_array = Request::getArray('end');
         $break_array = Request::getArray('break');
-        //$sum_array = Request::getArray('sum');
         $mktime_array = Request::getArray('entry_mktime');
         $defined_comment_array = Request::getArray('defined_comment');
         $comment_array = Request::getArray('comment');
