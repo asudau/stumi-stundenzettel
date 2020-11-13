@@ -23,6 +23,10 @@ class StundenzettelTimesheet extends \SimpleORMap
     protected static function configure($config = array())
     {
         $config['db_table'] = 'stundenzettel_timesheets';
+        
+        $config['belongs_to']['contract'] = [
+            'class_name'  => 'StundenzettelStumiContract',
+            'foreign_key' => 'contract_id',];
 
         parent::configure($config);
     }
@@ -86,6 +90,9 @@ class StundenzettelTimesheet extends \SimpleORMap
             $pdf->Ln();
             
         }
+        
+        $pdf->SetX(94);
+        $pdf->Write($line_height, $record->timesheet->sum);
   
         $fileid = time();   
         $pdf->Output( 'Stundenzettel' . $fileid, 'D');
