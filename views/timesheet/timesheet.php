@@ -70,10 +70,13 @@ use Studip\Button, Studip\LinkButton;
                            <input type='date' <?= (!$is_editable)? 'readonly' : ''?> class='entry_mktime' name ='entry_mktime[<?= $i ?>]' value='<?= $records[$j]['entry_mktime'] ?>' >
                         </td>
                         <td>
-                           <select <?= (!$is_editable)? 'readonly' : ''?> name ='defined_comment[<?= $i ?>]'>
+                           <select <?= (!$is_editable)? 'disabled' : ''?> class='defined_comment' name ='defined_comment[<?= $i ?>]'>
                                 <option value=""> -- </option>
                                 <?php foreach ($plugin->getCommentOptions() as $entry_value): ?>
-                                    <option <?= ($records[$j]['defined_comment'] == $entry_value) ? 'selected' : ''?> value="<?=$entry_value?>"><?= $entry_value ?></option>
+                                    <option 
+                                    <?= ($records[$j]['defined_comment'] == $entry_value) ? 'selected' : ''?> 
+                                    <?= ($entry_value == 'Feiertag') ? 'disabled' : '' ?> 
+                                        value="<?=$entry_value?>"><?= $entry_value ?></option>
                                 <?php endforeach ?>
                             </select>
                         </td>
@@ -108,15 +111,17 @@ use Studip\Button, Studip\LinkButton;
                            <input type='date' <?= (!$is_editable)? 'readonly' : ''?> class ='entry_mktime' name ='entry_mktime[<?= $i ?>]' value='' >
                         </td>
                         <td>
-                           <select <?= (!$is_editable)? 'readonly' : ''?>  name ='defined_comment[<?= $i ?>]'>
-                                <option selected value=""> -- </option>
+                           <select <?= (!$is_editable)? 'disabled' : ''?> class='defined_comment' name ='defined_comment[<?= $i ?>]'>
+                                <option <?= ($holiday) ? '' : 'selected' ?> value=""> -- </option>
                                 <?php foreach ($plugin->getCommentOptions() as $entry_value): ?>
-                                    <option value="<?=$entry_value?>"><?= $entry_value ?></option>
+                                    <option 
+                                        <?= ($holiday && ($entry_value == 'Feiertag')) ? 'selected' : ''?> 
+                                        <?= ($entry_value == 'Feiertag') ? 'disabled' : '' ?> value="<?=$entry_value?>"><?= $entry_value ?></option>
                                 <?php endforeach ?>
                             </select>
                         </td>
                         <td>
-                           <input type='text' <?= ($is_editable)? 'readonly' : ''?> class ='comment' name ='comment[<?= $i ?>]' value ='' >
+                           <input type='text' <?= (!$is_editable)? 'readonly' : ''?> class ='comment' name ='comment[<?= $i ?>]' value ='' >
                         </td>
                     </tr>
                 <?php endif ?>
@@ -149,8 +154,15 @@ use Studip\Button, Studip\LinkButton;
         background-color: #ccc;
     }
     tr.holiday {
+        background-color: #6da6b3;
+    }
+    tr.Urlaub {
         background-color: #6db370;
     }
+    tr.Krank {
+        background-color: #f4d33a;
+    }  
+    
 </style>
 
 <script>
@@ -222,6 +234,20 @@ use Studip\Button, Studip\LinkButton;
         
     }
     
+    function disable_timetracking(row_index){
+        document.getElementsByName('begin' + row_index)[0].value = '';
+        document.getElementsByName('begin' + row_index)[0].style.display = 'none';
+        document.getElementsByName('end' + row_index)[0].value = '';
+        document.getElementsByName('end' + row_index)[0].style.display = 'none';
+        document.getElementsByName('break' + row_index)[0].value = '';
+        document.getElementsByName('break' + row_index)[0].style.display = 'none';
+    }
+    
+    function autocalc_sum(row_index){
+        var default_workday_time = '<?= $timesheet->contract->default_workday_time ?>';
+        document.getElementsByName('sum' + row_index)[0].value = default_workday_time;
+    }
+    
     
     var inputs, index;
    
@@ -254,6 +280,19 @@ use Studip\Button, Studip\LinkButton;
             set_mktime(rec_index);
         };
     }
+    
+    inputs = document.getElementsByClassName('defined_comment');
+    for (index = 0; index < inputs.length; ++index) {
+        inputs[index].onchange = function () {
+            var name = this.getAttribute("name");
+            var rec_index = name.substring(15, 19);
+            disable_timetracking(rec_index);
+            autocalc_sum(rec_index);
+            document.getElementById('entry' + rec_index).removeAttribute("class");
+            document.getElementById('entry' + rec_index).classList.add(this.value);
+            set_mktime(rec_index);
+        };
+    }
 
 </script>
         
@@ -270,15 +309,15 @@ use Studip\Button, Studip\LinkButton;
 
     
 
-    inputs = document.getElementsByTagName('select');
-    for (index = 0; index < inputs.length; ++index) {
-        // deal with inputs[index] element.
-        inputs[index].onchange = function () {
-            if (this.value != ''){
-                document.getElementsByName(this.getAttribute("name"))[0].classList.remove("needs_fill");
-            }
-        };
-    }
+//    inputs = document.getElementsByTagName('select');
+//    for (index = 0; index < inputs.length; ++index) {
+//        // deal with inputs[index] element.
+//        inputs[index].onchange = function () {
+//            if (this.value != ''){
+//                document.getElementsByName(this.getAttribute("name"))[0].classList.remove("needs_fill");
+//            }
+//        };
+//    }
 
     inputs = document.getElementsByTagName('begin');
     for (index = 0; index < inputs.length; ++index) {

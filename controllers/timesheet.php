@@ -128,12 +128,12 @@ class TimesheetController extends StudipController {
                 $record->break = $break_array[$i];
                 $record->sum = $record->calculate_sum();
                 $record->entry_mktime = $mktime_array[$i];
-                $record->defined_comment = $defined_comment_array[$i];
+                $record->defined_comment = ($record->isHoliday()) ? 'Feiertag' : $defined_comment_array[$i];
                 $record->comment = $comment_array[$i];
                 $record->store();         
         }
         
-        $timesheet = StundenzettelTimesheet::find($timesheet_id);
+        $timesheet = $record->timesheet;
         $timesheet->calculate_sum();
         
         PageLayout::postMessage(MessageBox::success(_("Änderungen gespeichert."))); 

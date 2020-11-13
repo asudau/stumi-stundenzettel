@@ -19,6 +19,14 @@ class StundenzettelStumiContract extends \SimpleORMap
     {
         $config['db_table'] = 'stundenzettel_stumi_contracts';
         
+        $config['additional_fields']['default_workday_time']['get'] = function ($item) {
+            $workday_minutes_total = $item->contract_hours * 2.75;
+            $workday_hours = floor($workday_minutes_total / 60);
+            $workday_minutes = $workday_minutes_total % 60;
+            return sprintf("%02s", $workday_hours) . ':' . sprintf("%02s", $workday_minutes);
+            
+        };
+        
         parent::configure($config);
     }
  

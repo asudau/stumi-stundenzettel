@@ -29,7 +29,7 @@
                     <td><?= date('d.m.Y', $contract->contract_begin) ?></td>
                     <td><?= date('d.m.Y', $contract->contract_end) ?></td>
                     <td><?= $contract->contract_hours ?></td>
-                    <td></td>
+                    <td><?= $contract->default_workday_time ?></td>
                     <td></td>
                     <td><?= User::findOneByUser_Id($contract->supervisor)->username ?></td>
                     <td>
