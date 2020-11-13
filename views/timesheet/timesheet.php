@@ -66,7 +66,7 @@ use Studip\Button, Studip\LinkButton;
                            <input type='text' readonly class='sum' name ='sum[<?= $i ?>]' value ='<?= $records[$j]['sum'] ?>' >
                         </td>
                         <td>
-                           <input type='date' <?= (!$is_editable)? 'readonly' : ''?> class='entry_mktime' name ='entry_mktime[<?= $i ?>]' value='<?= $records[$j]['entry_mktime'] ?>' >
+                           <input type='date' min="<?= date('Y-m-d', strtotime($date)) ?>" max="<?= date('Y-m-d', strtotime('+1 week', strtotime($date))) ?>" <?= (!$is_editable)? 'readonly' : ''?> class='entry_mktime' name ='entry_mktime[<?= $i ?>]' value='<?= $records[$j]['entry_mktime'] ?>' >
                         </td>
                         <td>
                            <select <?= (!$is_editable)? 'disabled' : ''?> class='defined_comment' name ='defined_comment[<?= $i ?>]'>
@@ -107,7 +107,8 @@ use Studip\Button, Studip\LinkButton;
                            <input type='text' readonly class ='sum' name ='sum[<?= $i ?>]' value ='<?= (!$weekend && $holiday) ? $timesheet->contract->default_workday_time : ''?>' >
                         </td>
                         <td>
-                           <input type='date' <?= (!$is_editable)? 'readonly' : ''?> class ='entry_mktime' name ='entry_mktime[<?= $i ?>]' value='' >
+                            <!-- data-datepicker='{">":<?= $date ?>}' -->
+                           <input type='date' min="<?= date('Y-m-d', strtotime($date)) ?>" max="<?= date('Y-m-d', strtotime('+1 week', strtotime($date))) ?>" <?= (!$is_editable)? 'readonly' : ''?> class ='entry_mktime' name ='entry_mktime[<?= $i ?>]' value='' >
                         </td>
                         <td>
                            <select <?= (!$is_editable)? 'disabled' : ''?> class='defined_comment' name ='defined_comment[<?= $i ?>]'>
