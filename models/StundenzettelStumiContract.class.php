@@ -30,7 +30,7 @@ class StundenzettelStumiContract extends \SimpleORMap
         parent::configure($config);
     }
     
-    static function getCurrentContract($user_id) {
+    static function getCurrentContractId($user_id) {
         $contracts = self::findByStumi_id($user_id);
         $contract_id = '';
         foreach ($contracts as $contract) {
@@ -40,5 +40,28 @@ class StundenzettelStumiContract extends \SimpleORMap
         }
         return $contract_id;
     }
+    
+    function getContractDuration(){
+        
+        $begin_date = new \DateTime();
+        $begin_date->setTimestamp($this->contract_begin);
+        $end_date = new \DateTime();
+        $end_date->setTimestamp($this->contract_end);
+        
+        $interval = date_diff($begin_date, $end_date);
+        $month = $interval->y * 12 + $interval->m;
+        if ($interval->d >15){
+            $month++;   //php date_diff tut sich hier leider schwer 
+                        //1.10.2020 bis 31.10.2020 ist ein monate 
+                        //aber 1.11.2020-30.11.2020 is 0 monate und 29 tage
+        }
+        return $month;
+    }
+    
+    function getVacationEntitlement(){
+        $entitlement = $this->contract_hours * $this->getContractDuration() * 0.077;
+        return $entitlement;
+    }
+    
  
 }
