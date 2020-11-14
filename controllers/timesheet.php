@@ -34,14 +34,12 @@ class TimesheetController extends StudipController {
     {
         Navigation::activateItem('tools/hilfskraft-stundenverwaltung/timesheets');
         
+        //allgemeine Stundenzettel-Übersichtsseite für Stumis verwendet automatisch den aktuell laufenden Vertrag
         if (!$contract_id && $this->stumirole) {
-            $contract_id = StundenzettelStumiContract::getCurrentContract($GLOBALS['user']->user_id);
+            $contract_id = StundenzettelStumiContract::getCurrentContractId($GLOBALS['user']->user_id);
         }
         $this->contract = StundenzettelStumiContract::find($contract_id);
         $this->timesheets = StundenzettelTimesheet::findByContract_id($contract_id, 'ORDER by `year` ASC, `month` ASC'); 
-        
-        $this->inst_id = $inst_id;
-        $this->stumi_id = $stumi_id;
         
         $this->records = StundenzettelRecord::findByTimesheet_Id($timesheet_id, 'ORDER BY day ASC');
 
@@ -53,7 +51,7 @@ class TimesheetController extends StudipController {
         $month = Request::get('month');
         $year = Request::get('year');
         $contract = StundenzettelStumiContract::find($contract_id);
-        $this->timesheet = StundenzettelTimesheet::findOneBySQL('`contract_id` LIKE ? AND `month` LIKE ? AND `year` LIKE ?', [$contract_id, $month, $year]);
+        $this->timesheet = StundenzettelTimesheet::getContractTimesheet($contract_id, $month, $year);
         if (!$this->timesheet) {
             if ( (intval($contract->contract_begin) < strtotime($year . '-' . $month . '-28')) && (strtotime($year . '-' . $month . '-01') < intval($contract->contract_end)) ) {
                 $timesheet = new StundenzettelTimesheet();
@@ -77,10 +75,16 @@ class TimesheetController extends StudipController {
     
     public function timesheet_action($timesheet_id)
     {
-        Navigation::activateItem('tools/hilfskraft-stundenverwaltung/timesheets');
+        Navigation::activateItem('tools/hilfskraft-stundenverwaltung/timetracking');
         
         $sidebar = Sidebar::Get();
         //Sidebar::Get()->setTitle('Stundenzettel von ' . $GLOBALS['user']->username);
+        
+        if(!$timesheet_id && $this->stumirole){
+            $contract_id = StundenzettelStumiContract::getCurrentContractId($GLOBALS['user']->user_id);
+            $timesheet = StundenzettelTimesheet::getContractTimesheet($contract_id, date('m', time()), date('Y', time()));
+            $timesheet_id = $timesheet->id;
+        }
         
         $actions = new ActionsWidget();
         $actions->setTitle('Aktionen');

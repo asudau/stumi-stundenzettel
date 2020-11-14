@@ -31,6 +31,11 @@ class StundenzettelTimesheet extends \SimpleORMap
         parent::configure($config);
     }
     
+    static function getContractTimesheet($contract_id, $month, $year){
+        $timesheet = StundenzettelTimesheet::findOneBySQL('`contract_id` LIKE ? AND `month` LIKE ? AND `year` LIKE ?', [$contract_id, $month, $year]);
+        return $timesheet;
+    }
+    
     function build_pdf()
     {
         global $STUDIP_BASE_PATH, $TMP_PATH;

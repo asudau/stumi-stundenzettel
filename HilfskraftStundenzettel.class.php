@@ -21,24 +21,47 @@ class HilfskraftStundenzettel extends StudipPlugin implements SystemPlugin
         global $perm;
 
         //Personen mit Verwaltungsrolle für Stumis oder Stumis mit in StudIP hinterlegtem Arbeitsvertrag
-        if( $this->hasStumiAdminrole() || $this->hasStumiContract () ){
-            $navigation = new Navigation('Hilfskraft-Stundenzettelverwaltung');
-            $navigation->setImage(Icon::create('edit', 'navigation'));
-            $navigation->setURL(PluginEngine::getURL($this, array(), 'index'));
-            
-            $item = new Navigation(_('Übersicht'), PluginEngine::getURL($this, array(), 'index'));
-            $navigation->addSubNavigation('index', $item);
-            
-            $item = new Navigation(_('Stundenzettel verwalten'), PluginEngine::getURL($this, array(), 'timesheet'));
-            $navigation->addSubNavigation('timesheets', $item);
-            
-            Navigation::addItem('tools/hilfskraft-stundenverwaltung', $navigation);  
-        }         
+        if( $this->hasStumiContract () ){
+            $this->setupHilfskraftNavigation();
+        } else if( $this->hasStumiAdminrole() ) {
+            $this->setupAdminNavigation();
+        }
     }
 
     public function initialize ()
     {
         
+    }
+    
+    private function setupAdminNavigation()
+    {
+        $navigation = new Navigation('Hilfskraft-Stundenzettelverwaltung');
+        $navigation->setURL(PluginEngine::getURL($this, array(), 'index'));
+
+        $item = new Navigation(_('Übersicht'), PluginEngine::getURL($this, array(), 'index'));
+        $navigation->addSubNavigation('index', $item);
+
+        $item = new Navigation(_('Stundenzettel verwalten'), PluginEngine::getURL($this, array(), 'timesheet'));
+        $navigation->addSubNavigation('timesheets', $item);
+
+        Navigation::addItem('tools/hilfskraft-stundenverwaltung', $navigation);  
+    }
+    
+    private function setupHilfskraftNavigation()
+    {
+        $navigation = new Navigation('Stundenzettelverwaltung');
+        $navigation->setURL(PluginEngine::getURL($this, array(), 'index'));
+        
+        $item = new Navigation(_('Stundenerfassung'), PluginEngine::getURL($this, array(), 'timesheet/timesheet'));
+        $navigation->addSubNavigation('timetracking', $item);
+        
+        $item = new Navigation(_('Vertragsübersicht'), PluginEngine::getURL($this, array(), 'index'));
+        $navigation->addSubNavigation('index', $item);
+        
+        $item = new Navigation(_('Alle Stundenzettel verwalten'), PluginEngine::getURL($this, array(), 'timesheet'));
+        $navigation->addSubNavigation('timesheets', $item);
+
+        Navigation::addItem('tools/hilfskraft-stundenverwaltung', $navigation);  
     }
     
     public function getCommentOptions ()
