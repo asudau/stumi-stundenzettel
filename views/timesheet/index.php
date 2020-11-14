@@ -16,12 +16,6 @@
             </tr>
         </thead>
         <tbody>
-            <tr>  
-                <td><a href='<?=$this->controller->url_for('timesheet/timesheet/' . $contract->id) ?>' title='Stundenzettel anlegen'>Stundenzettel anlegen</a>
-                </td>
-                <td></td>
-                <td></td>
-            </tr>
             <?php if ($timesheets) : ?>
                 <?php foreach ($timesheets as $timesheet): ?>
                 <tr>  
@@ -47,12 +41,6 @@
             </tr>
         </thead>
         <tbody>
-            <tr>  
-                <td><a href='<?=$this->controller->url_for('timesheet/timesheet/' . $contract->id) ?>' title='Stundenzettel anlegen'>Stundenzettel anlegen</a>
-                </td>
-                <td></td>
-                <td></td>
-            </tr>
             <?php if ($timesheets) : ?>
                 <?php foreach ($timesheets as $timesheet): ?>
                 <tr>  

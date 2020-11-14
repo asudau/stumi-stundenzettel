@@ -45,11 +45,13 @@ class TimesheetController extends StudipController {
 
     }
     
-    public function select_action($contract_id)
+    public function select_action($contract_id, $month = '', $year = '')
     {
         Navigation::activateItem('tools/hilfskraft-stundenverwaltung/timesheets');
-        $month = Request::get('month');
-        $year = Request::get('year');
+        if (Request::get('month')) {
+            $month = Request::get('month');
+            $year = Request::get('year');
+        }
         $contract = StundenzettelStumiContract::find($contract_id);
         $this->timesheet = StundenzettelTimesheet::getContractTimesheet($contract_id, $month, $year);
         if (!$this->timesheet) {
@@ -75,15 +77,20 @@ class TimesheetController extends StudipController {
     
     public function timesheet_action($timesheet_id)
     {
-        Navigation::activateItem('tools/hilfskraft-stundenverwaltung/timetracking');
+        if ($this->stumirole){
+            Navigation::activateItem('tools/hilfskraft-stundenverwaltung/timetracking');
+        } else {
+            Navigation::activateItem('tools/hilfskraft-stundenverwaltung/timesheets');
+        }
         
         $sidebar = Sidebar::Get();
         //Sidebar::Get()->setTitle('Stundenzettel von ' . $GLOBALS['user']->username);
         
         if(!$timesheet_id && $this->stumirole){
             $contract_id = StundenzettelStumiContract::getCurrentContractId($GLOBALS['user']->user_id);
-            $timesheet = StundenzettelTimesheet::getContractTimesheet($contract_id, date('m', time()), date('Y', time()));
-            $timesheet_id = $timesheet->id;
+            //$timesheet = StundenzettelTimesheet::getContractTimesheet($contract_id, date('m', time()), date('Y', time()));
+            //$timesheet_id = $timesheet->id;
+            $this->redirect('timesheet/select/' . $contract_id . '/' . date('m', time()) . '/' . date('Y', time()));
         }
         
         $actions = new ActionsWidget();

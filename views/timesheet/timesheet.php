@@ -136,7 +136,7 @@ use Studip\Button, Studip\LinkButton;
             <?php endfor ?>
                 <tr>
                     <td></td>
-                    <td></td>
+                    <td>Summme:</td>
                     <td></td>
                     <td></td>
                     <td>

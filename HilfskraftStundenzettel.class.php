@@ -49,17 +49,17 @@ class HilfskraftStundenzettel extends StudipPlugin implements SystemPlugin
     
     private function setupHilfskraftNavigation()
     {
-        $navigation = new Navigation('Stundenzettelverwaltung');
-        $navigation->setURL(PluginEngine::getURL($this, array(), 'index'));
+        $navigation = new Navigation('Stundenzettel');
+        $navigation->setURL(PluginEngine::getURL($this, array(), 'timesheet/timesheet'));
         
         $item = new Navigation(_('Stundenerfassung'), PluginEngine::getURL($this, array(), 'timesheet/timesheet'));
         $navigation->addSubNavigation('timetracking', $item);
         
-        $item = new Navigation(_('Vertragsübersicht'), PluginEngine::getURL($this, array(), 'index'));
-        $navigation->addSubNavigation('index', $item);
-        
         $item = new Navigation(_('Alle Stundenzettel verwalten'), PluginEngine::getURL($this, array(), 'timesheet'));
         $navigation->addSubNavigation('timesheets', $item);
+        
+        $item = new Navigation(_('Vertragsübersicht'), PluginEngine::getURL($this, array(), 'index'));
+        $navigation->addSubNavigation('index', $item);
 
         Navigation::addItem('tools/hilfskraft-stundenverwaltung', $navigation);  
     }
