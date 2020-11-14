@@ -14,7 +14,7 @@
                 <th data-sort="false" style='width:10%'>Vertragsende</th>
                 <th data-sort="false" style='width:10%'>Stunden lt. Vertrag</th>
                 <th data-sort="false" style='width:10%'>Stundenkonto</th>
-                <th data-sort="false" style='width:10%'>Resturlaub</th>
+                <th data-sort="false" style='width:10%'>Resturlaub/Urlaubsanspruch</th>
                 <th data-sort="false" style='width:10%'>Verantwortlicher/r MA</th>
                 <th>Aktionen</th>
             </tr>
@@ -28,9 +28,9 @@
                     </td>
                     <td><?= date('d.m.Y', $contract->contract_begin) ?></td>
                     <td><?= date('d.m.Y', $contract->contract_end) ?></td>
-                    <td><?= $contract->contract_hours ?></td>
+                    <td><?= $contract->contract_hours ?> for <?= $contract->getContractDuration() ?></td>
                     <td><?= $contract->default_workday_time ?></td>
-                    <td></td>
+                    <td><?= $contract->getVacationEntitlement()?></td>
                     <td><?= User::findOneByUser_Id($contract->supervisor)->username ?></td>
                     <td>
                        <a onclick="return confirm('Eintrag löschen?')" href='<?=$this->controller->url_for('index/delete/' . $contract->id) ?>' title='Eintrag löschen' ><?=Icon::create('trash')?></a>
