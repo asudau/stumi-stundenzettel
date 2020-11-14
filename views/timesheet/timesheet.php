@@ -66,7 +66,11 @@ use Studip\Button, Studip\LinkButton;
                            <input type='text' readonly class='sum' name ='sum[<?= $i ?>]' value ='<?= $records[$j]['sum'] ?>' >
                         </td>
                         <td>
-                           <input type='date' min="<?= date('Y-m-d', strtotime($date)) ?>" max="<?= date('Y-m-d', strtotime('+1 week', strtotime($date))) ?>" <?= (!$is_editable)? 'readonly' : ''?> class='entry_mktime' name ='entry_mktime[<?= $i ?>]' value='<?= $records[$j]['entry_mktime'] ?>' >
+                           <input type='date'
+                                  min="<?= date('Y-m-d', strtotime($date)) ?>" max="<?= date('Y-m-d', strtotime('+1 week', strtotime($date))) ?>" 
+                                  <?= (!$is_editable)? 'readonly' : ''?> 
+                                  class='entry_mktime <?= ($records[$j]['entry_mktime'] == '00-00-000') ? 'empty_date' :'' ?>' 
+                                  name ='entry_mktime[<?= $i ?>]' value='<?= $records[$j]['entry_mktime'] ?>' >
                         </td>
                         <td>
                            <select <?= (!$is_editable)? 'disabled' : ''?> class='defined_comment' name ='defined_comment[<?= $i ?>]'>
@@ -108,7 +112,11 @@ use Studip\Button, Studip\LinkButton;
                         </td>
                         <td>
                             <!-- data-datepicker='{">":<?= $date ?>}' -->
-                           <input type='date' min="<?= date('Y-m-d', strtotime($date)) ?>" max="<?= date('Y-m-d', strtotime('+1 week', strtotime($date))) ?>" <?= (!$is_editable)? 'readonly' : ''?> class ='entry_mktime' name ='entry_mktime[<?= $i ?>]' value='' >
+                           <input type='date'
+                                  min="<?= date('Y-m-d', strtotime($date)) ?>" max="<?= date('Y-m-d', strtotime('+1 week', strtotime($date))) ?>" 
+                                  <?= (!$is_editable)? 'readonly' : ''?> 
+                                  class ='entry_mktime empty_date' 
+                                  name ='entry_mktime[<?= $i ?>]' value='' >
                         </td>
                         <td>
                            <select <?= (!$is_editable)? 'disabled' : ''?> class='defined_comment' name ='defined_comment[<?= $i ?>]'>
@@ -161,7 +169,10 @@ use Studip\Button, Studip\LinkButton;
     }
     tr.Krank {
         background-color: #f4d33a;
-    }  
+    }
+    input[class*="empty_date"]::-webkit-datetime-edit {
+        color: transparent; 
+    }
     
 </style>
 
