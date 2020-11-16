@@ -23,12 +23,16 @@ class IndexController extends StudipController {
 
     }
 
-    public function index_action($inst_id = '477d184367f48cc210f74bb4f779c7b7')
+    public function index_action()
     {
         Navigation::activateItem('tools/hilfskraft-stundenverwaltung/index');
-        
-        $this->inst_id = $inst_id;
-        
+        $user = User::findCurrent();
+
+        $this->inst_id = $user->institute_memberships->pluck('institut_id')[0];
+        if (!$this->inst_id) { //local testing
+            $this->inst_id = '477d184367f48cc210f74bb4f779c7b7';
+        }
+
         if ($this->plugin->hasStumiAdminrole ()) {
             
             $this->adminrole = true;
@@ -42,11 +46,11 @@ class IndexController extends StudipController {
             Sidebar::get()->addWidget($views);
             
             //get all stumis an contracts
-            $groups = Statusgruppen::findBySQL('`name` LIKE ? AND `range_id` LIKE ?', ['%Studentische%', $inst_id]);
+            $groups = Statusgruppen::findBySQL('`name` LIKE ? AND `range_id` LIKE ?', ['%Studentische%', $this->inst_id]);
             foreach ($groups as $group) {
                 foreach ($group->members as $member) {
                     $this->stumis[] = User::find($member->user_id);
-                    $this->stumi_contracts[$member->user_id] = StundenzettelStumiContract::findBySQL('`stumi_id` LIKE ? AND `inst_id` LIKE ?', [$member->user_id, $inst_id]);
+                    $this->stumi_contracts[$member->user_id] = StundenzettelStumiContract::findBySQL('`stumi_id` LIKE ? AND `inst_id` LIKE ?', [$member->user_id, $this->inst_id]);
                 }
             }
         }
@@ -55,7 +59,7 @@ class IndexController extends StudipController {
         
             $this->stumirole = true;
             $this->stumi = User::find($GLOBALS['user']->user_id);
-            $this->stumi_contracts = StundenzettelStumiContract::findBySQL('`stumi_id` LIKE ? AND `inst_id` LIKE ?', [$this->stumi->user_id, $inst_id]);
+            $this->stumi_contracts = StundenzettelStumiContract::findBySQL('`stumi_id` LIKE ? AND `inst_id` LIKE ?', [$this->stumi->user_id, $this->inst_id]);
                 
         }
     }
