@@ -92,9 +92,11 @@ class IndexController extends StudipController {
             
             $this->adminrole = true;
             $contract = StundenzettelStumiContract::find($contract_id);
+            $message = _("Änderungen gespeichert.");
             
             if (!$contract){
                 $contract = new StundenzettelStumiContract();
+                $message = _("Vertrag angelegt.");
             }
             
             //get all stumis an contracts
@@ -105,7 +107,7 @@ class IndexController extends StudipController {
             $contract->contract_hours = Request::get('hours');
             $contract->supervisor = Request::get('user_id');            
             $contract->store();
-            PageLayout::postMessage(MessageBox::success(_("Vertrag angelegt."))); 
+            PageLayout::postMessage(MessageBox::success($message)); 
             
         } else {
             PageLayout::postMessage(MessageBox::error(_("Keine Berechtigung."))); 
