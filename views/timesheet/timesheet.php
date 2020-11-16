@@ -6,8 +6,9 @@ use Studip\Button, Studip\LinkButton;
 <? if (!$timesheet) : ?>
 <? else : ?>
 
-    <h2>Name, Vorname der Hilfskraft: <?= User::findOneByUser_Id($stumi_id)->username ?></h2>
+    <h2>Name, Vorname der Hilfskraft: <?= User::findOneByUser_Id($stumi_id)->nachname ?>, <?= User::findOneByUser_Id($stumi_id)->vorname ?></h2>
     <h2>Fachbereich/Organisationseinheit: <?= Institute::find($inst_id)->name ?></h2>
+    <h2>Monatsarbeitszeit laut Arbeitsvertrag: <?= $timesheet->contract->contract_hours ?> Stunden</h2>
     <h2>Monat/Jahr: 
         <form name="month_select" method="post"  action="<?= $controller->url_for('timesheet/select/' . $timesheet->contract_id) ?>">
             <select name ='month' onchange="this.form.submit()">
@@ -266,7 +267,7 @@ use Studip\Button, Studip\LinkButton;
     function set_time_inputs_in_row_required(row_index){
         document.getElementsByName('begin' + row_index)[0].setAttribute("required", "");
         document.getElementsByName('end' + row_index)[0].setAttribute("required", "");
-        document.getElementsByName('mktime' + row_index)[0].setAttribute("required", "");
+        document.getElementsByName('entry_mktime' + row_index)[0].setAttribute("required", "");
     }
     
     function disable_timetracking(row_index){
