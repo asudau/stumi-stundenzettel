@@ -261,7 +261,12 @@ use Studip\Button, Studip\LinkButton;
         var day = row_index;
         var row_date = new Date(year + '-' + month + '-' + day);
         return row_date;
-        
+    }
+    
+    function set_time_inputs_in_row_required(row_index){
+        document.getElementsByName('begin' + row_index)[0].setAttribute("required", "");
+        document.getElementsByName('end' + row_index)[0].setAttribute("required", "");
+        document.getElementsByName('mktime' + row_index)[0].setAttribute("required", "");
     }
     
     function disable_timetracking(row_index){
@@ -294,6 +299,7 @@ use Studip\Button, Studip\LinkButton;
             var rec_index = name.substring(5, 9);
             autofill_row(rec_index);
             set_mktime(rec_index);
+            set_time_inputs_in_row_required(rec_index);
         };
     }
     
@@ -304,6 +310,7 @@ use Studip\Button, Studip\LinkButton;
             var rec_index = name.substring(3, 7);
             autofill_row(rec_index);
             set_mktime(rec_index);
+            set_time_inputs_in_row_required(rec_index);
         };
     }
     
@@ -314,6 +321,7 @@ use Studip\Button, Studip\LinkButton;
             var rec_index = name.substring(5, 9);
             autofill_row(rec_index);
             set_mktime(rec_index);
+            set_time_inputs_in_row_required(rec_index);
         };
     }
      
