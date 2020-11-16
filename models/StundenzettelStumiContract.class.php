@@ -35,7 +35,8 @@ class StundenzettelStumiContract extends \SimpleORMap
         parent::configure($config);
     }
     
-    static function getCurrentContractId($user_id) {
+    static function getCurrentContractId($user_id)
+    {
         $contracts = self::findByStumi_id($user_id);
         $contract_id = '';
         foreach ($contracts as $contract) {
@@ -46,8 +47,8 @@ class StundenzettelStumiContract extends \SimpleORMap
         return $contract_id;
     }
     
-    function getContractDuration(){
-        
+    function getContractDuration()
+    {
         $begin_date = new \DateTime();
         $begin_date->setTimestamp($this->contract_begin);
         $end_date = new \DateTime();
@@ -63,14 +64,16 @@ class StundenzettelStumiContract extends \SimpleORMap
         return $month;
     }
     
-    function getVacationEntitlement($year){
+    function getVacationEntitlement($year)
+    {
         $dezimal_entitlement = $this->contract_hours * $this->getContractDuration() * 0.077;
         $entitlement_hours = floor($dezimal_entitlement);
         $entitlement_minutes = ($dezimal_entitlement - $entitlement_hours) * 60;
         return sprintf("%02s", $entitlement_hours) . ':' . sprintf("%02s", round($entitlement_minutes) ); //round($entitlement_minutes, 3)
     }
     
-    function getRemainingVacation($year){
+    function getRemainingVacation($year)
+    {
         $claimed_vacation = strtotime($this->getClaimedVacation($year));
         $vacation = strtotime($this->getVacationEntitlement($year));
         $remaining_vacation = $vacation - $claimed_vacation;
@@ -79,7 +82,8 @@ class StundenzettelStumiContract extends \SimpleORMap
         return sprintf("%02s", $hours) . ':' . sprintf("%02s", $minutes);
     }
     
-    function getClaimedVacation($year){
+    function getClaimedVacation($year)
+    {
         $timesheets = StundenzettelTimesheet::findBySQL('`contract_id` LIKE ? AND `year` LIKE ?', [$this->id, $year]);
         $vacation_days = 0;
         foreach ($timesheets as $timesheet) {
@@ -93,7 +97,8 @@ class StundenzettelStumiContract extends \SimpleORMap
         return sprintf("%02s", $vacation_hours) . ':' . sprintf("%02s", $vacation_minutes);
     }
     
-    function getWorktimeBalance(){
+    function getWorktimeBalance()
+    {
         $timesheets = StundenzettelTimesheet::findBySQL('`contract_id` LIKE ?', [$this->id]);
         $balance_hours = 0.0;
         $balance_minutes = 0.0;
@@ -108,5 +113,35 @@ class StundenzettelStumiContract extends \SimpleORMap
         
         return sprintf("%02s", $balance_hours) . ':' . sprintf("%02s", $balance_minutes);
     }
- 
+
+    function add_missing_timesheets()
+    {
+        $current_month = date('m', time());
+        $current_year = date('Y', time());
+        $month = new DateTime();
+        $month->setTimestamp($this->contract_begin);
+        $i = 0;
+        if ($this->contract_begin < strtotime($current_year . '-' . $current_month . '-01')) {
+            while ($month->getTimestamp() < time()){
+                $this->add_timesheet($month->format('m'), date('Y', $this->contract_begin));
+                $month->modify('+1 month');
+            }
+        }
+    }
+    
+    function add_timesheet($month, $year)
+    {
+        $timesheet = StundenzettelTimesheet::getContractTimesheet($this->id, $month, $year);
+        if (!$timesheet) {
+            if ( (intval($this->contract_begin) < strtotime($year . '-' . $month . '-28')) && (strtotime($year . '-' . $month . '-01') < intval($this->contract_end)) ) {
+                $timesheet = new StundenzettelTimesheet();
+                $timesheet->month = $month;
+                $timesheet->year = $year;
+                $timesheet->contract_id = $this->id;
+                $timesheet->stumi_id = $this->stumi_id;
+                $timesheet->inst_id = $this->inst_id;
+                $timesheet->store();
+            }
+        }
+    }
 }
