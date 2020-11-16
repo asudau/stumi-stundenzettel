@@ -54,7 +54,7 @@ class TimesheetController extends StudipController {
         }
         $contract = StundenzettelStumiContract::find($contract_id);
         $this->timesheet = StundenzettelTimesheet::getContractTimesheet($contract_id, $month, $year);
-        if (!$this->timesheet) {
+        if (!$this->timesheet && $this->stumirole) {
             if ( (intval($contract->contract_begin) < strtotime($year . '-' . $month . '-28')) && (strtotime($year . '-' . $month . '-01') < intval($contract->contract_end)) ) {
                 $timesheet = new StundenzettelTimesheet();
                 $timesheet->month = $month;
@@ -68,6 +68,9 @@ class TimesheetController extends StudipController {
                 PageLayout::postMessage(MessageBox::error(_("Dieser Monat liegt außerhalb des Vertragszeitraums."))); 
                 $this->render_action('timesheet');
             }
+        } else if (!$this->timesheet && $this->adminrole){
+            PageLayout::postMessage(MessageBox::error(_("Für diesen Monat liegt kein Stundenzettel vor."))); 
+            $this->render_action('timesheet');
         } else {
             $this->redirect('timesheet/timesheet/' . $this->timesheet->id);
         }
