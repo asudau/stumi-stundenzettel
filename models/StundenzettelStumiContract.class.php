@@ -20,10 +20,15 @@ class StundenzettelStumiContract extends \SimpleORMap
         $config['db_table'] = 'stundenzettel_stumi_contracts';
         
         $config['additional_fields']['default_workday_time']['get'] = function ($item) {
-            $workday_minutes_total = $item->contract_hours * 2.75;
-            $workday_hours = floor($workday_minutes_total / 60);
-            $workday_minutes = $workday_minutes_total % 60;
+            $workday_hours = floor($item->default_workday_time_in_minutes / 60);
+            $workday_minutes = $item->default_workday_time_in_minutes % 60;
             return sprintf("%02s", $workday_hours) . ':' . sprintf("%02s", $workday_minutes);
+            
+        };
+        
+        $config['additional_fields']['default_workday_time_in_minutes']['get'] = function ($item) {
+            $workday_minutes_total = round($item->contract_hours /4.348 / 5 * 60);//* 2.75;
+            return $workday_minutes_total;
             
         };
         
@@ -58,10 +63,50 @@ class StundenzettelStumiContract extends \SimpleORMap
         return $month;
     }
     
-    function getVacationEntitlement(){
-        $entitlement = $this->contract_hours * $this->getContractDuration() * 0.077;
-        return $entitlement;
+    function getVacationEntitlement($year){
+        $dezimal_entitlement = $this->contract_hours * $this->getContractDuration() * 0.077;
+        $entitlement_hours = floor($dezimal_entitlement);
+        $entitlement_minutes = ($dezimal_entitlement - $entitlement_hours) * 60;
+        return sprintf("%02s", $entitlement_hours) . ':' . sprintf("%02s", round($entitlement_minutes) ); //round($entitlement_minutes, 3)
     }
     
+    function getRemainingVacation($year){
+        $claimed_vacation = strtotime($this->getClaimedVacation($year));
+        $vacation = strtotime($this->getVacationEntitlement($year));
+        $remaining_vacation = $vacation - $claimed_vacation;
+        $minutes = ($remaining_vacation/60)%60;
+        $hours = floor(($remaining_vacation/60)/ 60);
+        return sprintf("%02s", $hours) . ':' . sprintf("%02s", $minutes);
+    }
+    
+    function getClaimedVacation($year){
+        $timesheets = StundenzettelTimesheet::findBySQL('`contract_id` LIKE ? AND `year` LIKE ?', [$this->id, $year]);
+        $vacation_days = 0;
+        foreach ($timesheets as $timesheet) {
+            $records = StundenzettelRecord::findBySQL('`timesheet_id` = ? AND `defined_comment` = "Urlaub"', [$timesheet->id]);
+            $vacation_days += sizeof($records);
+        }
+        
+        $vacation_minutes_total = ($vacation_days * $this->default_workday_time_in_minutes);
+        $vacation_hours = floor($vacation_minutes_total / 60);
+        $vacation_minutes = $vacation_minutes_total % 60;
+        return sprintf("%02s", $vacation_hours) . ':' . sprintf("%02s", $vacation_minutes);
+    }
+    
+    function getWorktimeBalance(){
+        $timesheets = StundenzettelTimesheet::findBySQL('`contract_id` LIKE ?', [$this->id]);
+        $balance_hours = 0.0;
+        $balance_minutes = 0.0;
+        foreach ($timesheets as $timesheet) {
+            if (strtotime($timesheet->year . '-' . $timesheet->month . '-28') < time()){
+                $balance_hours += explode(':', $timesheet->sum)[0] - $this->contract_hours; //TODO 02:30 - 12
+                $balance_minutes += explode(':', $timesheet->sum)[1];
+            }
+        }
+        $balance_hours += floor($balance_minutes/60);
+        $balance_minutes = $balance_minutes % 60;
+        
+        return sprintf("%02s", $balance_hours) . ':' . sprintf("%02s", $balance_minutes);
+    }
  
 }

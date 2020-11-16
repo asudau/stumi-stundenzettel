@@ -12,9 +12,12 @@
                 <th data-sort="text" style='width:10%'>Nachame, Vorname</th>
                 <th data-sort="false" style='width:10%'>Vertragsbeginn</th>
                 <th data-sort="false" style='width:10%'>Vertragsende</th>
-                <th data-sort="false" style='width:10%'>Stunden lt. Vertrag</th>
-                <th data-sort="false" style='width:10%'>Stundenkonto</th>
-                <th data-sort="false" style='width:10%'>Resturlaub/Urlaubsanspruch</th>
+                <th data-sort="false" style='width:10%'>Laufzeit in Monaten</th>
+                <th data-sort="false" style='width:10%'>Monatsstunden lt. Vertrag</th>
+                <th data-sort="false" style='width:10%'>Tagessatz</th>
+                <th data-sort="false" style='width:10%'>Stundenkonto (exkl. <?= date('M', time()) ?>)</th>
+                <th data-sort="false" style='width:10%'>Urlaub in Anspruch genommen <?= date('Y', time()) ?></th>
+                <th data-sort="false" style='width:10%'>Resturlaub <?= date('Y', time()) ?></th>
                 <th data-sort="false" style='width:10%'>Verantwortlicher/r MA</th>
                 <th>Aktionen</th>
             </tr>
@@ -28,9 +31,12 @@
                     </td>
                     <td><?= date('d.m.Y', $contract->contract_begin) ?></td>
                     <td><?= date('d.m.Y', $contract->contract_end) ?></td>
-                    <td><?= $contract->contract_hours ?> for <?= $contract->getContractDuration() ?></td>
+                    <td><?= $contract->getContractDuration() ?></td>
+                    <td><?= $contract->contract_hours ?></td>
                     <td><?= $contract->default_workday_time ?></td>
-                    <td><?= $contract->getVacationEntitlement()?></td>
+                    <td><?= $contract->getWorktimeBalance() ?></td>
+                    <td><?= $contract->getClaimedVacation(date('Y', time()))?> von <?= $contract->getVacationEntitlement(date('Y', time()))?></td>
+                    <td><?= $contract->getRemainingVacation(date('Y', time()))?></td>
                     <td><?= User::findOneByUser_Id($contract->supervisor)->username ?></td>
                     <td>
                        <a onclick="return confirm('Eintrag löschen?')" href='<?=$this->controller->url_for('index/delete/' . $contract->id) ?>' title='Eintrag löschen' ><?=Icon::create('trash')?></a>
@@ -70,10 +76,9 @@
                 <th data-sort="false" style='width:10%'>Vertragsbeginn</th>
                 <th data-sort="false" style='width:10%'>Vertragsende</th>
                 <th data-sort="false" style='width:10%'>Stunden lt. Vertrag</th>
-                <th data-sort="false" style='width:10%'>Stundenkonto</th>
-                <th data-sort="false" style='width:10%'>Resturlaub</th>                
+                <th data-sort="false" style='width:10%'>Stundenkonto (exkl. <?= date('M', time()) ?>)</th>
+                <th data-sort="false" style='width:10%'>Resturlaub/Urlaubsanspruch <?= date('Y', time()) ?></th>                
                 <th data-sort="false" style='width:10%'>Verantwortlicher/r MA</th>
-                <th>Aktionen</th>
             </tr>
         </thead>
         <tbody>
@@ -83,12 +88,9 @@
                     <td><?= date('d.m.Y', $contract->contract_begin) ?></td>
                     <td><?= date('d.m.Y', $contract->contract_end) ?></td>
                     <td><?= $contract->contract_hours ?></td>
-                    <td></td>
-                    <td></td>
+                    <td><?= $contract->getWorktimeBalance() ?></td>
+                    <td><?= $contract->getRemainingVacation(date('Y', time())) ?>/<?= $contract->getVacationEntitlement(date('Y', time())) ?></td>
                     <td><?= User::findOneByUser_Id($contract->supervisor)->username ?></td>
-                    <td><a href='<?=$this->controller->url_for('timesheet/index/' . $contract->id) ?>' title='Stundenzettel einsehen'><?= Icon::create('files','clickable') ?></a> 
-                    </td>
-
                 </tr>
             <?php endforeach ?>
         </tbody>
