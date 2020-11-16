@@ -9,7 +9,7 @@
     <table id='stumi-contract-entries' class="sortable-table default">
         <thead>
             <tr>
-                <th data-sort="text" style='width:10%'>Nachame, Vorname</th>
+                <th data-sort="text" style='width:10%'>Nachname, Vorname</th>
                 <th data-sort="false" style='width:10%'>Vertragsbeginn</th>
                 <th data-sort="false" style='width:10%'>Vertragsende</th>
                 <th data-sort="false" style='width:10%'>Laufzeit in Monaten</th>
@@ -50,6 +50,9 @@
                 <tr> 
                     <td><?= $stumi->nachname ?>, <?= $stumi->vorname ?>
                     </td>
+                    <td> -- </td>
+                    <td> -- </td>
+                    <td> -- </td>
                     <td> -- </td>
                     <td> -- </td>
                     <td> -- </td>
