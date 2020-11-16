@@ -95,13 +95,13 @@ class TimesheetController extends StudipController {
         
         $actions = new ActionsWidget();
         $actions->setTitle('Aktionen');
-        $actions->addLink(
-                _('Stundenzettel einreichen'),
-                PluginEngine::getLink($this->plugin, [], 'timesheet/send/' . $timesheet_id ),
-                Icon::create('share', 'new'),
-                ['title' => 'Achtung, anschließend keine Bearbeitung mehr möglich!',
-                    'onclick' => "return confirm('Bearbeitung abschließen und Stundenzettel offiziell einreichen?')"]
-            );
+//        $actions->addLink(
+//                _('Stundenzettel einreichen'),
+//                PluginEngine::getLink($this->plugin, [], 'timesheet/send/' . $timesheet_id ),
+//                Icon::create('share', 'new'),
+//                ['title' => 'Achtung, anschließend keine Bearbeitung mehr möglich!',
+//                    'onclick' => "return confirm('Bearbeitung abschließen und Stundenzettel offiziell einreichen?')"]
+//            );
         if (true) {
             $actions->addLink(
                 _('PDF-zum Ausdruck generieren'),
