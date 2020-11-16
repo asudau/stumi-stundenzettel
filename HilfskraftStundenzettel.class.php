@@ -10,6 +10,7 @@
  */
 
 require_once 'constants.inc.php';
+require_once 'models/StundenzettelStumiContract.class.php';
 
 class HilfskraftStundenzettel extends StudipPlugin implements SystemPlugin
 {
