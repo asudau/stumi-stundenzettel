@@ -66,7 +66,7 @@ class StundenzettelStumiContract extends \SimpleORMap
     
     function getVacationEntitlement($year)
     {
-        $dezimal_entitlement = $this->contract_hours * $this->getContractDuration() * 0.077;
+        $dezimal_entitlement = $this->contract_hours * $this->getContractDuration() * 0.077; //TODO nicht duration sondern pro Jahr
         $entitlement_hours = floor($dezimal_entitlement);
         $entitlement_minutes = ($dezimal_entitlement - $entitlement_hours) * 60;
         return sprintf("%02s", $entitlement_hours) . ':' . sprintf("%02s", round($entitlement_minutes) ); //round($entitlement_minutes, 3)
