@@ -6,7 +6,7 @@ use Studip\Button, Studip\LinkButton;
 <? if (!$timesheet) : ?>
 <? else : ?>
 
-    <h2>Name, Vorname der Hilfskraft: <?= User::findOneByUser_Id($stumi_id)->nachname ?>, <?= User::findOneByUser_Id($stumi_id)->vorname ?></h2>
+    <h2>Name, Vorname der Hilfskraft: <?= User::findOneByUser_Id($timesheet->stumi_id)->nachname ?>, <?= User::findOneByUser_Id($timesheet->stumi_id)->vorname ?></h2>
     <h2>Fachbereich/Organisationseinheit: <?= Institute::find($inst_id)->name ?></h2>
     <h2>Monatsarbeitszeit laut Arbeitsvertrag: <?= $timesheet->contract->contract_hours ?> Stunden</h2>
     <h2>Monat/Jahr: 
@@ -25,7 +25,7 @@ use Studip\Button, Studip\LinkButton;
         
     </h2>
 
-<form name="entry" method="post" onsubmit="return validateForm()" action="<?= $controller->url_for('timesheet/save_timesheet', $timesheet->id) ?>" class="default collapsable">
+<form name="timesheet_form" method="post" class='<?= $adminrole ? 'admin' : '' ?>' onsubmit="return validateForm()" action="<?= $controller->url_for('timesheet/save_timesheet', $timesheet->id) ?>" class="default collapsable">
     <?= CSRFProtection::tokenTag() ?>
     
         <table class='sortable-table default'>
@@ -197,6 +197,14 @@ use Studip\Button, Studip\LinkButton;
             var name = inputs[index].getAttribute("id");
             var rec_index = name.substring(5, 10);
             disable_timetracking(rec_index);
+        }
+        
+        var form = document.getElementsByName('timesheet_form')[0];
+        if (form.getAttribute("class") == 'admin'){
+            var inputs = form.querySelectorAll("input, select");
+            for(var i = 0; i < inputs.length; i++){
+                inputs[i].setAttribute("disabled", true);;
+            }
         }
     });
     
