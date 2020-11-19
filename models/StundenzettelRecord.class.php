@@ -47,52 +47,55 @@ class StundenzettelRecord extends \SimpleORMap
     function calculate_sum(){
         $begintime = strtotime($this->begin);
         $endtime = strtotime($this->end);
-        $breaktime_pts = explode(':', $this->break);
         if(in_array($this->defined_comment, ['Urlaub', 'Krank', 'Feiertag']) && !$this->isWeekend() ) {
             $this->sum = $this->timesheet->contract->default_workday_time;
         } else if( $begintime > 0 && $endtime > 0 ) {
-            $sum = $endtime - $begintime - $breaktime_pts[0]*3600 - $breaktime_pts[1]*60;
-            //return date('h:i', $sum);
-            $minutes = ($sum/60)%60;
-            $hours = floor(($sum/60)/ 60);
-            $this->sum = sprintf("%02s", $hours) . ':' . sprintf("%02s", $minutes);
+            $this->sum = StundenzettelTimesheet::calcTimeDifference($this->begin, $this->end, $this->break);
         } else {
             $this->sum = '';
         }
     }
     
-    function sum_to_seconds(){
+    function sum_to_seconds()
+    {
         $sum = explode(':', $this->sum);
         return $sum[0]*3600 + $sum[1]*60;
     }
     
-    function getWeekday() {
+    function getWeekday() 
+    {
         return date('w', strtotime($this->getDate()));
     }
     
-    function getDate() {
+    function getDate() 
+    {
         $timesheet = StundenzettelTimesheet::find($this->timesheet_id);
         return sprintf("%02s", $this->day) . '.' . sprintf("%02s", $timesheet->month) . '.' . sprintf("%02s", $timesheet->year);
     }
     
-    function isWeekend(){
+    function isWeekend()
+    {
         return in_array($this->getWeekday(), ['6', '0']);
     }
     
-    function isHoliday(){
+    function isHoliday()
+    {
         return array_key_exists(substr($this->getDate(),0,6), self::$holidays_nds);
     }
     
-    static function isDateWeekend($date){
+    static function isDateWeekend($date)
+    {
         $day = date('w', strtotime($date));
         return in_array($day, ['6', '0']);
     }
     
-    static function isDateHoliday($date){
+    static function isDateHoliday($date)
+    {
         return array_key_exists(substr($date, 0, 6), self::$holidays_nds);
     }
     
-    static function isEditable($date){
+    static function isEditable($date)
+    {
         $date_time = new DateTime($date);
         $today = new DateTime('now');
         return (!self::isDateHoliday($date) && !self::isDateWeekend($date) && ($date_time <= $today));

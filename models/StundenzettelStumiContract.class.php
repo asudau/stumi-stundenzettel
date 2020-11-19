@@ -58,8 +58,8 @@ class StundenzettelStumiContract extends \SimpleORMap
         $month = $interval->y * 12 + $interval->m;
         if ($interval->d >15){
             $month++;   //php date_diff tut sich hier leider schwer 
-                        //1.10.2020 bis 31.10.2020 ist ein monate 
-                        //aber 1.11.2020-30.11.2020 is 0 monate und 29 tage
+                        //1.10.2020 bis 31.10.2020 ist ein Monat 
+                        //aber 1.11.2020-30.11.2020 is 0 Monate und 29 tage
         }
         return $month;
     }

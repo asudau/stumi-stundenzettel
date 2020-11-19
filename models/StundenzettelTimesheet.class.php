@@ -77,6 +77,7 @@ class StundenzettelTimesheet extends \SimpleORMap
         
         //$this->Cell(0, 0, $content, 0, 1, 'L', 0, '', 0, false, 'C', 'C');
         foreach ($records as $record){
+            $record->calculate_sum();
             $content = $record->begin . '  ' . $record->break . '  ' . $record->end . '  ' . $record->sum . '  ' .
                     $record->defined_comment . '  ' . $record->comment . '   ' . $record->entry_mktime ;
             $pdf->SetX(44);
@@ -86,7 +87,7 @@ class StundenzettelTimesheet extends \SimpleORMap
             $pdf->SetX(74);
             $pdf->Write($line_height, $record->end);
             $pdf->SetX(94);
-            $pdf->Write($line_height, $record->calculate_sum());
+            $pdf->Write($line_height, $record->sum);
             $pdf->SetX(114);
             $pdf->Write($line_height, ($record->begin) ? date('d.m.Y', strtotime($record->entry_mktime)) : '');
             $pdf->SetX(144);
@@ -95,7 +96,7 @@ class StundenzettelTimesheet extends \SimpleORMap
             $pdf->Ln();
             
         }
-        
+
         $pdf->SetX(94);
         $pdf->Write($line_height, $record->timesheet->sum);
   
@@ -116,4 +117,76 @@ class StundenzettelTimesheet extends \SimpleORMap
         $this->store();
     }
     
+    static function calcTimeDifference($timea, $timeb, $break = '0:0'){
+        $timea_pts = explode(':', $timea);
+        $timeb_pts = explode(':', $timeb);
+        $break_pts = explode(':', $break);
+        
+        $begin_minutes = intval($timea_pts[1]);
+        $begin_hours = intval($timea_pts[0]);
+
+        $end_minutes = intval($timeb_pts[1]);
+        $end_hours = intval($timeb_pts[0]);
+
+        $break_minutes = intval($break_pts[1]);
+        $break_hours = intval($break_pts[0]);
+
+        $minutes_total = 0;
+        $hours_total = 0;
+
+        //reduce timeslot by break
+        if (($begin_minutes + $break_minutes) >= 60) {
+            $begin_hours = $begin_hours + 1;
+            $begin_minutes = ($begin_minutes + $break_minutes) - 60;
+        } else {
+            $begin_minutes = $begin_minutes + $break_minutes;
+        }
+        $begin_hours = $begin_hours + $break_hours;
+
+        if (($end_minutes + (60 - $begin_minutes)) >= 60) {
+            $minutes_total = ($end_minutes + (60 - $begin_minutes)) - 60;
+        } else {
+            $end_hours -= 1;
+            $minutes_total = $end_minutes + (60 - $begin_minutes);
+        }
+
+        $hours_total = $end_hours - $begin_hours;
+
+        return (sprintf("%02s", $hours_total) . ':' . sprintf("%02s", $minutes_total));
+    }
+    
+    static function addTimes($timea, $timeb){
+        $timea_pts = explode(':', $timea);
+        $timeb_pts = explode(':', $timeb);
+        
+        $timea_minutes = intval($timea_pts[1]);
+        $timea_hours = intval($timea_pts[0]);
+
+        $timeb_minutes = intval($timeb_pts[1]);
+        $timeb_hours = intval($timeb_pts[0]);
+        
+        $minutes_total = 0;
+        $hours_total = 0;
+        
+        if (($timea_minutes + $timeb_minutes) >= 60) {
+            $hours_total += 1;
+            $minutes_total = ($timea_minutes + $timeb_minutes) - 60;
+        } else {
+            $$minutes_total = $timea_minutes + $timeb_minutes;
+        }
+        
+        $hours_total = $timea_hours + $timeb_hours;
+        return (sprintf("%02s", $hours_total) . ':' . sprintf("%02s", $minutes_total));        
+    }
+    
+    static function multiplyMinutes($minutes, $factor){
+        $minutes_total = $minutes * $factor;
+        $hours = floor($minutes_total / 60);
+        $minutes = $minutes_total % 60;
+        return sprintf("%02s", $hours) . ':' . sprintf("%02s", $minutes);
+    }
+    
+    static function multiplyTime($time, $factor){
+        //TODO
+    }
 }
