@@ -17,8 +17,18 @@ class IndexController extends StudipController {
         PageLayout::setTitle(_("Studentische MitarbeiterInnen - Übersicht"));
         
         // Check permissions to be on this site
-        if ( !($this->plugin->hasStumiAdminrole() || $this->plugin->hasStumiContract ()) ) {
+        if ( !($this->plugin->hasStumiAdminrole() || $this->plugin->hasStumiContract () || $this->plugin->isStumiSupervisor()) ) {
             throw new AccessDeniedException(_("Sie haben keine Zugriffsberechtigung"));
+        }
+        
+        if ($this->plugin->hasStumiAdminrole ()) {
+            $this->adminrole = true;
+        }
+        if ($this->plugin->hasStumiContract ()) {
+            $this->stumirole = true;
+        }
+        if ($this->plugin->isStumiSupervisor ()) {
+            $this->supervisorrole = true;
         }
 
     }
@@ -28,9 +38,7 @@ class IndexController extends StudipController {
         Navigation::activateItem('tools/hilfskraft-stundenverwaltung/index');
         $user = User::findCurrent();
 
-        if ($this->plugin->hasStumiAdminrole ()) {
-            
-            $this->adminrole = true;
+        if ($this->adminrole) {
             
             //get institutes for thie user
             foreach($user->institute_memberships->pluck('institut_id') as $inst_id){
@@ -58,9 +66,28 @@ class IndexController extends StudipController {
             }
         }
         
-        if ($this->plugin->hasStumiContract ()) {
+        if ($this->supervisorrole) {
+            
+            //get stumis for this user
+            $stumi_contracts = StundenzettelStumiContract::findBySupervisor(User::findCurrent()->user_id);
+            foreach($stumi_contracts as $contract){
+                if(!in_array($contract->stumi_id, $this->stumis)){
+                    $this->stumis[] = User::find($contract->stumi_id);
+                    $this->stumi_contracts[$contract->stumi_id] = StundenzettelStumiContract::findBySQL('`stumi_id` LIKE ? AND `supervisor` LIKE ?', [$contract->stumi_id, User::findCurrent()->user_id]);
+                }
+            }   
+            //setup navigation
+            $views = new ViewsWidget();
+            $views->addLink(_('Übersicht über Studentische MitarbeiterInnen'),
+                            $this->url_for('index'))
+                  ->setActive($action === 'index');
+            
+            Sidebar::get()->addWidget($views);
+            
+        }
         
-            $this->stumirole = true;
+        if ($this->stumirole) {
+
             $this->stumi = User::find($GLOBALS['user']->user_id);
             $this->stumi_contracts = StundenzettelStumiContract::findByStumi_id($this->stumi->user_id);
             foreach($this->stumi_contracts as $contract){

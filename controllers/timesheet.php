@@ -17,7 +17,7 @@ class TimesheetController extends StudipController {
         PageLayout::setTitle(_("Stundenzettel verwalten"));
         
         // Check permissions to be on this site
-        if ( !($this->plugin->hasStumiAdminrole() || $this->plugin->hasStumiContract ()) ) {
+        if ( !($this->plugin->hasStumiAdminrole() || $this->plugin->hasStumiContract () || $this->plugin->isStumiSupervisor()) ) {
             throw new AccessDeniedException(_("Sie haben keine Zugriffsberechtigung."));
         }
         
@@ -26,6 +26,9 @@ class TimesheetController extends StudipController {
         }
         if ($this->plugin->hasStumiContract ()) {
             $this->stumirole = true;
+        }
+        if ($this->plugin->isStumiSupervisor ()) {
+            $this->supervisorrole = true;
         }
 
     }

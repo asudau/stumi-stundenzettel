@@ -3,7 +3,7 @@
 <body>
 <div>
     
-<?php if ($adminrole) : ?>    
+<?php if ($adminrole || $supervisorrole) : ?>    
     <h1> <?= $stumi->nachname ?>, <?= $stumi->vorname ?> </h1>
     Vertragslaufzeit: <?= date('d.m.Y', $contract->contract_begin) ?> bis <?= date('d.m.Y', $contract->contract_end) ?>
 

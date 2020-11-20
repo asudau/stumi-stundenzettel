@@ -15,7 +15,6 @@ require_once 'models/StundenzettelStumiContract.class.php';
 class HilfskraftStundenzettel extends StudipPlugin implements SystemPlugin
 {
 
-    
     public function __construct()
     {
         parent::__construct();
@@ -26,6 +25,8 @@ class HilfskraftStundenzettel extends StudipPlugin implements SystemPlugin
             $this->setupHilfskraftNavigation();
         } else if( $this->hasStumiAdminrole() ) {
             $this->setupAdminNavigation();
+        } else if ($this->isStumiSupervisor()) {
+            $this->setupSupervisorNavigation();
         }
     }
 
@@ -65,6 +66,20 @@ class HilfskraftStundenzettel extends StudipPlugin implements SystemPlugin
         Navigation::addItem('tools/hilfskraft-stundenverwaltung', $navigation);  
     }
     
+    private function setupSupervisorNavigation()
+    {
+        $navigation = new Navigation('Hilfskraft-Stundenzettelverwaltung');
+        $navigation->setURL(PluginEngine::getURL($this, array(), 'index'));
+
+        $item = new Navigation(_('Übersicht'), PluginEngine::getURL($this, array(), 'index'));
+        $navigation->addSubNavigation('index', $item);
+
+        $item = new Navigation(_('Stundenzettel verwalten'), PluginEngine::getURL($this, array(), 'timesheet'));
+        $navigation->addSubNavigation('timesheets', $item);
+
+        Navigation::addItem('tools/hilfskraft-stundenverwaltung', $navigation);  
+    }
+    
     public function getCommentOptions ()
     {
         return array(
@@ -92,6 +107,11 @@ class HilfskraftStundenzettel extends StudipPlugin implements SystemPlugin
     public function hasStumiContract ()
     {
         return StundenzettelStumiContract::findByStumi_id($GLOBALS['user']->user_id);
+    }
+    
+    public function isStumiSupervisor ()
+    {
+        return StundenzettelStumiContract::findBySupervisor($GLOBALS['user']->user_id);
     }
 
     public function perform($unconsumed_path)

@@ -3,7 +3,7 @@
 <body>
 <div>
     
-<?php if ($adminrole) : ?>    
+<?php if ($adminrole || $supervisorrole) : ?>    
     <h> <?= Institute::find($inst_id[0])->name ?>: <?= sizeof($stumis) ?> Studentische MitarbeiterInnen </h1>
 
     <table id='stumi-contract-entries' class="sortable-table default">
