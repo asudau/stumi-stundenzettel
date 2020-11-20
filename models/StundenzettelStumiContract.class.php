@@ -87,10 +87,7 @@ class StundenzettelStumiContract extends \SimpleORMap
             $vacation_days += sizeof($records);
         }
         
-        $vacation_minutes_total = ($vacation_days * $this->default_workday_time_in_minutes);
-        $vacation_hours = floor($vacation_minutes_total / 60);
-        $vacation_minutes = $vacation_minutes_total % 60;
-        return sprintf("%02s", $vacation_hours) . ':' . sprintf("%02s", $vacation_minutes);
+        return StundenzettelTimesheet::multiplyMinutes($this->default_workday_time_in_minutes, $vacation_days);
     }
     
     function getWorktimeBalance()
