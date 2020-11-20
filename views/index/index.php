@@ -4,7 +4,7 @@
 <div>
     
 <?php if ($adminrole) : ?>    
-    <h> <?= Institute::find($inst_id)->name ?>: <?= sizeof($stumis) ?> Studentische MitarbeiterInnen </h1>
+    <h> <?= Institute::find($inst_id[0])->name ?>: <?= sizeof($stumis) ?> Studentische MitarbeiterInnen </h1>
 
     <table id='stumi-contract-entries' class="sortable-table default">
         <thead>

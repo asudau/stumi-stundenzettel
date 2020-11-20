@@ -28,14 +28,17 @@ class IndexController extends StudipController {
         Navigation::activateItem('tools/hilfskraft-stundenverwaltung/index');
         $user = User::findCurrent();
 
-        $this->inst_id = $user->institute_memberships->pluck('institut_id')[0];
-        if (!$this->inst_id) { //local testing
-            $this->inst_id = '477d184367f48cc210f74bb4f779c7b7';
-        }
-
         if ($this->plugin->hasStumiAdminrole ()) {
             
             $this->adminrole = true;
+            
+            //get institutes for thie user
+            foreach($user->institute_memberships->pluck('institut_id') as $inst_id){
+                $this->inst_id[] = $inst_id;
+            }
+            if (sizeof($this->inst_id) == 0) { //local testing with root
+                $this->inst_id[] = '477d184367f48cc210f74bb4f779c7b7';
+            }
             
             //setup navigation
             $views = new ViewsWidget();
@@ -59,9 +62,13 @@ class IndexController extends StudipController {
         
             $this->stumirole = true;
             $this->stumi = User::find($GLOBALS['user']->user_id);
-            $this->stumi_contracts = StundenzettelStumiContract::findBySQL('`stumi_id` LIKE ? AND `inst_id` LIKE ?', [$this->stumi->user_id, $this->inst_id]);
-                
-        }
+            $this->stumi_contracts = StundenzettelStumiContract::findByStumi_id($this->stumi->user_id);
+            foreach($this->stumi_contracts as $contract){
+                if(!in_array($inst_id, $this->inst_id)){
+                    $this->inst_id[] = $inst_id;
+                }
+            }    
+        } 
     }
     
     public function new_action($inst_id, $stumi_id)
