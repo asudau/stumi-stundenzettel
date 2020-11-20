@@ -93,18 +93,13 @@ class StundenzettelStumiContract extends \SimpleORMap
     function getWorktimeBalance()
     {
         $timesheets = StundenzettelTimesheet::findBySQL('`contract_id` LIKE ?', [$this->id]);
-        $balance_hours = 0.0;
-        $balance_minutes = 0.0;
+        $balance_time = '0:0';
         foreach ($timesheets as $timesheet) {
             if (strtotime($timesheet->year . '-' . $timesheet->month . '-28') < time()){
-                $balance_hours += explode(':', $timesheet->sum)[0] - $this->contract_hours; //TODO 02:30 - 12
-                $balance_minutes += explode(':', $timesheet->sum)[1];
+                $balance_time = StundenzettelTimesheet::addTimes($balance_time, $timesheet->timesheet_balance);
             }
         }
-        $balance_hours += floor($balance_minutes/60);
-        $balance_minutes = $balance_minutes % 60;
-        
-        return sprintf("%02s", $balance_hours) . ':' . sprintf("%02s", $balance_minutes);
+        return $balance_time;
     }
 
     function add_missing_timesheets()

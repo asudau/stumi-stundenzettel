@@ -27,6 +27,10 @@ class StundenzettelTimesheet extends \SimpleORMap
         $config['belongs_to']['contract'] = [
             'class_name'  => 'StundenzettelStumiContract',
             'foreign_key' => 'contract_id',];
+        
+        $config['additional_fields']['timesheet_balance']['get'] = function ($item) {
+            return self::subtractTimes($item->sum, $item->contract->contract_hours);     
+        };
 
         parent::configure($config);
     }
@@ -172,7 +176,7 @@ class StundenzettelTimesheet extends \SimpleORMap
             $hours_total += 1;
             $minutes_total = ($timea_minutes + $timeb_minutes) - 60;
         } else {
-            $$minutes_total = $timea_minutes + $timeb_minutes;
+            $minutes_total = $timea_minutes + $timeb_minutes;
         }
         
         $hours_total = $timea_hours + $timeb_hours;
