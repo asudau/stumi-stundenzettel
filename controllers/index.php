@@ -49,11 +49,11 @@ class IndexController extends StudipController {
             Sidebar::get()->addWidget($views);
             
             //get all stumis an contracts
-            $groups = Statusgruppen::findBySQL('`name` LIKE ? AND `range_id` LIKE ?', ['%Studentische%', $this->inst_id]);
+            $groups = Statusgruppen::findBySQL('`name` LIKE ? AND `range_id` LIKE ?', ['%Studentische%', $this->inst_id[0]]);
             foreach ($groups as $group) {
                 foreach ($group->members as $member) {
                     $this->stumis[] = User::find($member->user_id);
-                    $this->stumi_contracts[$member->user_id] = StundenzettelStumiContract::findBySQL('`stumi_id` LIKE ? AND `inst_id` LIKE ?', [$member->user_id, $this->inst_id]);
+                    $this->stumi_contracts[$member->user_id] = StundenzettelStumiContract::findBySQL('`stumi_id` LIKE ? AND `inst_id` LIKE ?', [$member->user_id, $this->inst_id[0]]);
                 }
             }
         }
