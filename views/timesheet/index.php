@@ -12,6 +12,7 @@
             <tr>
                 <th data-sort="text" style='width:10%'>Monat/Jahr</th>
                 <th data-sort="false" style='width:10%'>Stunden</th>
+                <th data-sort="false" style='width:10%'>Überstunden</th>
                 <th data-sort="false" style='width:10%'>Status</th>
             </tr>
         </thead>
@@ -22,6 +23,7 @@
                     <td><a href='<?=$this->controller->url_for('timesheet/timesheet/' . $timesheet->id) ?>' title='Stundenzettel editieren'><?= $timesheet->month ?>/<?= $timesheet->year ?></a>
                     </td>
                     <td><?= $timesheet->sum ?></td>
+                    <td><?= $timesheet->timesheet_balance ?></td>
                     <td></td>
                 </tr>
                 <?php endforeach ?>
@@ -37,6 +39,7 @@
             <tr>
                 <th data-sort="text" style='width:10%'>Monat/Jahr</th>
                 <th data-sort="false" style='width:10%'>Stunden</th>
+                <th data-sort="false" style='width:10%'>Überstunden</th>
                 <th data-sort="false" style='width:10%'>Status</th>
             </tr>
         </thead>
@@ -47,6 +50,7 @@
                     <td><a href='<?=$this->controller->url_for('timesheet/timesheet/' . $timesheet->id) ?>' title='Stundenzettel editieren'><?= $timesheet->month ?>/<?= $timesheet->year ?></a>
                     </td>
                     <td><?= $timesheet->sum ?></td>
+                    <td><?= $timesheet->timesheet_balance ?></td>
                     <td></td>
                 </tr>
                 <?php endforeach ?>
