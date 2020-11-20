@@ -64,6 +64,10 @@ class StundenzettelStumiContract extends \SimpleORMap
         return $month;
     }
     
+    function monthPartOfContract($month, $year){
+        return (intval($this->contract_begin) < strtotime($year . '-' . $month . '-28')) && (strtotime($year . '-' . $month . '-01') < intval($this->contract_end)); 
+    }
+    
     function getVacationEntitlement($year)
     {
         $dezimal_entitlement = $this->contract_hours * $this->getContractDuration() * 0.077; //TODO nicht duration sondern pro Jahr

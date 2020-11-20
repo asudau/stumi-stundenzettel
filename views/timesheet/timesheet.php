@@ -3,7 +3,25 @@
 use Studip\Button, Studip\LinkButton;
 ?>
 
-<? if (!$timesheet) : ?>
+<? if ($no_timesheet) : ?>
+    <h2>Name, Vorname der Hilfskraft: <?= User::findOneByUser_Id($contract->stumi_id)->nachname ?>, <?= User::findOneByUser_Id($contract->stumi_id)->vorname ?></h2>
+    <h2>Fachbereich/Organisationseinheit: <?= Institute::find($contract->inst_id)->name ?></h2>
+
+    <h2>Monat/Jahr: 
+        <form name="month_select" method="post"  action="<?= $controller->url_for('timesheet/select/' . $contract->id) ?>">
+            <select name ='month' onchange="this.form.submit()">
+                <?php foreach ($plugin->getMonths() as $entry_value): ?>
+                    <option <?= ($month == $entry_value) ? 'selected' : '' ?> value="<?=$entry_value?>"><?= $entry_value ?></option>
+                <?php endforeach ?>
+            </select>
+            <select  name ='year' onchange="this.form.submit()">
+                <?php foreach ($plugin->getYears() as $entry_value): ?>
+                    <option <?= ($year == $entry_value) ? 'selected' : '' ?> value="<?=$entry_value?>"><?= $entry_value ?></option>
+                <?php endforeach ?>
+            </select>
+        </form>
+        
+    </h2>
 <? else : ?>
 
     <h2>Name, Vorname der Hilfskraft: <?= User::findOneByUser_Id($timesheet->stumi_id)->nachname ?>, <?= User::findOneByUser_Id($timesheet->stumi_id)->vorname ?></h2>
