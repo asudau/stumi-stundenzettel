@@ -15,6 +15,37 @@
 class StundenzettelStumiContract extends \SimpleORMap
 {
     
+    private static $staus_array = array(
+        'finished' => array(
+            'icon' => 'radiobutton-checked',
+            'true_icon_role' => Icon::ROLE_STATUS_GREEN,
+            'false_icon_role' => Icon::ROLE_INACTIVE,
+            'true_tooltip' => 'Digitaler Stundenzettel eingereicht',
+            'false_tooltip' => 'Digitaler Stundenzettel noch nicht eingereicht'
+            ),
+        'approved' => array(
+            'icon' => 'accept',
+            'true_icon_role' => Icon::ROLE_STATUS_GREEN,
+            'false_icon_role' => Icon::ROLE_INACTIVE,
+            'true_tooltip' => 'Digitaler Stundenzettel durch verantwortliche/n Mitarbeiter/in freigegeben',
+            'false_tooltip' => 'Digitaler Stundenzettel noch nicht durch verantwortliche/n Mitarbeiter/in geprüft und freigegebn'
+            ),
+        'received' => array(
+            'icon' => 'inbox',
+            'true_icon_role' => Icon::ROLE_STATUS_GREEN,
+            'false_icon_role' => Icon::ROLE_INACTIVE,
+            'true_tooltip' => 'Papierausdruck liegt unterschrieben im Sekretariat vor',
+            'false_tooltip' => 'Papierausdruck liegt noch nicht im Sekretariat vor'
+            ),
+        'complete' => array(
+            'icon' => 'lock-locked',
+            'true_icon_role' => Icon::ROLE_STATUS_GREEN,
+            'false_icon_role' => Icon::ROLE_INACTIVE,
+            'true_tooltip' => 'Vorgang abgeschlossen',
+            'false_tooltip' => 'Vorgang offen'
+            ),
+        );
+    
     protected static function configure($config = array())
     {
         $config['db_table'] = 'stundenzettel_stumi_contracts';
@@ -45,6 +76,11 @@ class StundenzettelStumiContract extends \SimpleORMap
             }
         }
         return $contract_id;
+    }
+    
+    static function getStaus_array()
+    {
+        return self::$staus_array;
     }
     
     function getContractDuration()

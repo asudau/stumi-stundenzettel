@@ -46,6 +46,8 @@ class TimesheetController extends StudipController {
         $this->stumi = User::find($this->contract->stumi_id);
         
         $this->records = StundenzettelRecord::findByTimesheet_Id($timesheet_id, 'ORDER BY day ASC');
+        
+        $this->status_infos = StundenzettelStumiContract::getStaus_array();
 
     }
     
