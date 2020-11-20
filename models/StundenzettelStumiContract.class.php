@@ -72,14 +72,10 @@ class StundenzettelStumiContract extends \SimpleORMap
         return sprintf("%02s", $entitlement_hours) . ':' . sprintf("%02s", round($entitlement_minutes) ); //round($entitlement_minutes, 3)
     }
     
+    //function subtractTimes
     function getRemainingVacation($year)
     {
-        $claimed_vacation = strtotime($this->getClaimedVacation($year));
-        $vacation = strtotime($this->getVacationEntitlement($year));
-        $remaining_vacation = $vacation - $claimed_vacation;
-        $minutes = ($remaining_vacation/60)%60;
-        $hours = floor(($remaining_vacation/60)/ 60);
-        return sprintf("%02s", $hours) . ':' . sprintf("%02s", $minutes);
+        return StundenzettelTimesheet::subtractTimes($this->getVacationEntitlement($year), $this->getClaimedVacation($year));
     }
     
     function getClaimedVacation($year)

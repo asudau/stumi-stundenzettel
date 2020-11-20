@@ -179,6 +179,30 @@ class StundenzettelTimesheet extends \SimpleORMap
         return (sprintf("%02s", $hours_total) . ':' . sprintf("%02s", $minutes_total));        
     }
     
+    static function subtractTimes($timea, $timeb){
+        $timea_pts = explode(':', $timea);
+        $timeb_pts = explode(':', $timeb);
+        
+        $timea_minutes = intval($timea_pts[1]);
+        $timea_hours = intval($timea_pts[0]);
+
+        $timeb_minutes = intval($timeb_pts[1]);
+        $timeb_hours = intval($timeb_pts[0]);
+        
+        $minutes_total = 0;
+        $hours_total = 0;
+        
+        if (($timea_minutes - $timeb_minutes) < 0) {
+            $hours_total -= 1;
+            $minutes_total = ($timea_minutes - $timeb_minutes) + 60;
+        } else {
+            $minutes_total = $timea_minutes - $timeb_minutes;
+        }
+        
+        $hours_total = $timea_hours - $timeb_hours;
+        return (sprintf("%02s", $hours_total) . ':' . sprintf("%02s", $minutes_total));        
+    }
+    
     static function multiplyMinutes($minutes, $factor){
         $minutes_total = $minutes * $factor;
         $hours = floor($minutes_total / 60);
@@ -187,6 +211,10 @@ class StundenzettelTimesheet extends \SimpleORMap
     }
     
     static function multiplyTime($time, $factor){
-        //TODO
+        //TODO: test
+        $time_pts = explode(':', $time);
+        $minutes_multiplied = self::multiplyMinutes(intval($time_pts[1]), $factor);
+        $hours_multiplied = intval($time_pts[0]) * $factor;
+        return addTimes($minutes_multiplied, $hours_multiplied);  
     }
 }
