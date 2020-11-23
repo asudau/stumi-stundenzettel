@@ -31,6 +31,10 @@ class StundenzettelTimesheet extends \SimpleORMap
         $config['additional_fields']['timesheet_balance']['get'] = function ($item) {
             return self::subtractTimes($item->sum, $item->contract->contract_hours);     
         };
+        
+        $config['additional_fields']['locked']['get'] = function ($item) {
+            return $item->finished;     
+        };
 
         parent::configure($config);
     }
@@ -110,15 +114,17 @@ class StundenzettelTimesheet extends \SimpleORMap
     }
     
     function calculate_sum(){
-        $records = StundenzettelRecord::findByTimesheet_Id($this->id);
-        $sum_seconds = 0;
-        foreach ($records as $record){
-            $sum += $record->sum_to_seconds();   
+        if (!$this->locked){
+            $records = StundenzettelRecord::findByTimesheet_Id($this->id);
+            $sum_seconds = 0;
+            foreach ($records as $record){
+                $sum += $record->sum_to_seconds();   
+            }
+            $minutes = ($sum/60)%60;
+            $hours = floor(($sum/60)/ 60);
+            $this->sum = sprintf("%02s", $hours) . ':' . sprintf("%02s", $minutes);
+            $this->store();
         }
-        $minutes = ($sum/60)%60;
-        $hours = floor(($sum/60)/ 60);
-        $this->sum = sprintf("%02s", $hours) . ':' . sprintf("%02s", $minutes);
-        $this->store();
     }
     
     static function calcTimeDifference($timea, $timeb, $break = '0:0'){

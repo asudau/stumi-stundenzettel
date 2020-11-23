@@ -106,70 +106,94 @@ class TimesheetController extends StudipController {
             //$timesheet_id = $timesheet->id;
             $this->redirect('timesheet/select/' . $contract_id . '/' . date('m', time()) . '/' . date('Y', time()));
         }
-        
-        $actions = new ActionsWidget();
-        $actions->setTitle('Aktionen');
-//        $actions->addLink(
-//                _('Stundenzettel einreichen'),
-//                PluginEngine::getLink($this->plugin, [], 'timesheet/send/' . $timesheet_id ),
-//                Icon::create('share', 'new'),
-//                ['title' => 'Achtung, anschließend keine Bearbeitung mehr möglich!',
-//                    'onclick' => "return confirm('Bearbeitung abschließen und Stundenzettel offiziell einreichen?')"]
-//            );
-        if (true) {
-            $actions->addLink(
-                _('PDF-zum Ausdruck generieren'),
-                PluginEngine::getLink($this->plugin, [], 'timesheet/pdf/' . $timesheet_id ),
-                Icon::create('file-pdf', 'clickable')
-            );
-        }
-        $sidebar->addWidget($actions);
 
         $this->timesheet = StundenzettelTimesheet::find($timesheet_id);
-        $this->days_per_month = cal_days_in_month(CAL_GREGORIAN, $this->timesheet->month, $this->timesheet->year);
-        
+        $this->days_per_month = cal_days_in_month(CAL_GREGORIAN, $this->timesheet->month, $this->timesheet->year); 
         $this->inst_id = $this->timesheet->inst_id;
         $this->stumi_id = $this->timesheet->stumi_id;
-
         $this->records = StundenzettelRecord::findByTimesheet_Id($timesheet_id, 'ORDER BY day ASC');
+        
+        if($this->timesheet->locked){
+            PageLayout::postMessage(MessageBox::info(_("Bearbeitung gesperrt."))); 
+        }
+        
+        if($this->stumirole){
+            $actions = new ActionsWidget();
+            $actions->setTitle('Aktionen');
+            
+            if (!$this->timesheet->finished) {
+                $actions->addLink(
+                        _('Stundenzettel einreichen'),
+                        PluginEngine::getLink($this->plugin, [], 'timesheet/send/' . $timesheet_id ),
+                        Icon::create('share', 'new'),
+                        ['title' => 'Achtung, anschließend keine Bearbeitung mehr möglich!',
+                            'onclick' => "return confirm('Bearbeitung abschließen und Stundenzettel offiziell einreichen?')"]
+                    );
+            } else {
+                $actions->addLink(
+                        _('Stundenzettel wurde eingereicht'),
+                        PluginEngine::getLink($this->plugin, [], 'timesheet/timesheet/' . $timesheet_id ),
+                        Icon::create('lock-locked', 'new'),
+                        ['title' => 'Keine Bearbeitung mehr möglich!',
+                            'disabled' => "disabled"]
+                    );
+            }
+            if (true) {
+                $actions->addLink(
+                    _('PDF-zum Ausdruck generieren'),
+                    PluginEngine::getLink($this->plugin, [], 'timesheet/pdf/' . $timesheet_id ),
+                    Icon::create('file-pdf', 'clickable')
+                );
+            }
+            $sidebar->addWidget($actions);
+        }
 
     }
     
     
     public function save_timesheet_action($timesheet_id)
     {
-        $record_ids_array = Request::getArray('record_id');
-        $begin_array = Request::getArray('begin');
-        $end_array = Request::getArray('end');
-        $break_array = Request::getArray('break');
-        $mktime_array = Request::getArray('entry_mktime');
-        $defined_comment_array = Request::getArray('defined_comment');
-        $comment_array = Request::getArray('comment');
+        $timesheet = StundenzettelTimesheet::find($timesheet_id);
         
-        $limit = count($begin_array);
-        for ($i = 1; $i <= $limit; $i++) {
-           
-            $record = StundenzettelRecord::find([$timesheet_id, $i]);
-            if (!$record) {
-                $record = new StundenzettelRecord();
-                $record->timesheet_id = $timesheet_id;
-                $record->day = $i;
+         if (!$timesheet->locked) {
+             
+            $record_ids_array = Request::getArray('record_id');
+            $begin_array = Request::getArray('begin');
+            $end_array = Request::getArray('end');
+            $break_array = Request::getArray('break');
+            $mktime_array = Request::getArray('entry_mktime');
+            $defined_comment_array = Request::getArray('defined_comment');
+            $comment_array = Request::getArray('comment');
+
+            $limit = count($begin_array);
+            for ($i = 1; $i <= $limit; $i++) {
+
+                $record = StundenzettelRecord::find([$timesheet_id, $i]);
+                if (!$record) {
+                    $record = new StundenzettelRecord();
+                    $record->timesheet_id = $timesheet_id;
+                    $record->day = $i;
+                }
+                    $record->begin = $begin_array[$i];
+                    $record->end = $end_array[$i];
+                    $record->break = $break_array[$i];
+                    $record->entry_mktime = $mktime_array[$i];
+                    $record->defined_comment = ($record->isHoliday()) ? 'Feiertag' : $defined_comment_array[$i];
+                    $record->comment = $comment_array[$i];
+                    $record->calculate_sum();
+                    $record->store();
             }
-                $record->begin = $begin_array[$i];
-                $record->end = $end_array[$i];
-                $record->break = $break_array[$i];
-                $record->entry_mktime = $mktime_array[$i];
-                $record->defined_comment = ($record->isHoliday()) ? 'Feiertag' : $defined_comment_array[$i];
-                $record->comment = $comment_array[$i];
-                $record->calculate_sum();
-                $record->store();         
-        }
-        
-        $timesheet = $record->timesheet;
-        $timesheet->calculate_sum();
-        
-        PageLayout::postMessage(MessageBox::success(_("Änderungen gespeichert."))); 
-        $this->redirect('timesheet/timesheet/' . $timesheet_id);
+
+            $timesheet = $record->timesheet;
+            $timesheet->calculate_sum();
+
+            PageLayout::postMessage(MessageBox::success(_("Änderungen gespeichert."))); 
+            $this->redirect('timesheet/timesheet/' . $timesheet_id);
+            
+         } else {
+            PageLayout::postMessage(MessageBox::success(_("Bearbeitung ist gesperrt."))); 
+            $this->redirect('timesheet/timesheet/' . $timesheet_id);
+         }
     }
     
     public function pdf_action($timesheet_id)
@@ -179,6 +203,20 @@ class TimesheetController extends StudipController {
             $timesheet->build_pdf();
         } else {
             PageLayout::postMessage(MessageBox::success(_("Stundenzettel konnte nicht generiert werden.")));
+            $this->redirect('timesheet/index');
+        }
+    }
+    
+    public function send_action($timesheet_id)
+    {
+        $timesheet = StundenzettelTimesheet::find($timesheet_id);
+        if($timesheet){
+            $timesheet->finished = true;
+            $timesheet->store();
+            PageLayout::postMessage(MessageBox::success(_("Stundenzettel wurde eingereicht und kann nun nicht mehr bearbeitet werden.")));
+            $this->redirect('timesheet/index');
+        } else {
+            PageLayout::postMessage(MessageBox::error(_("Fehler: kein Stundenzettel gefunden.")));
             $this->redirect('timesheet/index');
         }
     }

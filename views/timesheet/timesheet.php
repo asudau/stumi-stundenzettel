@@ -3,11 +3,11 @@
 use Studip\Button, Studip\LinkButton;
 ?>
 
-<? if ($no_timesheet) : ?>
-    <h2>Name, Vorname der Hilfskraft: <?= User::findOneByUser_Id($contract->stumi_id)->nachname ?>, <?= User::findOneByUser_Id($contract->stumi_id)->vorname ?></h2>
-    <h2>Fachbereich/Organisationseinheit: <?= Institute::find($contract->inst_id)->name ?></h2>
+<?php if ($no_timesheet) : ?>
+    <h3>Name, Vorname der Hilfskraft: <?= User::findOneByUser_Id($contract->stumi_id)->nachname ?>, <?= User::findOneByUser_Id($contract->stumi_id)->vorname ?></h3>
+    <h3>Fachbereich/Organisationseinheit: <?= Institute::find($contract->inst_id)->name ?></h3>
 
-    <h2>Monat/Jahr: 
+    <h3>Monat/Jahr: 
         <form name="month_select" method="post"  action="<?= $controller->url_for('timesheet/select/' . $contract->id) ?>">
             <select name ='month' onchange="this.form.submit()">
                 <?php foreach ($plugin->getMonths() as $entry_value): ?>
@@ -21,13 +21,13 @@ use Studip\Button, Studip\LinkButton;
             </select>
         </form>
         
-    </h2>
-<? else : ?>
+    </h3>
+<?php else : ?>
 
-    <h2>Name, Vorname der Hilfskraft: <?= User::findOneByUser_Id($timesheet->stumi_id)->nachname ?>, <?= User::findOneByUser_Id($timesheet->stumi_id)->vorname ?></h2>
-    <h2>Fachbereich/Organisationseinheit: <?= Institute::find($inst_id)->name ?></h2>
-    <h2>Monatsarbeitszeit laut Arbeitsvertrag: <?= $timesheet->contract->contract_hours ?> Stunden</h2>
-    <h2>Monat/Jahr: 
+    <h3>Name, Vorname der Hilfskraft: <?= User::findOneByUser_Id($timesheet->stumi_id)->nachname ?>, <?= User::findOneByUser_Id($timesheet->stumi_id)->vorname ?></h3>
+    <h3>Fachbereich/Organisationseinheit: <?= Institute::find($inst_id)->name ?></h3>
+    <h3>Monatsarbeitszeit laut Arbeitsvertrag: <?= $timesheet->contract->contract_hours ?> Stunden</h3>
+    <h3>Monat/Jahr: 
         <form name="month_select" method="post"  action="<?= $controller->url_for('timesheet/select/' . $timesheet->contract_id) ?>">
             <select name ='month' onchange="this.form.submit()">
                 <?php foreach ($plugin->getMonths() as $entry_value): ?>
@@ -41,9 +41,9 @@ use Studip\Button, Studip\LinkButton;
             </select>
         </form>
         
-    </h2>
+    </h3>
 
-<form name="timesheet_form" method="post" class='<?= $adminrole ? 'admin' : '' ?>' onsubmit="return validateForm()" action="<?= $controller->url_for('timesheet/save_timesheet', $timesheet->id) ?>" class="default collapsable">
+<form name="timesheet_form" method="post" class='<?= $adminrole ? 'admin' : '' ?> <?= $timesheet->locked ? 'locked' : '' ?>' onsubmit="return validateForm()" action="<?= $controller->url_for('timesheet/save_timesheet', $timesheet->id) ?>" class="default collapsable">
     <?= CSRFProtection::tokenTag() ?>
     
         <table class='sortable-table default'>
@@ -172,7 +172,7 @@ use Studip\Button, Studip\LinkButton;
         <?= Button::create(_('Übernehmen')) ?>
     </footer>
 </form>
-    
+
 <? endif ?>    
     
 
@@ -218,7 +218,7 @@ use Studip\Button, Studip\LinkButton;
         }
         
         var form = document.getElementsByName('timesheet_form')[0];
-        if (form.getAttribute("class") == 'admin'){
+        if (form.classList.contains('admin') || form.classList.contains('locked') ){
             var inputs = form.querySelectorAll("input, select");
             for(var i = 0; i < inputs.length; i++){
                 inputs[i].setAttribute("disabled", true);;
@@ -374,7 +374,7 @@ use Studip\Button, Studip\LinkButton;
 
 </script>
         
-        
+<!-- remove         -->
 <script>
 
     function validateForm() {
@@ -389,7 +389,6 @@ use Studip\Button, Studip\LinkButton;
     for (index = 0; index < inputs.length; ++index) {
         // deal with inputs[index] element.
         inputs[index].onchange = function () {
-            alert('test');
             var begin = document.getElementsByName('begin[1]')[0].value;
             var end = document.getElementsByName('end[1]')[0].value;
             document.getElementsByName('sum[1]')[0].value = begin + end;
