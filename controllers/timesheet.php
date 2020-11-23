@@ -221,6 +221,20 @@ class TimesheetController extends StudipController {
         }
     }
     
+    public function approve_action($timesheet_id)
+    {
+        $timesheet = StundenzettelTimesheet::find($timesheet_id);
+        if($timesheet && User::findCurrent()->user_id == $timesheet->contract->supervisor){
+            $timesheet->approved = true;
+            $timesheet->store();
+            PageLayout::postMessage(MessageBox::success(_("Korrektheit der Angaben wurde von Ihnen bestätigt.")));
+            $this->redirect('timesheet/index/'. $timesheet->contract->id);
+        } else {
+            PageLayout::postMessage(MessageBox::error(_("Fehler: Sie sind nicht berechtigt diesen Stundenzettel zu bewerten.")));
+            $this->redirect('timesheet/index');
+        }
+    }
+    
     // customized #url_for for plugins
     public function url_for($to = '')
     {

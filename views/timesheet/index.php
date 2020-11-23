@@ -22,7 +22,7 @@
                 <tr>  
                     <td><a href='<?=$this->controller->url_for('timesheet/timesheet/' . $timesheet->id) ?>' title='Stundenzettel editieren'><?= $timesheet->month ?>/<?= $timesheet->year ?></a>
                     </td>
-                    <td><?= $timesheet->sum ?></td>
+                    <td><?= ($timesheet->sum) ? : '0:00' ?> / <?= $timesheet->contract->contract_hours ?></td>
                     <td><?= $timesheet->timesheet_balance ?></td>
                     <td>  
                         <?= ($timesheet->finished) ?  
@@ -66,7 +66,7 @@
                 <tr>  
                     <td><a href='<?=$this->controller->url_for('timesheet/timesheet/' . $timesheet->id) ?>' title='Stundenzettel editieren'><?= $timesheet->month ?>/<?= $timesheet->year ?></a>
                     </td>
-                    <td><?= $timesheet->sum ?></td>
+                    <td><?= ($timesheet->sum) ? : '0:00' ?> / <?= $timesheet->contract->contract_hours ?></td>
                     <td><?= $timesheet->timesheet_balance ?></td>
                     <td>
                         <?= ($timesheet->finished) ?  

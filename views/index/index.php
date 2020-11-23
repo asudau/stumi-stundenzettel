@@ -39,8 +39,10 @@
                     <td><?= $contract->getRemainingVacation(date('Y', time()))?></td>
                     <td><?= User::findOneByUser_Id($contract->supervisor)->username ?></td>
                     <td>
-                       <a onclick="return confirm('Eintrag löschen?')" href='<?=$this->controller->url_for('index/delete/' . $contract->id) ?>' title='Eintrag löschen' ><?=Icon::create('trash')?></a>
-                       <a  href='<?=$this->controller->url_for('index/edit/' . $contract->id) ?>' title='Vertragsdaten bearbeiten' data-dialog='size=auto'><?=Icon::create('edit')?></a>
+                        <? if ($adminrole) : ?>
+                            <a onclick="return confirm('Eintrag löschen?')" href='<?=$this->controller->url_for('index/delete/' . $contract->id) ?>' title='Eintrag löschen' ><?=Icon::create('trash')?></a>
+                            <a  href='<?=$this->controller->url_for('index/edit/' . $contract->id) ?>' title='Vertragsdaten bearbeiten' data-dialog='size=auto'><?=Icon::create('edit')?></a>
+                        <? endif ?>
                     </td>
 
                 </tr>

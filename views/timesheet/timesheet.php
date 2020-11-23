@@ -167,12 +167,16 @@ use Studip\Button, Studip\LinkButton;
                 </tr>
         </table>
 
-
-    <footer data-dialog-button>
-        <?= Button::create(_('Übernehmen')) ?>
-    </footer>
+    <? if ($stumirole) : ?>
+        <footer data-dialog-button>
+            <?= Button::create(_('Übernehmen')) ?>
+        </footer>
+    <? endif ?>  
 </form>
-
+<? endif ?>  
+    
+<? if ($supervisorrole) : ?>
+     <?= LinkButton::create(_('Korrektheit bestätigen'), $controller->url_for('timesheet/approve/' . $timesheet->id) ) ?>
 <? endif ?>    
     
 
