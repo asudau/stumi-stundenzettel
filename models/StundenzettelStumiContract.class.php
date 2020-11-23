@@ -19,28 +19,28 @@ class StundenzettelStumiContract extends \SimpleORMap
         'finished' => array(
             'icon' => 'radiobutton-checked',
             'true_icon_role' => Icon::ROLE_STATUS_GREEN,
-            'false_icon_role' => Icon::ROLE_INACTIVE,
+            'false_icon_role' => Icon::ROLE_NAVIGATION,
             'true_tooltip' => 'Digitaler Stundenzettel eingereicht',
             'false_tooltip' => 'Digitaler Stundenzettel noch nicht eingereicht'
             ),
         'approved' => array(
             'icon' => 'accept',
             'true_icon_role' => Icon::ROLE_STATUS_GREEN,
-            'false_icon_role' => Icon::ROLE_INACTIVE,
+            'false_icon_role' => Icon::ROLE_NAVIGATION,
             'true_tooltip' => 'Digitaler Stundenzettel durch verantwortliche/n Mitarbeiter/in freigegeben',
             'false_tooltip' => 'Digitaler Stundenzettel noch nicht durch verantwortliche/n Mitarbeiter/in geprüft und freigegebn'
             ),
         'received' => array(
             'icon' => 'inbox',
             'true_icon_role' => Icon::ROLE_STATUS_GREEN,
-            'false_icon_role' => Icon::ROLE_INACTIVE,
+            'false_icon_role' => Icon::ROLE_NAVIGATION,
             'true_tooltip' => 'Papierausdruck liegt unterschrieben im Sekretariat vor',
             'false_tooltip' => 'Papierausdruck liegt noch nicht im Sekretariat vor'
             ),
         'complete' => array(
             'icon' => 'lock-locked',
             'true_icon_role' => Icon::ROLE_STATUS_GREEN,
-            'false_icon_role' => Icon::ROLE_INACTIVE,
+            'false_icon_role' => Icon::ROLE_NAVIGATION,
             'true_tooltip' => 'Vorgang abgeschlossen',
             'false_tooltip' => 'Vorgang offen'
             ),
