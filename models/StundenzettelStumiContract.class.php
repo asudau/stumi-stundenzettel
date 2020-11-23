@@ -101,7 +101,13 @@ class StundenzettelStumiContract extends \SimpleORMap
     }
     
     function monthPartOfContract($month, $year){
-        return (intval($this->contract_begin) < strtotime($year . '-' . $month . '-28')) && (strtotime($year . '-' . $month . '-01') < intval($this->contract_end)); 
+        $contract_begin_data = StundenzettelContractBegin::find($this->id);
+        if ($contract_begin_data){ //digitale Stundenerfassung beginnt erst zu späterem Zeitpunkt
+            return ( strtotime($contract_begin_data->begin_digital_recording_year . '-' . $contract_begin_data->begin_digital_recording_month . '-01') < strtotime($year . '-' . $month . '-28')) && 
+                    (strtotime($year . '-' . $month . '-01') < intval($this->contract_end));
+        } else {
+            return (intval($this->contract_begin) < strtotime($year . '-' . $month . '-28')) && (strtotime($year . '-' . $month . '-01') < intval($this->contract_end)); 
+        }
     }
     
     function getVacationEntitlement($year)

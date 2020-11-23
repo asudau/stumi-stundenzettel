@@ -124,6 +124,15 @@ class IndexController extends StudipController {
         $this->render_action('new');
     }
     
+    public function define_begin_digital_recording_action($contract_id)
+    {   
+        $this->contract = StundenzettelStumiContract::find($contract_id);
+        $this->inst_id = $this->contract->inst_id;
+        $this->stumi = User::find($this->contract->stumi_id);
+        $supervisor = User::find($this->contract->supervisor);
+        
+    }
+    
     public function save_action($inst_id, $stumi_id, $contract_id)
     {   
         if ($this->plugin->hasStumiAdminrole ()) {

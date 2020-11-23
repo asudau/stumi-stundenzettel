@@ -42,7 +42,8 @@
                         <? if ($adminrole) : ?>
                             <a onclick="return confirm('Eintrag löschen?')" href='<?=$this->controller->url_for('index/delete/' . $contract->id) ?>' title='Eintrag löschen' ><?=Icon::create('trash')?></a>
                             <a  href='<?=$this->controller->url_for('index/edit/' . $contract->id) ?>' title='Vertragsdaten bearbeiten' data-dialog='size=auto'><?=Icon::create('edit')?></a>
-                        <? endif ?>
+                            <a  href='<?=$this->controller->url_for('index/define_begin_digital_recording/' . $contract->id) ?>' title='Zeitpunkt für Beginn digitaler Erfassung defnieren' data-dialog='size=auto'><?=Icon::create('date')?></a>                      
+                            <? endif ?>
                     </td>
 
                 </tr>
