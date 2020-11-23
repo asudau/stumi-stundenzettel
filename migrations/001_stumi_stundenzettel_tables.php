@@ -42,7 +42,7 @@ class StumiStundenzettelTables extends Migration
             `approved` tinyint(1) NOT NULL DEFAULT '0',
             `received` tinyint(1) NOT NULL DEFAULT '0',
             `complete` tinyint(1) NOT NULL DEFAULT '0',
-            `sum` DECIMAL (6, 2) NOT NULL,
+            `sum` text NULL,
             PRIMARY KEY (id)
         ) ");
         
@@ -50,15 +50,15 @@ class StumiStundenzettelTables extends Migration
         $db->exec("CREATE TABLE IF NOT EXISTS `stundenzettel_records` (
             `id` varchar(32) NOT NULL,
             `timesheet_id` varchar(32) NOT NULL,
-            `day` varchar(32) NOT NULL,
-            `begin` int(11) NULL,
-            `end`  int(11) NULL,
-            `break` int(11) NULL ,
-            `sum` DECIMAL (6, 2) NULL ,
+            `day` int(2) NOT NULL,
+            `begin` varchar(5) NULL,
+            `end`  varchar(5) NULL,
+            `break` varchar(5) NULL ,
+            `sum` varchar(5) NULL ,
             `defined_comment` ENUM('Krank', 'Urlaub', 'Feiertag') NULL,
             `comment` varchar(255) NOT NULL,
-            `entry_mktime` int(11) NULL ,
-            PRIMARY KEY (id)
+            `entry_mktime` date NULL ,
+            PRIMARY KEY (`timesheet_id`, `day`)
         ) ");
 
         SimpleORMap::expireTableScheme();
