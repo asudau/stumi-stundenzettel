@@ -23,7 +23,7 @@
                     <td><a href='<?=$this->controller->url_for('timesheet/timesheet/' . $timesheet->id) ?>' title='Stundenzettel editieren'><?= $timesheet->month ?>/<?= $timesheet->year ?></a>
                     </td>
                     <td><?= ($timesheet->sum) ? : '0:00' ?> / <?= $timesheet->contract->contract_hours ?></td>
-                    <td><?= $timesheet->timesheet_balance ?></td>
+                    <td><?= ($timesheet->month_completed) ? $timesheet->timesheet_balance : 'ausstehend' ?></td>
                     <td>  
                         <?= ($timesheet->finished) ?  
                              Icon::create($status_infos['finished']['icon'], $status_infos['finished']['true_icon_role'], ['title' =>  $status_infos['finished']['true_tooltip']] ) :
@@ -67,7 +67,7 @@
                     <td><a href='<?=$this->controller->url_for('timesheet/timesheet/' . $timesheet->id) ?>' title='Stundenzettel editieren'><?= $timesheet->month ?>/<?= $timesheet->year ?></a>
                     </td>
                     <td><?= ($timesheet->sum) ? : '0:00' ?> / <?= $timesheet->contract->contract_hours ?></td>
-                    <td><?= $timesheet->timesheet_balance ?></td>
+                    <td><?= ($timesheet->month_completed) ? $timesheet->timesheet_balance : 'ausstehend' ?></td>
                     <td>
                         <?= ($timesheet->finished) ?  
                              Icon::create($status_infos['finished']['icon'], $status_infos['finished']['true_icon_role'], ['title' =>  $status_infos['finished']['true_tooltip']] ) :

@@ -135,7 +135,7 @@ class StundenzettelStumiContract extends \SimpleORMap
         $timesheets = StundenzettelTimesheet::findBySQL('`contract_id` LIKE ?', [$this->id]);
         $balance_time = '0:0';
         foreach ($timesheets as $timesheet) {
-            if (strtotime($timesheet->year . '-' . $timesheet->month . '-28') < time()){
+            if ($timesheet->month_completed){
                 $balance_time = StundenzettelTimesheet::addTimes($balance_time, $timesheet->timesheet_balance);
             }
         }

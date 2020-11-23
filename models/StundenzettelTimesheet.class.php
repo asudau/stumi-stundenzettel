@@ -14,7 +14,7 @@
  * @property tinyint       $received
  * @property tinyint       $complete
  * @property decimal       $sum
-
+ * @property boolen        $month_completed  //calcultated for each day
  */
 
 class StundenzettelTimesheet extends \SimpleORMap
@@ -29,7 +29,16 @@ class StundenzettelTimesheet extends \SimpleORMap
             'foreign_key' => 'contract_id',];
         
         $config['additional_fields']['timesheet_balance']['get'] = function ($item) {
-            return self::subtractTimes($item->sum, $item->contract->contract_hours);     
+            if ($item->month_completed){
+                return self::subtractTimes($item->sum, $item->contract->contract_hours);
+            } else {
+                return '';
+            }
+        };
+        
+        $config['additional_fields']['month_completed']['get'] = function ($item) {
+            $days_per_month = cal_days_in_month(CAL_GREGORIAN, $item->month, $item->year);
+            return strtotime($item->year . '-' . $item->month . '-' . $days_per_month) < time();
         };
         
         $config['additional_fields']['locked']['get'] = function ($item) {
