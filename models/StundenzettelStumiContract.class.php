@@ -110,6 +110,18 @@ class StundenzettelStumiContract extends \SimpleORMap
         }
     }
     
+    function monthWithinRecordingTime($month, $year)
+    {
+        if (StundenzettelContractBegin::find($this->id)) {    
+            $contract_data = StundenzettelContractBegin::find($this->id);
+            if (($year == $contract_data->begin_digital_recording_year && $month < $contract_data->begin_digital_recording_month) ||
+                  $year < $contract_data->begin_digital_recording_year  ){
+                return false;
+            } else return true;
+        } else return true;
+        
+    }
+    
     function getVacationEntitlement($year)
     {
         $dezimal_entitlement = $this->contract_hours * $this->getContractDuration() * 0.077; //TODO nicht duration sondern pro Jahr
@@ -118,10 +130,10 @@ class StundenzettelStumiContract extends \SimpleORMap
         return sprintf("%02s", $entitlement_hours) . ':' . sprintf("%02s", round($entitlement_minutes) ); //round($entitlement_minutes, 3)
     }
     
-    //function subtractTimes
+    
     function getRemainingVacation($year)
     {
-        return StundenzettelTimesheet::subtractTimes($this->getVacationEntitlement($year), $this->getClaimedVacation($year));
+        return StundenzettelTimesheet::subtractTimes($this->getVacationEntitlement($year), $this->getClaimedVacation($year));;
     }
     
     function getClaimedVacation($year)
@@ -132,8 +144,16 @@ class StundenzettelStumiContract extends \SimpleORMap
             $records = StundenzettelRecord::findBySQL('`timesheet_id` = ? AND `defined_comment` = "Urlaub"', [$timesheet->id]);
             $vacation_days += sizeof($records);
         }
+        $claimed_vacation = StundenzettelTimesheet::multiplyMinutes($this->default_workday_time_in_minutes, $vacation_days);
         
-        return StundenzettelTimesheet::multiplyMinutes($this->default_workday_time_in_minutes, $vacation_days);
+        if (StundenzettelContractBegin::find($this->id)) {    
+            $contract_data = StundenzettelContractBegin::find($this->id);
+            if ($contract_data->begin_digital_recording_year){
+                $claimed_vacation = StundenzettelTimesheet::addTimes($claimed_vacation, $contract_data->vacation_claimed);
+            }
+        }
+        
+        return $claimed_vacation;
     }
     
     function getWorktimeBalance()
@@ -141,9 +161,13 @@ class StundenzettelStumiContract extends \SimpleORMap
         $timesheets = StundenzettelTimesheet::findBySQL('`contract_id` LIKE ?', [$this->id]);
         $balance_time = '0:0';
         foreach ($timesheets as $timesheet) {
-            if ($timesheet->month_completed){
+            if ($timesheet->month_completed && $this->monthWithinRecordingTime($timesheet->month, $timesheet->year)) {
                 $balance_time = StundenzettelTimesheet::addTimes($balance_time, $timesheet->timesheet_balance);
             }
+        }
+        if (StundenzettelContractBegin::find($this->id)) {    
+            $contract_data = StundenzettelContractBegin::find($this->id);
+            $balance_time = StundenzettelTimesheet::addTimes($balance_time, $contract_data->balance); 
         }
         return $balance_time;
     }

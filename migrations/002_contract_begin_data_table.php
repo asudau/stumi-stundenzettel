@@ -20,7 +20,7 @@ class ContractBeginDataTable extends Migration
             `vacation_claimed` varchar(6) NOT NULL,
             `begin_digital_recording_month` int(2) NOT NULL,
             `begin_digital_recording_year` int(4) NOT NULL,
-            PRIMARY KEY (id)
+            PRIMARY KEY (contract_id)
         ) ");
         
         SimpleORMap::expireTableScheme();

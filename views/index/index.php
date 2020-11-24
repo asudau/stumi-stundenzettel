@@ -29,7 +29,13 @@
                 <tr>  
                     <td><a href='<?=$this->controller->url_for('timesheet/index/' . $contract->id) ?>' title='Stundenzettel einsehen'><?= $stumi->nachname ?>, <?= $stumi->vorname ?></a>
                     </td>
-                    <td><?= date('d.m.Y', $contract->contract_begin) ?></td>
+                    <td><?= date('d.m.Y', $contract->contract_begin) ?>
+                        <? if (StundenzettelContractBegin::find($contract->id)) : ?>
+                            <? $begin_data = StundenzettelContractBegin::find($contract->id); ?>
+                            <?= Icon::create('info-circle', 'clickable',  
+                                    ['title' => 'Beginn der elektronischen Erfassung: ' . $begin_data->begin_digital_recording_month . '/' . $begin_data->begin_digital_recording_year ]);?>
+                        <? endif ?>
+                    </td>
                     <td><?= date('d.m.Y', $contract->contract_end) ?></td>
                     <td><?= $contract->getContractDuration() ?></td>
                     <td><?= $contract->contract_hours ?></td>
@@ -42,7 +48,7 @@
                         <? if ($adminrole) : ?>
                             <a onclick="return confirm('Eintrag löschen?')" href='<?=$this->controller->url_for('index/delete/' . $contract->id) ?>' title='Eintrag löschen' ><?=Icon::create('trash')?></a>
                             <a  href='<?=$this->controller->url_for('index/edit/' . $contract->id) ?>' title='Vertragsdaten bearbeiten' data-dialog='size=auto'><?=Icon::create('edit')?></a>
-                            <a  href='<?=$this->controller->url_for('index/define_begin_digital_recording/' . $contract->id) ?>' title='Zeitpunkt für Beginn digitaler Erfassung defnieren' data-dialog='size=auto'><?=Icon::create('date')?></a>                      
+                            <a  href='<?=$this->controller->url_for('index/add_contract_begin_data/' . $contract->id) ?>' title='Zeitpunkt für Beginn digitaler Erfassung defnieren' data-dialog='size=auto'><?=Icon::create('date')?></a>                      
                             <? endif ?>
                     </td>
 

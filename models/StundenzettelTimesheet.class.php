@@ -187,39 +187,50 @@ class StundenzettelTimesheet extends \SimpleORMap
         $minutes_total = 0;
         $hours_total = 0;
         
-        if (($timea_minutes + $timeb_minutes) >= 60) {
-            $hours_total += 1;
-            $minutes_total = ($timea_minutes + $timeb_minutes) - 60;
-        } else {
-            $minutes_total = $timea_minutes + $timeb_minutes;
+        if ($timea_hours < 0 && $timeb_hours < 0){
+            return '-' . self::addTimes(substr($timea, 1), substr($timeb, 1));
+        } else if ($timea_hours < 0 && $timeb_hours > 0){
+            return self::subtractTimes($timeb, substr($timea, 1));
+        } else if ($timea_hours > 0 && $timeb_hours < 0){
+            return self::subtractTimes($timea, substr($timeb, 1));
         }
         
-        $hours_total = $timea_hours + $timeb_hours;
-        return (sprintf("%02s", $hours_total) . ':' . sprintf("%02s", $minutes_total));        
+        $timea_minutes = intval($timea_pts[1]) + intval($timea_pts[0]) * 60;
+        $timeb_minutes = intval($timeb_pts[1]) + intval($timeb_pts[0]) * 60;
+        
+        $minutes_total = $timea_minutes + $timeb_minutes;
+        $hours = floor($minutes_total / 60);
+        $minutes = $minutes_total % 60;
+        
+        return sprintf("%02s", $hours) . ':' . sprintf("%02s", $minutes);
+//        if (($timea_minutes + $timeb_minutes) >= 60) {
+//            $hours_total += 1;
+//            $minutes_total = ($timea_minutes + $timeb_minutes) - 60;
+//        } else {
+//            $minutes_total = $timea_minutes + $timeb_minutes;
+//        }
+//        
+//        $hours_total = $timea_hours + $timeb_hours;
+//        return (sprintf("%02s", $hours_total) . ':' . sprintf("%02s", $minutes_total));        
     }
     
     static function subtractTimes($timea, $timeb){
         $timea_pts = explode(':', $timea);
         $timeb_pts = explode(':', $timeb);
         
-        $timea_minutes = intval($timea_pts[1]);
-        $timea_hours = intval($timea_pts[0]);
-
-        $timeb_minutes = intval($timeb_pts[1]);
-        $timeb_hours = intval($timeb_pts[0]);
+        $timea_minutes = intval($timea_pts[1]) + intval($timea_pts[0]) * 60;
+        $timeb_minutes = intval($timeb_pts[1]) + intval($timeb_pts[0]) * 60;
         
-        $minutes_total = 0;
-        $hours_total = 0;
-        
-        if (($timea_minutes - $timeb_minutes) < 0) {
-            $hours_total -= 1;
-            $minutes_total = ($timea_minutes - $timeb_minutes) + 60;
+        $minutes_total = $timea_minutes - $timeb_minutes;
+        $hours = floor($minutes_total / 60);
+        if (($minutes_total % 60) != 0 && $hours < 0) {
+            $hours = $hours + 1;
+            $minutes = $minutes_total % 60;
         } else {
-            $minutes_total = $timea_minutes - $timeb_minutes;
+            $minutes = $minutes_total % 60;
         }
-        
-        $hours_total = $timea_hours - $timeb_hours;
-        return (sprintf("%02s", $hours_total) . ':' . sprintf("%02s", $minutes_total));        
+ 
+        return (sprintf("%02s", $hours) . ':' . sprintf("%02s", abs($minutes)));        
     }
     
     static function multiplyMinutes($minutes, $factor){

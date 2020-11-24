@@ -124,13 +124,11 @@ class IndexController extends StudipController {
         $this->render_action('new');
     }
     
-    public function define_begin_digital_recording_action($contract_id)
+    public function add_contract_begin_data_action($contract_id)
     {   
         $this->contract = StundenzettelStumiContract::find($contract_id);
-        $this->inst_id = $this->contract->inst_id;
         $this->stumi = User::find($this->contract->stumi_id);
-        $supervisor = User::find($this->contract->supervisor);
-        
+        $this->contract_data = StundenzettelContractBegin::find($contract_id); 
     }
     
     public function save_action($inst_id, $stumi_id, $contract_id)
@@ -180,6 +178,32 @@ class IndexController extends StudipController {
         
         $this->redirect('index/');
 
+    }
+    
+    public function save_contract_begin_data_action($contract_id)
+    {   
+        $begin_data = StundenzettelContractBegin::find($contract_id);
+//        $this->contract = StundenzettelStumiContract::find($contract_id);
+//        $this->inst_id = $this->contract->inst_id;
+//        $this->stumi = User::find($this->contract->stumi_id);
+        if (!$begin_data) {
+            $begin_data = new StundenzettelContractBegin();
+            $begin_data->contract_id = $contract_id;
+        }
+        
+        $begin_data->begin_digital_recording_month = Request::get('begin_month');
+        $begin_data->begin_digital_recording_year = Request::get('begin_year');
+        $begin_data->vacation_claimed = Request::get('vacation_claimed');
+        $begin_data->balance = Request::get('balance');
+        
+        if($begin_data->store()){
+            PageLayout::postMessage(MessageBox::success(_("Vertragsdaten gespeichert"))); 
+        } else {
+            PageLayout::postMessage(MessageBox::error(_("Daten konnten nicht gespeichert werden"))); 
+        }
+        
+        $this->redirect('index/');
+  
     }
     
     public function institute_settings_action(){
