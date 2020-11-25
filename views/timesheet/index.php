@@ -2,7 +2,7 @@
 
 <body>
 <div>
-<?php if (!$contract_id) : ?>   
+<?php if (!$contract->id) : ?>   
     <h1> Diese Ansicht fehlt noch, Für die Übersicht über Stundenzettel einer Person, einfach die Person anklicken. </h1>
     
 <?php elseif ($adminrole || $supervisorrole) : ?>    
