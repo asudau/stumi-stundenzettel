@@ -69,7 +69,7 @@
                     <td> -- </td>
                     <td> -- </td>
                     <td>
-                       <a  href='<?=$this->controller->url_for('index/new/'. $inst_id. '/' . $stumi->user_id) ?>' title='Vertrag hinzufügen' data-dialog='size=auto'><?=Icon::create('add')?></a>
+                       <a  href='<?=$this->controller->url_for('index/new/'. $inst_id[0] . '/' . $stumi->user_id) ?>' title='Vertrag hinzufügen' data-dialog='size=auto'><?=Icon::create('add')?></a>
                     </td>
                     </tr>
 
