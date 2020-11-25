@@ -82,7 +82,7 @@ class StundenzettelTimesheet extends \SimpleORMap
         $pdf->Write(5, studip_utf8encode(User::find($this->stumi_id)->nachname . ', ' .  User::find($this->stumi_id)->vorname));
         $pdf->Ln();
         $pdf->SetX(90);
-        $pdf->Write(5, studip_utf8encode(Institute::find($this->inst_id)->name ));
+        $pdf->Write(5, studip_utf8encode(my_substr(Institute::find($this->inst_id)->name ,0,50)));
         $pdf->Ln();
         $pdf->SetX(90);
         $pdf->Write(6, studip_utf8encode($this->month . '/' . $this->year));
