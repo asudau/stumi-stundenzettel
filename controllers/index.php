@@ -47,15 +47,7 @@ class IndexController extends StudipController {
             if (sizeof($this->inst_id) == 0) { //local testing with root
                 $this->inst_id[] = '477d184367f48cc210f74bb4f779c7b7';
             }
-            
-            //setup navigation
-            $views = new ViewsWidget();
-            $views->addLink(_('Übersicht über Studentische MitarbeiterInnen'),
-                            $this->url_for('index'))
-                  ->setActive($action === 'index');
-            
-            Sidebar::get()->addWidget($views);
-            
+        
             //get all stumis an contracts
             $groups = Statusgruppen::findBySQL('`name` LIKE ? AND `range_id` LIKE ?', ['%Studentische%', $this->inst_id[0]]);
             foreach ($groups as $group) {
@@ -77,12 +69,12 @@ class IndexController extends StudipController {
                 }
             }   
             //setup navigation
-            $views = new ViewsWidget();
-            $views->addLink(_('Übersicht über Studentische MitarbeiterInnen'),
-                            $this->url_for('index'))
-                  ->setActive($action === 'index');
-            
-            Sidebar::get()->addWidget($views);
+//            $views = new ViewsWidget();
+//            $views->addLink(_('Übersicht über Studentische MitarbeiterInnen'),
+//                            $this->url_for('index'))
+//                  ->setActive($action === 'index');
+//            
+//            Sidebar::get()->addWidget($views);
             
         }
         
