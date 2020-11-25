@@ -33,7 +33,7 @@ class TimesheetController extends StudipController {
 
     }
 
-    public function index_action($contract_id)
+    public function index_action($contract_id = NULL)
     {
         Navigation::activateItem('tools/hilfskraft-stundenverwaltung/timesheets');
         

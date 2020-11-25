@@ -2,8 +2,10 @@
 
 <body>
 <div>
+<?php if (!$contract_id) : ?>   
+    <h1> Diese Ansicht fehlt noch, Für die Übersicht über Stundenzettel einer Person, einfach die Person anklicken. </h1>
     
-<?php if ($adminrole || $supervisorrole) : ?>    
+<?php elseif ($adminrole || $supervisorrole) : ?>    
     <h1> <?= $stumi->nachname ?>, <?= $stumi->vorname ?> </h1>
     Vertragslaufzeit: <?= date('d.m.Y', $contract->contract_begin) ?> bis <?= date('d.m.Y', $contract->contract_end) ?>
 
