@@ -30,7 +30,8 @@ class TimesheetController extends StudipController {
         if ($this->plugin->isStumiSupervisor ()) {
             $this->supervisorrole = true;
         }
-
+        
+        $this->time_pattern = '^(24:00)|((0[1-9]|1\d|2[0-3]):([0-5]\d))|(00:(0[1-5]|[1-9]0|[1-5][1-9]))$';
     }
 
     public function index_action($contract_id = NULL)
