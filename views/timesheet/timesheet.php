@@ -79,7 +79,7 @@ use Studip\Button, Studip\LinkButton;
                             <input type='text' pattern="<?= $time_pattern ?>" <?= (!$is_editable)? 'readonly' : ''?> class='begin size-s studip-timepicker' id ='' name ='begin[<?= $i ?>]' value='<?= $records[$j]['begin'] ?>' placeholder="hh:mm" >
                         </td>
                         <td>
-                            <input type='text' pattern="<?= $time_pattern ?>" <?= (!$is_editable)? 'readonly' : ''?> class='break' name ='break[<?= $i ?>]' value ='<?= $records[$j]['break'] ?>' placeholder="hh:mm">
+                            <input type='text' pattern="<?= $break_pattern ?>" <?= (!$is_editable)? 'readonly' : ''?> class='break' name ='break[<?= $i ?>]' value ='<?= $records[$j]['break'] ?>' placeholder="hh:mm">
                         </td>
                         <td>
                             <input type='text' pattern="<?= $time_pattern ?>" <?= (!$is_editable)? 'readonly' : ''?> class='end size-s studip-timepicker' id ='' name ='end[<?= $i ?>]' value='<?= $records[$j]['end'] ?>' placeholder="hh:mm" >
@@ -124,7 +124,7 @@ use Studip\Button, Studip\LinkButton;
                             <input type='text' pattern="<?= $time_pattern ?>" <?= (!$is_editable)? 'readonly' : ''?> class='begin' id ='' name ='begin[<?= $i ?>]' value='' placeholder="hh:mm" >
                         </td>
                         <td>
-                            <input type='text' pattern="<?= $time_pattern ?>" <?= (!$is_editable)? 'readonly' : ''?> class ='break' name ='break[<?= $i ?>]' value ='' placeholder="hh:mm">
+                            <input type='text' pattern="<?= $break_pattern ?>" <?= (!$is_editable)? 'readonly' : ''?> class ='break' name ='break[<?= $i ?>]' value ='' placeholder="hh:mm">
                         </td>
                         <td>
                             <input type='text' pattern="<?= $time_pattern ?>" <?= (!$is_editable)? 'readonly' : ''?> class='end' name ='end[<?= $i ?>]' value='' placeholder="hh:mm" >
@@ -253,7 +253,7 @@ use Studip\Button, Studip\LinkButton;
     function calculate_sum(begin, end, brk){
         
         if (begin && end){
-            if (!brk) {
+            if (!brk || brk == '0') {
               brk = '00:00';  
             }
             var begin_array = begin.split(':');
@@ -289,7 +289,7 @@ use Studip\Button, Studip\LinkButton;
 
             hours_total = +end_hours - +begin_hours;
             return (("0" + hours_total).slice (-2) + ':' + ("0" + minutes_total).slice (-2));
-        }
+        } else return '';
    
     }
     
@@ -297,6 +297,9 @@ use Studip\Button, Studip\LinkButton;
         var begin = document.getElementsByName('begin' + row_index)[0].value;
         var end = document.getElementsByName('end' + row_index)[0].value;
         var brk = document.getElementsByName('break' + row_index)[0].value;
+        if ((begin && end) && (brk == '0')) {
+              document.getElementsByName('break' + row_index)[0].value = '00:00';
+            }
         var res = calculate_sum(begin, end, brk);
         document.getElementsByName('sum' + row_index)[0].value = res;
     }
