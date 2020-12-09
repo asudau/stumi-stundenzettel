@@ -288,7 +288,7 @@ use Studip\Button, Studip\LinkButton;
             }
 
             hours_total = +end_hours - +begin_hours;
-            return (hours_total + ':' + minutes_total);
+            return (("0" + hours_total).slice (-2) + ':' + ("0" + minutes_total).slice (-2));
         }
    
     }
