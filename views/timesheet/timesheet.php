@@ -30,6 +30,7 @@ use Studip\Button, Studip\LinkButton;
     <p>Name, Vorname: <b><?= User::findOneByUser_Id($timesheet->stumi_id)->nachname ?>, <?= User::findOneByUser_Id($timesheet->stumi_id)->vorname ?></b></p>
     <p>Fachbereich/Organisationseinheit: <b><?= Institute::find($inst_id)->name ?></b></p>
     <p>Monatsarbeitszeit laut Arbeitsvertrag: <b><?= $timesheet->contract->contract_hours ?> Stunden </b></p>
+    <p>Diesen Monat erfasst: <b> <?= $timesheet->sum ?> Stunden </b></p>
     <p>Monat/Jahr: 
         <form name="month_select" method="post"  action="<?= $controller->url_for('timesheet/select/' . $timesheet->contract_id) ?>">
             <select name ='month' onchange="this.form.submit()">
@@ -43,7 +44,7 @@ use Studip\Button, Studip\LinkButton;
                 <?php endforeach ?>
             </select>
         </form>
-    </p>
+    </p> 
 
 
 <form id="timesheet_form" method="post" class='<?= $adminrole ? 'admin' : '' ?> <?= $timesheet->locked ? 'locked' : '' ?>' onsubmit="return validateForm()" action="<?= $controller->url_for('timesheet/save_timesheet', $timesheet->id) ?>" class="default collapsable">
