@@ -2,6 +2,10 @@
 use Studip\Button, Studip\LinkButton;
 ?>
 
+<div id='form_error' class="messagebox messagebox_error " style='display:none'>
+    Speichern wegen fehlerhafter Werte nicht möglich. Bitte überprüfe deine Eingaben.
+</div>
+
 <?php if ($no_timesheet) : ?>
     <h3>Name, Vorname der Hilfskraft: <?= User::findOneByUser_Id($contract->stumi_id)->nachname ?>, <?= User::findOneByUser_Id($contract->stumi_id)->vorname ?></h3>
     <h3>Fachbereich/Organisationseinheit: <?= Institute::find($contract->inst_id)->name ?></h3>
@@ -42,7 +46,7 @@ use Studip\Button, Studip\LinkButton;
         
     </h3>
 
-<form name="timesheet_form" method="post" class='<?= $adminrole ? 'admin' : '' ?> <?= $timesheet->locked ? 'locked' : '' ?>' onsubmit="return validateForm()" action="<?= $controller->url_for('timesheet/save_timesheet', $timesheet->id) ?>" class="default collapsable">
+<form id="timesheet_form" method="post" class='<?= $adminrole ? 'admin' : '' ?> <?= $timesheet->locked ? 'locked' : '' ?>' onsubmit="return validateForm()" action="<?= $controller->url_for('timesheet/save_timesheet', $timesheet->id) ?>" class="default collapsable">
     <?= CSRFProtection::tokenTag() ?>
     <div style="overflow:scroll;height:400px">
         <table class='sortable-table default'>
@@ -195,10 +199,27 @@ use Studip\Button, Studip\LinkButton;
     input[class*="empty_date"]::-webkit-datetime-edit {
         color: transparent; 
     }
+    :invalid {
+        box-shadow: none; /* FF */
+        outline: 0;       /* IE */
+        border-color: red;
+    }
     
 </style>
 
 <script>
+    
+    var form = document.getElementById('timesheet_form');
+    form.addEventListener('invalid', function(e) {
+        document.getElementById('form_error').style.removeProperty("display");
+        //alert('Speichern wegen fehlerhafter Werte nicht möglich. Bitte überprüfe deine Eingaben.');  
+    }, true);
+    
+    form.addEventListener('valid', function(e) {
+        document.getElementById('form_error').style.display = 'none';
+        //alert('Speichern wegen fehlerhafter Werte nicht möglich. Bitte überprüfe deine Eingaben.');  
+    }, true);
+    
     
     $(function() {
         inputs = document.getElementsByClassName('Krank');
