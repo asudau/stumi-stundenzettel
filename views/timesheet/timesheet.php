@@ -1,4 +1,3 @@
-
 <?
 use Studip\Button, Studip\LinkButton;
 ?>
@@ -45,7 +44,7 @@ use Studip\Button, Studip\LinkButton;
 
 <form name="timesheet_form" method="post" class='<?= $adminrole ? 'admin' : '' ?> <?= $timesheet->locked ? 'locked' : '' ?>' onsubmit="return validateForm()" action="<?= $controller->url_for('timesheet/save_timesheet', $timesheet->id) ?>" class="default collapsable">
     <?= CSRFProtection::tokenTag() ?>
-    
+    <div style="overflow:scroll;height:400px">
         <table class='sortable-table default'>
             <tr>
                 <th style='width:10px'>Tag</th>
@@ -166,7 +165,7 @@ use Studip\Button, Studip\LinkButton;
                     <td></td>
                 </tr>
         </table>
-
+    </div>
     <? if ($stumirole) : ?>
         <footer data-dialog-button>
             <?= Button::create(_('Übernehmen')) ?>
@@ -178,7 +177,7 @@ use Studip\Button, Studip\LinkButton;
 <? if ($supervisorrole) : ?>
      <?= LinkButton::create(_('Korrektheit bestätigen'), $controller->url_for('timesheet/approve/' . $timesheet->id) ) ?>
 <? endif ?>    
-    
+
 
 <style>
     tr.weekend {
@@ -303,8 +302,10 @@ use Studip\Button, Studip\LinkButton;
     function disable_timetracking(row_index){
         document.getElementsByName('begin' + row_index)[0].value = '';
         document.getElementsByName('begin' + row_index)[0].style.display = 'none';
+        document.getElementsByName('begin' + row_index)[0].removeAttribute('required');
         document.getElementsByName('end' + row_index)[0].value = '';
         document.getElementsByName('end' + row_index)[0].style.display = 'none';
+        document.getElementsByName('end' + row_index)[0].removeAttribute('required');
         document.getElementsByName('break' + row_index)[0].value = '';
         document.getElementsByName('break' + row_index)[0].style.display = 'none';
     }
