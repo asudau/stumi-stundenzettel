@@ -47,10 +47,10 @@ use Studip\Button, Studip\LinkButton;
     </p> 
 
 
-<form id="timesheet_form" method="post" class='<?= $adminrole ? 'admin' : '' ?> <?= $timesheet->locked ? 'locked' : '' ?>' onsubmit="return validateForm()" action="<?= $controller->url_for('timesheet/save_timesheet', $timesheet->id) ?>" class="default collapsable">
+<form id="timesheet_form" method="post" class='<?= $adminrole ? 'admin' : '' ?> <?= $timesheet->locked ? 'locked' : '' ?>' action="<?= $controller->url_for('timesheet/save_timesheet', $timesheet->id) ?>" class="default collapsable">
     <?= CSRFProtection::tokenTag() ?>
-    <div style="overflow:scroll;height:400px">
-        <table class='sortable-table default'>
+    <div style="overflow:scroll;">
+        <table class='sortable-table default' style='width: auto;'>
             <tr>
                 <th style='width:10px'>Tag</th>
                 <th style='width:110px'>Beginn</th>
@@ -60,6 +60,7 @@ use Studip\Button, Studip\LinkButton;
                 <th style='width:110px'>Aufgezeichnet am</th>
                 <th style='width:110px'>Bemerkung</th>
                 <th style='width:200px'>sonstige Bemerkung</th>
+                <th style='width:100px'></th>
                 
             </tr>
 
@@ -77,16 +78,16 @@ use Studip\Button, Studip\LinkButton;
                            <?= $i ?>
                         </td>
                         <td >
-                            <input type='text' pattern="<?= $time_pattern ?>" <?= (!$is_editable)? 'readonly' : ''?> class='begin size-s studip-timepicker' id ='' name ='begin[<?= $i ?>]' value='<?= $records[$j]['begin'] ?>' placeholder="hh:mm" >
+                            <input style='width: 80px;' type='text' pattern="<?= $time_pattern ?>" <?= (!$is_editable)? 'readonly' : ''?> class='begin size-s studip-timepicker' id ='' name ='begin[<?= $i ?>]' value='<?= $records[$j]['begin'] ?>' placeholder="hh:mm" >
                         </td>
                         <td>
-                            <input type='text' pattern="<?= $break_pattern ?>" <?= (!$is_editable)? 'readonly' : ''?> class='break' name ='break[<?= $i ?>]' value ='<?= $records[$j]['break'] ?>' placeholder="hh:mm">
+                            <input style='width: 80px;' type='text' pattern="<?= $break_pattern ?>" <?= (!$is_editable)? 'readonly' : ''?> class='break' name ='break[<?= $i ?>]' value ='<?= $records[$j]['break'] ?>' placeholder="hh:mm">
                         </td>
                         <td>
-                            <input type='text' pattern="<?= $time_pattern ?>" <?= (!$is_editable)? 'readonly' : ''?> class='end size-s studip-timepicker' id ='' name ='end[<?= $i ?>]' value='<?= $records[$j]['end'] ?>' placeholder="hh:mm" >
+                            <input style='width: 80px;' type='text' pattern="<?= $time_pattern ?>" <?= (!$is_editable)? 'readonly' : ''?> class='end size-s studip-timepicker' id ='' name ='end[<?= $i ?>]' value='<?= $records[$j]['end'] ?>' placeholder="hh:mm" >
                         </td>
                         <td>
-                           <input type='text' readonly class='sum' name ='sum[<?= $i ?>]' value ='<?= $records[$j]['sum'] ?>' >
+                           <input style='width: 80px;' type='text' readonly class='sum' name ='sum[<?= $i ?>]' value ='<?= $records[$j]['sum'] ?>' >
                         </td>
                         <td>
                            <input type='date'
@@ -109,6 +110,11 @@ use Studip\Button, Studip\LinkButton;
                         <td>
                            <input type='text' <?= (!$is_editable)? 'readonly' : ''?> id ='' name ='comment[<?= $i ?>]' value ='<?= $records[$j]['comment'] ?>' >
                         </td>
+                        <td>
+                            <? if ($is_editable) : ?>
+                             <a href='' onclick='return clearLine(event, "[<?= $i ?>]"); return false;'> <?= Icon::create('decline', clickable) ?> </a>
+                            <? endif ?>
+                        </td>
                     </tr>
                     <?php $j++; ?>
                 <?php else: ?>
@@ -122,16 +128,16 @@ use Studip\Button, Studip\LinkButton;
                            <?= $i ?>
                         </td>
                         <td >
-                            <input type='text' pattern="<?= $time_pattern ?>" <?= (!$is_editable)? 'readonly' : ''?> class='begin' id ='' name ='begin[<?= $i ?>]' value='' placeholder="hh:mm" >
+                            <input style='width: 80px;' type='text' pattern="<?= $time_pattern ?>" <?= (!$is_editable)? 'readonly' : ''?> class='begin' id ='' name ='begin[<?= $i ?>]' value='' placeholder="hh:mm" >
                         </td>
                         <td>
-                            <input type='text' pattern="<?= $break_pattern ?>" <?= (!$is_editable)? 'readonly' : ''?> class ='break' name ='break[<?= $i ?>]' value ='' placeholder="hh:mm">
+                            <input style='width: 80px;' type='text' pattern="<?= $break_pattern ?>" <?= (!$is_editable)? 'readonly' : ''?> class ='break' name ='break[<?= $i ?>]' value ='' placeholder="hh:mm">
                         </td>
                         <td>
-                            <input type='text' pattern="<?= $time_pattern ?>" <?= (!$is_editable)? 'readonly' : ''?> class='end' name ='end[<?= $i ?>]' value='' placeholder="hh:mm" >
+                            <input style='width: 80px;' type='text' pattern="<?= $time_pattern ?>" <?= (!$is_editable)? 'readonly' : ''?> class='end' name ='end[<?= $i ?>]' value='' placeholder="hh:mm" >
                         </td>
                         <td>
-                           <input type='text' readonly class ='sum' name ='sum[<?= $i ?>]' value ='<?= (!$weekend && $holiday) ? $timesheet->contract->default_workday_time : ''?>' >
+                           <input style='width: 80px;' type='text' readonly class ='sum' name ='sum[<?= $i ?>]' value ='<?= (!$weekend && $holiday) ? $timesheet->contract->default_workday_time : ''?>' >
                         </td>
                         <td>
                             <!-- data-datepicker='{">":<?= $date ?>}' -->
@@ -154,6 +160,8 @@ use Studip\Button, Studip\LinkButton;
                         <td>
                            <input type='text' <?= (!$is_editable)? 'readonly' : ''?> class ='comment' name ='comment[<?= $i ?>]' value ='' >
                         </td>
+                         <td>
+                        </td>
                     </tr>
                 <?php endif ?>
             <?php endfor ?>
@@ -163,7 +171,7 @@ use Studip\Button, Studip\LinkButton;
                     <td></td>
                     <td></td>
                     <td>
-                       <input type='text' class ='comment' name ='' value ='<?= $timesheet->sum ?>' >
+                       <input style='width:80px' type='text' class ='comment' name ='' value ='<?= $timesheet->sum ?>' >
                     </td>
                     <td></td>
                     <td></td>
@@ -250,6 +258,28 @@ use Studip\Button, Studip\LinkButton;
             }
         }
     });
+    
+    function validateFormSaved() {
+        alert("Ungespeicherte Änderungen!");
+        return false;
+    }
+    
+    function clearLine(event, row_index) {
+        event.preventDefault();
+        document.getElementsByName('begin' + row_index)[0].value = '';
+        document.getElementsByName('begin' + row_index)[0].removeAttribute('required');
+        document.getElementsByName('begin' + row_index)[0].removeAttribute('display');
+        document.getElementsByName('end' + row_index)[0].value = '';
+        document.getElementsByName('end' + row_index)[0].removeAttribute('required');
+        document.getElementsByName('end' + row_index)[0].removeAttribute('display');
+        document.getElementsByName('break' + row_index)[0].value = '';
+        document.getElementsByName('break' + row_index)[0].removeAttribute('required');
+        document.getElementsByName('break' + row_index)[0].removeAttribute('display');
+        document.getElementsByName('sum' + row_index)[0].value = '';
+        document.getElementsByName('comment' + row_index)[0].value = '';
+        document.getElementsByName('defined_comment' + row_index)[0].value = '';
+        document.getElementsByName('entry_mktime' + row_index)[0].value = '';
+    }
     
     function calculate_sum(begin, end, brk){
         
@@ -408,11 +438,13 @@ use Studip\Button, Studip\LinkButton;
 <script>
 
     function validateForm() {
-    var value = e.options[e.selectedIndex].value;
-        if (value == "NULL") {
-        alert("Promotionsfach muss angegeben werden!");
+        alert("Ungespeicherte Änderungen!");
         return false;
-    }
+//        var value = e.options[e.selectedIndex].value;
+//        if (value == "NULL") {
+//        alert("Promotionsfach muss angegeben werden!");
+//        return false;
+//        }
 }
 
     inputs = document.getElementsByTagName('begin');
