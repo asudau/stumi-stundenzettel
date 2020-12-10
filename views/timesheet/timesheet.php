@@ -52,7 +52,8 @@ use Studip\Button, Studip\LinkButton;
     <div style="overflow:scroll;">
         <table class='sortable-table default' style='width: auto;'>
             <tr>
-                <th style='width:10px'>Tag</th>
+                <th style='width:15px'>Tag</th>
+                <th style='width:15px'></th>
                 <th style='width:110px'>Beginn</th>
                 <th style='width:110px'>Pause</th>
                 <th style='width:110px'>Ende</th>
@@ -75,7 +76,10 @@ use Studip\Button, Studip\LinkButton;
                     <tr id ='entry[<?= $i ?>]' class='<?= ($weekend)? 'weekend' : ''?> <?= ($holiday)? 'holiday' : ''?> <?= $records[$j]['defined_comment'] ?>' >
                         <input type='hidden' name ='record_id[<?= $i ?>]' value='<?= $records[$j]['id'] ?>' >
                         <td>
-                           <?= $i ?>
+                            <?= $i ?>
+                        </td>
+                        <td>
+                            <?= date("l", strtotime($date)) ?>
                         </td>
                         <td >
                             <input style='width: 80px;' type='text' pattern="<?= $time_pattern ?>" <?= (!$is_editable)? 'readonly' : ''?> class='begin size-s studip-timepicker' id ='' name ='begin[<?= $i ?>]' value='<?= $records[$j]['begin'] ?>' placeholder="hh:mm" >
@@ -125,7 +129,10 @@ use Studip\Button, Studip\LinkButton;
                     <tr id ='entry[<?= $i ?>]' class='<?= ($weekend)? 'weekend' : ''?> <?= ($holiday)? 'holiday' : ''?>' >
                         <input type='hidden' name ='record_id[<?= $i ?>]' value='' >
                         <td>
-                           <?= $i ?>
+                            <?= $i ?>
+                        </td>
+                        <td>
+                            <?= date("l", strtotime($date)) ?>
                         </td>
                         <td >
                             <input style='width: 80px;' type='text' pattern="<?= $time_pattern ?>" <?= (!$is_editable)? 'readonly' : ''?> class='begin' id ='' name ='begin[<?= $i ?>]' value='' placeholder="hh:mm" >
