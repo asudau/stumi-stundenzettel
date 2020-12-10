@@ -31,7 +31,8 @@ class TimesheetController extends StudipController {
             $this->supervisorrole = true;
         }
         
-        $this->time_pattern = '^(24:00)|((0[1-9]|1\d|2[0-3]):([0-5]\d))|(00:(0[1-5]|[1-9]0|[1-5][1-9]))$';
+        $this->time_pattern = '^(00:00)|((0[1-9]|1\d|2[0-3]):([0-5]\d))|(([1-9]|1\d|2[0-3]):([0-5]\d))|(00:(0[1-5]|[1-9]0|[1-5][1-9]))$';
+        $this->break_pattern = '^(00:00)|(0)|((0[1-9]|1\d|2[0-3]):([0-5]\d))|(([1-9]|1\d|2[0-3]):([0-5]\d))|(00:(0[1-5]|[1-9]0|[1-5][1-9]))$';
     }
 
     public function index_action($contract_id = NULL)
@@ -144,6 +145,7 @@ class TimesheetController extends StudipController {
                     _('PDF-zum Ausdruck generieren'),
                     PluginEngine::getLink($this->plugin, [], 'timesheet/pdf/' . $timesheet_id ),
                     Icon::create('file-pdf', 'clickable')
+                    //,['onclick'=>"return validateFormSaved()"]
                 );
             }
             $sidebar->addWidget($actions);
