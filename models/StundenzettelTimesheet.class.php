@@ -68,7 +68,7 @@ class StundenzettelTimesheet extends \SimpleORMap
         $pdf->AddPage();
         $pdf->Image($GLOBALS['ABSOLUTE_PATH_STUDIP'] . '/' . 
                     PluginEngine::getPlugin('HilfskraftStundenzettel')->getPluginPath().
-                '/assets/images/formblatt.png', 0, 0, 1200, 1550, '', '', '', false, 300);
+                '/assets/images/Arbeitszeitnachweis.png', 0, 0, 1200, 1550, '', '', '', false, 300);
         
         $records = StundenzettelRecord::findByTimesheet_Id($this->id, 'ORDER BY day ASC');
 
