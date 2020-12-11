@@ -90,6 +90,11 @@ class StundenzettelRecord extends \SimpleORMap
         return array_key_exists(substr($this->getDate(),0,6), self::$holidays_nds);
     }
     
+    function isUniClosed()
+    {
+        return array_key_exists(substr($this->getDate(),0,6), self::$uni_closed);
+    }
+    
     static function isDateWeekend($date)
     {
         $day = date('w', strtotime($date));
@@ -101,7 +106,7 @@ class StundenzettelRecord extends \SimpleORMap
         return array_key_exists(substr($date, 0, 6), self::$holidays_nds);
     }
     
-    static function isUniClosed($date)
+    static function isUniClosedOnDate($date)
     {
         return array_key_exists(substr($date, 0, 6), self::$uni_closed);
     }
@@ -110,6 +115,6 @@ class StundenzettelRecord extends \SimpleORMap
     {
         $date_time = new DateTime($date);
         $today = new DateTime('now');
-        return (!self::isUniClosed($date) && !self::isDateHoliday($date) && !self::isDateWeekend($date) && ($date_time <= $today));
+        return (!self::isUniClosedOnDate($date) && !self::isDateHoliday($date) && !self::isDateWeekend($date) && ($date_time <= $today));
     }
 }

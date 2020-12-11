@@ -72,7 +72,7 @@ use Studip\Button, Studip\LinkButton;
                     <? $holiday = $records[$j]->isHoliday(); ?>
                     <? $weekend = $records[$j]->isWeekend(); ?>
                     <? $date = $records[$j]->getDate(); ?>
-                    <? $uni_closed = StundenzettelRecord::isUniClosed($date); ?>
+                    <? $uni_closed = StundenzettelRecord::isUniClosedOnDate($date); ?>
                     <? $is_editable = StundenzettelRecord::isEditable($date); ?>
                     <tr id ='entry[<?= $i ?>]' class='<?= ($weekend)? 'weekend' : ''?> <?= ($holiday)? 'holiday' : ''?> <?= $records[$j]['defined_comment'] ?>' >
                         <input type='hidden' name ='record_id[<?= $i ?>]' value='<?= $records[$j]['id'] ?>' >
@@ -126,7 +126,7 @@ use Studip\Button, Studip\LinkButton;
                     <? $date = $i . '.' . $timesheet->month . '.'  . $timesheet->year; ?>
                     <? $weekend = StundenzettelRecord::isDateWeekend($date); ?>
                     <? $holiday = StundenzettelRecord::isDateHoliday($date); ?>
-                    <? $uni_closed = StundenzettelRecord::isUniClosed($date); ?>
+                    <? $uni_closed = StundenzettelRecord::isUniClosedOnDate($date); ?>
                     <? $is_editable = StundenzettelRecord::isEditable($date); ?>
                     <tr id ='entry[<?= $i ?>]' class='<?= ($weekend)? 'weekend' : ''?> <?= ($holiday)? 'holiday' : ''?>' >
                         <input type='hidden' name ='record_id[<?= $i ?>]' value='' >
