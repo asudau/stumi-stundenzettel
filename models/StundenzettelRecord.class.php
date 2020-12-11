@@ -32,6 +32,13 @@ class StundenzettelRecord extends \SimpleORMap
         '31.12.' => 'Silvester'
         );
     
+    private static $uni_closed = array(
+        '27.12.' => 'Universitätsbetrieb geschlossen',
+        '28.12.' => 'Universitätsbetrieb geschlossen',
+        '29.12.' => 'Universitätsbetrieb geschlossen',
+        '30.12.' => 'Universitätsbetrieb geschlossen'
+        );
+    
     
     protected static function configure($config = array())
     {
@@ -94,10 +101,15 @@ class StundenzettelRecord extends \SimpleORMap
         return array_key_exists(substr($date, 0, 6), self::$holidays_nds);
     }
     
+    static function isUniClosed($date)
+    {
+        return array_key_exists(substr($date, 0, 6), self::$uni_closed);
+    }
+    
     static function isEditable($date)
     {
         $date_time = new DateTime($date);
         $today = new DateTime('now');
-        return (!self::isDateHoliday($date) && !self::isDateWeekend($date) && ($date_time <= $today));
+        return (!self::isUniClosed($date) && !self::isDateHoliday($date) && !self::isDateWeekend($date) && ($date_time <= $today));
     }
 }

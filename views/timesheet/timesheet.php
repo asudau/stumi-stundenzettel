@@ -60,7 +60,7 @@ use Studip\Button, Studip\LinkButton;
                 <th style='width:110px'>Dauer</th>
                 <th style='width:110px'>Aufgezeichnet am</th>
                 <th style='width:110px'>Bemerkung</th>
-                <th style='width:200px'>sonstige Bemerkung</th>
+                <th style='width:210px'>sonstige Bemerkung</th>
                 <th style='width:100px'></th>
                 
             </tr>
@@ -72,6 +72,7 @@ use Studip\Button, Studip\LinkButton;
                     <? $holiday = $records[$j]->isHoliday(); ?>
                     <? $weekend = $records[$j]->isWeekend(); ?>
                     <? $date = $records[$j]->getDate(); ?>
+                    <? $uni_closed = StundenzettelRecord::isUniClosed($date); ?>
                     <? $is_editable = StundenzettelRecord::isEditable($date); ?>
                     <tr id ='entry[<?= $i ?>]' class='<?= ($weekend)? 'weekend' : ''?> <?= ($holiday)? 'holiday' : ''?> <?= $records[$j]['defined_comment'] ?>' >
                         <input type='hidden' name ='record_id[<?= $i ?>]' value='<?= $records[$j]['id'] ?>' >
@@ -112,7 +113,7 @@ use Studip\Button, Studip\LinkButton;
                             </select>
                         </td>
                         <td>
-                           <input type='text' <?= (!$is_editable)? 'readonly' : ''?> id ='' name ='comment[<?= $i ?>]' value ='<?= $records[$j]['comment'] ?>' >
+                           <input style='width:210px' type='text' <?= (!$is_editable)? 'readonly' : ''?> id ='' name ='comment[<?= $i ?>]' value ='<?= ($uni_closed)? 'Stundenerfassung nicht zulässig' : $records[$j]['comment'] ?>' >
                         </td>
                         <td>
                             <? if ($is_editable) : ?>
@@ -125,6 +126,7 @@ use Studip\Button, Studip\LinkButton;
                     <? $date = $i . '.' . $timesheet->month . '.'  . $timesheet->year; ?>
                     <? $weekend = StundenzettelRecord::isDateWeekend($date); ?>
                     <? $holiday = StundenzettelRecord::isDateHoliday($date); ?>
+                    <? $uni_closed = StundenzettelRecord::isUniClosed($date); ?>
                     <? $is_editable = StundenzettelRecord::isEditable($date); ?>
                     <tr id ='entry[<?= $i ?>]' class='<?= ($weekend)? 'weekend' : ''?> <?= ($holiday)? 'holiday' : ''?>' >
                         <input type='hidden' name ='record_id[<?= $i ?>]' value='' >
@@ -165,7 +167,7 @@ use Studip\Button, Studip\LinkButton;
                             </select>
                         </td>
                         <td>
-                           <input type='text' <?= (!$is_editable)? 'readonly' : ''?> class ='comment' name ='comment[<?= $i ?>]' value ='' >
+                           <input style='width:210px' type='text' <?= (!$is_editable)? 'readonly' : ''?> class ='comment' name ='comment[<?= $i ?>]' value ='<?= ($uni_closed)? 'Stundenerfassung nicht zulässig' :''?>' >
                         </td>
                          <td>
                         </td>
