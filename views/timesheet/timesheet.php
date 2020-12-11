@@ -79,7 +79,7 @@ use Studip\Button, Studip\LinkButton;
                             <?= $i ?>
                         </td>
                         <td>
-                            <?= date("l", strtotime($date)) ?>
+                            <?= strftime("%A", strtotime($date)) ?>
                         </td>
                         <td >
                             <input style='width: 80px;' type='text' pattern="<?= $time_pattern ?>" <?= (!$is_editable)? 'readonly' : ''?> class='begin size-s studip-timepicker' id ='' name ='begin[<?= $i ?>]' value='<?= $records[$j]['begin'] ?>' placeholder="hh:mm" >
@@ -132,7 +132,7 @@ use Studip\Button, Studip\LinkButton;
                             <?= $i ?>
                         </td>
                         <td>
-                            <?= date("l", strtotime($date)) ?>
+                            <?= strftime("%A", strtotime($date)) ?>
                         </td>
                         <td >
                             <input style='width: 80px;' type='text' pattern="<?= $time_pattern ?>" <?= (!$is_editable)? 'readonly' : ''?> class='begin' id ='' name ='begin[<?= $i ?>]' value='' placeholder="hh:mm" >
