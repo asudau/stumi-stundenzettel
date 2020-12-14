@@ -15,6 +15,59 @@
 class StundenzettelStumiContract extends \SimpleORMap
 {
     
+    private static $dezimal_to_minute = array(
+        '01' => '00', '51' => '30',
+        '02' => '01', '52' => '31',
+        '03' => '02', '53' => '32',
+        '04' => '02', '54' => '32',
+        '05' => '03', '55' => '33',
+        '06' => '03', '56' => '33',
+        '07' => '04', '57' => '34',
+        '08' => '05', '58' => '35',
+        '09' => '05', '59' => '35',
+        '10' => '06', '60' => '36',
+        '11' => '06', '61' => '36',
+        '12' => '07', '62' => '37',
+        '13' => '08', '63' => '38',
+        '14' => '08', '64' => '38',
+        '15' => '09', '65' => '39',
+        '16' => '09', '66' => '39',
+        '17' => '10', '67' => '40',
+        '18' => '11', '68' => '41',
+        '19' => '11', '69' => '41',
+        '20' => '12', '70' => '42',
+        '21' => '12', '71' => '42',
+        '22' => '13', '72' => '43',
+        '23' => '14', '73' => '44',
+        '24' => '14', '74' => '44',
+        '25' => '15', '75' => '45',
+        '26' => '15', '76' => '45',
+        '27' => '16', '77' => '46',
+        '28' => '17', '78' => '47',
+        '29' => '17', '79' => '47',
+        '30' => '18', '80' => '48',
+        '31' => '18', '81' => '48',
+        '32' => '19', '82' => '49',
+        '33' => '20', '83' => '50',
+        '34' => '20', '84' => '50',
+        '35' => '21', '85' => '51',
+        '36' => '21', '86' => '51',
+        '37' => '22', '87' => '52',
+        '38' => '23', '88' => '53',
+        '39' => '23', '89' => '53',
+        '40' => '24', '90' => '54',
+        '41' => '24', '91' => '54',
+        '42' => '25', '92' => '55',
+        '43' => '26', '93' => '56',
+        '44' => '26', '94' => '56',
+        '45' => '27', '95' => '57',
+        '46' => '27', '96' => '57',
+        '47' => '28', '97' => '58',
+        '48' => '29', '98' => '59',
+        '49' => '29', '99' => '59',
+        '50' => '30'
+        );
+    
     private static $staus_array = array(
         'finished' => array(
             'icon' => 'radiobutton-checked',
@@ -53,13 +106,20 @@ class StundenzettelStumiContract extends \SimpleORMap
         $config['additional_fields']['default_workday_time']['get'] = function ($item) {
             $workday_hours = floor($item->default_workday_time_in_minutes / 60);
             $workday_minutes = $item->default_workday_time_in_minutes % 60;
-            return sprintf("%02s", $workday_hours) . ':' . sprintf("%02s", $workday_minutes);
+            return sprintf("%02s", $workday_hours) . ':' . self::$dezimal_to_minute[$item->default_workday_minutes_dezimal];
             
         };
         
         $config['additional_fields']['default_workday_time_in_minutes']['get'] = function ($item) {
             $workday_minutes_total = round($item->contract_hours /4.348 / 5 * 60);//* 2.75;
             return $workday_minutes_total;
+            
+        };
+        
+        $config['additional_fields']['default_workday_minutes_dezimal']['get'] = function ($item) {
+            $workday_total_dezimal = round($item->contract_hours /4.348 / 5 , 2);//* 2.75;
+            $workday_minutes_dezimal = explode('.', strval($workday_total_dezimal))[1];
+            return $workday_minutes_dezimal;
             
         };
         
