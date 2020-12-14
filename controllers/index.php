@@ -40,7 +40,15 @@ class IndexController extends StudipController {
 
         if ($this->adminrole) {
             
-            //get institutes for thie user
+            $this->search = isset($_GET['search_user'])? studip_utf8encode($_GET['search_user']) : '';
+        
+            $search_user = new SearchWidget($this->url_for('index/'));
+            $search_user->setTitle('Nutzer suchen');
+            
+            $search_user->addNeedle(_('Name'), 'search_user', true, null, null, studip_utf8decode($this->search));
+            Sidebar::get()->addWidget($search_user);
+            
+            //get institutes for the user
             foreach($user->institute_memberships->pluck('institut_id') as $inst_id){
                 $this->inst_id[] = $inst_id;
             }
@@ -48,12 +56,15 @@ class IndexController extends StudipController {
                 $this->inst_id[] = '477d184367f48cc210f74bb4f779c7b7';
             }
         
-            //get all stumis an contracts
+            //get all stumis and contracts
             $groups = Statusgruppen::findBySQL('`name` LIKE ? AND `range_id` LIKE ?', ['%Studentische%', $this->inst_id[0]]);
             foreach ($groups as $group) {
                 foreach ($group->members as $member) {
-                    $this->stumis[] = User::find($member->user_id);
-                    $this->stumi_contracts[$member->user_id] = StundenzettelStumiContract::findBySQL('`stumi_id` LIKE ? AND `inst_id` LIKE ?', [$member->user_id, $this->inst_id[0]]);
+                    $stumi = User::find($member->user_id);
+                    if (!$this->search || strpos(strtolower($stumi->username . ' ' . $stumi->vorname . ' ' . $stumi->nachname), strtolower($this->search))) {
+                        $this->stumis[] = $stumi;
+                        $this->stumi_contracts[$member->user_id] = StundenzettelStumiContract::findBySQL('`stumi_id` LIKE ? AND `inst_id` LIKE ?', [$member->user_id, $this->inst_id[0]]);
+                    }
                 }
             }
         }
