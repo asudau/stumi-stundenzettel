@@ -12,12 +12,12 @@
                 <th data-sort="text" style='width:10%'>Nachname, Vorname</th>
                 <th data-sort="false" style='width:10%'>Vertragsbeginn</th>
                 <th data-sort="false" style='width:10%'>Vertragsende</th>
-                <th data-sort="false" style='width:10%'>Laufzeit in Monaten</th>
-                <th data-sort="false" style='width:10%'>Monatsstunden lt. Vertrag</th>
-                <th data-sort="false" style='width:10%'>Tagessatz</th>
-                <th data-sort="false" style='width:10%'>Stundenkonto (exkl. <?= date('M', time()) ?>)</th>
+                <th data-sort="digit" style='width:10%'>Laufzeit</br>in Monaten</th>
+                <th data-sort="digit" style='width:10%'>Monatsstunden</br>lt. Vertrag</th>
+                <th data-sort="digit" style='width:10%'>Tagessatz</th>
+                <th data-sort="digit" style='width:10%'>Stundenkonto</br>(exkl. <?= date('M', time()) ?>)</th>
                 <th data-sort="false" style='width:10%'>Urlaub in Anspruch genommen <?= date('Y', time()) ?></th>
-                <th data-sort="false" style='width:10%'>Resturlaub <?= date('Y', time()) ?></th>
+                <th data-sort="digit" style='width:10%'>Resturlaub</br><?= date('Y', time()) ?></th>
                 <th data-sort="false" style='width:10%'>Verantwortlicher/r MA</th>
                 <th>Aktionen</th>
             </tr>
