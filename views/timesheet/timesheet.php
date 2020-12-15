@@ -127,8 +127,8 @@ use Studip\Button, Studip\LinkButton;
                            <input style='width:210px' type='text' <?= (!$is_editable)? 'readonly' : ''?> id ='' name ='comment[<?= $i ?>]' value ='<?= ($uni_closed)? 'Stundenerfassung nicht zulässig' : $records[$j]['comment'] ?>' >
                         </td>
                         <td>
-                            <? if ($is_editable) : ?>
-                             <a href='' onclick='return clearLine(event, "[<?= $i ?>]"); return false;'> <?= Icon::create('decline', clickable) ?> </a>
+                            <? if ($is_editable && !$timesheet->locked) : ?>
+                             <a href='' class='edit_action' onclick='return clearLine(event, "[<?= $i ?>]"); return false;'> <?= Icon::create('decline', clickable) ?> </a>
                             <? endif ?>
                         </td>
                     </tr>
@@ -211,7 +211,7 @@ use Studip\Button, Studip\LinkButton;
         </table>
     </div>
     <? if ($stumirole) : ?>
-        <footer data-dialog-button>
+        <footer id='timesheet_submit' data-dialog-button>
             <?= Button::create(_('Übernehmen')) ?>
         </footer>
     <? endif ?>  
@@ -287,6 +287,8 @@ use Studip\Button, Studip\LinkButton;
             for(var i = 0; i < inputs.length; i++){
                 inputs[i].setAttribute("disabled", true);;
             }
+            var submit_button = document.getElementById('timesheet_submit');
+            submit_button.style.display = 'none';
         }
     });
     
