@@ -281,7 +281,7 @@ use Studip\Button, Studip\LinkButton;
             disable_timetracking(rec_index);
         }
         
-        var form = document.getElementsByName('timesheet_form')[0];
+        var form = document.getElementById('timesheet_form');
         if (form.classList.contains('admin') || form.classList.contains('locked') ){
             var inputs = form.querySelectorAll("input, select");
             for(var i = 0; i < inputs.length; i++){

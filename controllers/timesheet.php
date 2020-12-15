@@ -115,7 +115,7 @@ class TimesheetController extends StudipController {
         $this->stumi_id = $this->timesheet->stumi_id;
         $this->records = StundenzettelRecord::findByTimesheet_Id($timesheet_id, 'ORDER BY day ASC');
         
-        if($this->timesheet->locked){
+        if($this->timesheet->locked || $this->adminrole){
             PageLayout::postMessage(MessageBox::info(_("Bearbeitung gesperrt."))); 
         }
         
