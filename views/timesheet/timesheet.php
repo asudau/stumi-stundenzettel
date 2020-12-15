@@ -102,6 +102,7 @@ use Studip\Button, Studip\LinkButton;
                                   name ='entry_mktime[<?= $i ?>]' value='<?= $records[$j]['entry_mktime'] ?>' >
                         </td>
                         <td>
+                           <? if (!$uni_closed || $holiday || $weekend) : ?>
                            <select <?= (!$is_editable)? 'disabled' : ''?> class='defined_comment' name ='defined_comment[<?= $i ?>]'>
                                 <option value=""> -- </option>
                                 <?php foreach ($plugin->getCommentOptions() as $entry_value): ?>
@@ -111,6 +112,16 @@ use Studip\Button, Studip\LinkButton;
                                         value="<?=$entry_value?>"><?= $entry_value ?></option>
                                 <?php endforeach ?>
                             </select>
+                           <? else : ?>
+                            <select class='defined_comment' name ='defined_comment[<?= $i ?>]'>
+                                <option value=""> -- </option>
+                                <?php foreach ($plugin->getCommentOptions() as $entry_value): ?>
+                                    <option 
+                                        <?= ($records[$j]['defined_comment'] == $entry_value) ? 'selected' : ''?> 
+                                        <?= ($entry_value == 'Urlaub') ? '' : 'disabled' ?> value="<?=$entry_value?>"><?= $entry_value ?></option>
+                                <?php endforeach ?>
+                            </select>
+                            <? endif ?>
                         </td>
                         <td>
                            <input style='width:210px' type='text' <?= (!$is_editable)? 'readonly' : ''?> id ='' name ='comment[<?= $i ?>]' value ='<?= ($uni_closed)? 'Stundenerfassung nicht zulässig' : $records[$j]['comment'] ?>' >
@@ -157,6 +168,7 @@ use Studip\Button, Studip\LinkButton;
                                   name ='entry_mktime[<?= $i ?>]' value='' >
                         </td>
                         <td>
+                            <? if (!$uni_closed || $holiday || $weekend) : ?>
                            <select <?= (!$is_editable)? 'disabled' : ''?> class='defined_comment' name ='defined_comment[<?= $i ?>]'>
                                 <option <?= ($holiday) ? '' : 'selected' ?> value=""> -- </option>
                                 <?php foreach ($plugin->getCommentOptions() as $entry_value): ?>
@@ -165,6 +177,15 @@ use Studip\Button, Studip\LinkButton;
                                         <?= ($entry_value == 'Feiertag') ? 'disabled' : '' ?> value="<?=$entry_value?>"><?= $entry_value ?></option>
                                 <?php endforeach ?>
                             </select>
+                            <? else : ?>
+                            <select class='defined_comment' name ='defined_comment[<?= $i ?>]'>
+                                <option selected value=""> -- </option>
+                                <?php foreach ($plugin->getCommentOptions() as $entry_value): ?>
+                                    <option 
+                                        <?= ($entry_value == 'Urlaub') ? '' : 'disabled' ?> value="<?=$entry_value?>"><?= $entry_value ?></option>
+                                <?php endforeach ?>
+                            </select>
+                            <? endif ?>
                         </td>
                         <td>
                            <input style='width:210px' type='text' <?= (!$is_editable)? 'readonly' : ''?> class ='comment' name ='comment[<?= $i ?>]' value ='<?= ($uni_closed)? 'Stundenerfassung nicht zulässig' :''?>' >
