@@ -118,7 +118,7 @@ class StundenzettelTimesheet extends \SimpleORMap
         $pdf->Write($line_height, $record->timesheet->sum);
   
         $fileid = time();   
-        $pdf->Output( 'Stundenzettel' . $fileid, 'D');
+        $pdf->Output( 'Stundenzettel_' . $this->month . '-' . $this->year . '_' . User::find($this->stumi_id)->nachname . '.pdf', 'D');
       
     }
     
