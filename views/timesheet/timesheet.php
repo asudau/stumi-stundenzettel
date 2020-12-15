@@ -177,10 +177,11 @@ use Studip\Button, Studip\LinkButton;
                 <tr>
                     <td></td>
                     <td>Summe:</td>
+                    <td>(wird beim Speichern berechnet)</td>
                     <td></td>
                     <td></td>
                     <td>
-                       <input style='width:80px' type='text' class ='comment' name ='' value ='<?= $timesheet->sum ?>' >
+                       <input style='width:80px' type='text' readonly class ='comment' name ='' value ='<?= $timesheet->sum ?>' >
                     </td>
                     <td></td>
                     <td></td>
