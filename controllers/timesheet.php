@@ -116,7 +116,11 @@ class TimesheetController extends StudipController {
         $this->records = StundenzettelRecord::findByTimesheet_Id($timesheet_id, 'ORDER BY day ASC');
         
         if($this->timesheet->locked || $this->adminrole){
-            PageLayout::postMessage(MessageBox::info(_("Bearbeitung gesperrt."))); 
+            if($this->adminrole || $this->supervisorrole){
+                PageLayout::postMessage(MessageBox::info(_("Bearbeitung gesperrt. Sie sind nicht berechtigt Änderungen vorzunehmen"))); 
+            } else {
+                PageLayout::postMessage(MessageBox::info(_("Der Stundenzettel wurde bereits eingereicht und kann nicht mehr bearbeitet werden. Sollten Änderungen nötig sein, kontaktiere deine/n zuständigen Ansprechpartner/in.")));
+            }
         }
         
         if($this->stumirole){
@@ -194,7 +198,7 @@ class TimesheetController extends StudipController {
             $this->redirect('timesheet/timesheet/' . $timesheet_id);
             
          } else {
-            PageLayout::postMessage(MessageBox::success(_("Bearbeitung ist gesperrt."))); 
+            PageLayout::postMessage(MessageBox::success(_("Speichern nicht möglich. Bearbeitung ist gesperrt."))); 
             $this->redirect('timesheet/timesheet/' . $timesheet_id);
          }
     }

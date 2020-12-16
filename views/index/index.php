@@ -18,7 +18,7 @@
                 <th data-sort="digit" style='width:10%'>Stundenkonto</br>(exkl. <?= date('M', time()) ?>)</th>
                 <th data-sort="false" style='width:10%'>Urlaub in Anspruch genommen <?= date('Y', time()) ?></th>
                 <th data-sort="digit" style='width:10%'>Resturlaub</br><?= date('Y', time()) ?></th>
-                <th data-sort="false" style='width:10%'>Verantwortlicher/r MA</th>
+                <th data-sort="false" style='width:10%'>Verantwortliche/r MA</th>
                 <th>Aktionen</th>
             </tr>
         </thead>
@@ -90,7 +90,7 @@
                 <th data-sort="false" style='width:10%'>Stunden lt. Vertrag</th>
                 <th data-sort="false" style='width:10%'>Stundenkonto (exkl. <?= date('M', time()) ?>)</th>
                 <th data-sort="false" style='width:10%'>Resturlaub/Urlaubsanspruch <?= date('Y', time()) ?></th>                
-                <th data-sort="false" style='width:10%'>Verantwortlicher/r MA</th>
+                <th data-sort="false" style='width:10%'>Verantwortliche/r MA</th>
             </tr>
         </thead>
         <tbody>
