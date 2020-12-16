@@ -103,6 +103,10 @@ class StundenzettelStumiContract extends \SimpleORMap
     {
         $config['db_table'] = 'stundenzettel_stumi_contracts';
         
+        $config['belongs_to']['stumi'] = [
+            'class_name'  => 'User',
+            'foreign_key' => 'stumi_id',];
+        
         $config['additional_fields']['default_workday_time']['get'] = function ($item) {
             $workday_hours = floor($item->default_workday_time_in_minutes / 60);
             $workday_minutes = $item->default_workday_time_in_minutes % 60;
@@ -119,8 +123,7 @@ class StundenzettelStumiContract extends \SimpleORMap
         $config['additional_fields']['default_workday_minutes_dezimal']['get'] = function ($item) {
             $workday_total_dezimal = round($item->contract_hours /4.348 / 5 , 2);//* 2.75;
             $workday_minutes_dezimal = explode('.', strval($workday_total_dezimal))[1];
-            return $workday_minutes_dezimal;
-            
+            return $workday_minutes_dezimal;    
         };
         
         parent::configure($config);
@@ -136,6 +139,12 @@ class StundenzettelStumiContract extends \SimpleORMap
             }
         }
         return $contract_id;
+    }
+    
+    static function getCurrentContracts()
+    {
+        $contracts = self::findBySQL('contract_begin < ? AND contract_end > ?', [time(), time()]);
+        return $contracts;
     }
     
     static function getStaus_array()

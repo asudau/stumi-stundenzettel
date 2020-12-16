@@ -52,6 +52,33 @@ class TimesheetController extends StudipController {
         $this->status_infos = StundenzettelStumiContract::getStaus_array();
 
     }
+    public function admin_index_action()
+    {
+        if (!$this->adminrole){
+            throw new AccessDeniedException(_("Sie haben keine Zugriffsberechtigung."));
+        }
+        Navigation::activateItem('tools/hilfskraft-stundenverwaltung/timesheets');
+        
+        $this->contracts = StundenzettelStumiContract::getCurrentContracts();
+        if (strftime('%e', time()) > 18) {
+            $this->next_month = strftime('%b', strtotime("+1 month", time()));
+            $this->last_month = strftime('%b', time());
+            $this->next_month_num = strftime('%m', strtotime("+1 month", time()));
+            $this->last_month_num = strftime('%m', time());
+        } else {
+            $this->next_month = strftime('%b', time());
+            $this->last_month = strftime('%b', strtotime("-1 month", time()));
+            $this->next_month_num = strftime('%m', time());
+            $this->last_month_num = strftime('%m', strtotime("-1 month", time()));
+        }
+        
+        foreach ($this->contracts as $contract) {
+            $this->timesheets[$contract->id]['last_month'] = StundenzettelTimesheet::getContractTimesheet($contract->id, $this->last_month_num, date('Y', time()));
+            $this->timesheets[$contract->id]['next_month'] = StundenzettelTimesheet::getContractTimesheet($contract->id, $this->next_month_num, date('Y', time()));
+        }
+        
+        $this->status_infos = StundenzettelStumiContract::getStaus_array();
+    }
     
     public function select_action($contract_id, $month = '', $year = '')
     {

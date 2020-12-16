@@ -15,7 +15,7 @@
                 <th data-sort="digit" style='width:10%'>Laufzeit</br>in Monaten</th>
                 <th data-sort="digit" style='width:10%'>Monatsstunden</br>lt. Vertrag</th>
                 <th data-sort="digit" style='width:10%'>Tagessatz</th>
-                <th data-sort="digit" style='width:10%'>Stundenkonto</br>(exkl. <?= date('M', time()) ?>)</th>
+                <th data-sort="digit" style='width:10%'>Stundenkonto</br>(exkl. <?= strftime('%h', time()) ?>)</th>
                 <th data-sort="false" style='width:10%'>Urlaub in Anspruch genommen <?= date('Y', time()) ?></th>
                 <th data-sort="digit" style='width:10%'>Resturlaub</br><?= date('Y', time()) ?></th>
                 <th data-sort="false" style='width:10%'>Verantwortliche/r MA</th>
