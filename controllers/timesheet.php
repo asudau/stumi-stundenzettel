@@ -269,6 +269,20 @@ class TimesheetController extends StudipController {
         }
     }
     
+    public function received_action($timesheet_id)
+    {
+        $timesheet = StundenzettelTimesheet::find($timesheet_id);
+        if($timesheet && $this->adminrole){
+            $timesheet->received = true;
+            $timesheet->store();
+            PageLayout::postMessage(MessageBox::success(_("Vorliegen in Papierform bestätigt.")));
+            $this->redirect('timesheet/index/'. $timesheet->contract->id);
+        } else {
+            PageLayout::postMessage(MessageBox::error(_("Fehler: Sie sind zu dieser aktion nicht berechtigt.")));
+            $this->redirect('timesheet/index');
+        }
+    }
+    
     // customized #url_for for plugins
     public function url_for($to = '')
     {

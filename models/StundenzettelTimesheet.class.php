@@ -44,6 +44,10 @@ class StundenzettelTimesheet extends \SimpleORMap
         $config['additional_fields']['locked']['get'] = function ($item) {
             return $item->finished;     
         };
+        
+        $config['additional_fields']['int_status']['get'] = function ($item) {
+            return $item->finished + $item->approved + $item->received + $item->complete ;     
+        };
 
         parent::configure($config);
     }
