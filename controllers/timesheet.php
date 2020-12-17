@@ -101,7 +101,7 @@ class TimesheetController extends StudipController {
                 $timesheet->store();
                 $this->redirect('timesheet/timesheet/' . $timesheet->id);
             } else {
-                PageLayout::postMessage(MessageBox::error(_("Dieser Monat liegt außerhalb des Vertragszeitraums."))); 
+                PageLayout::postMessage(MessageBox::error(_("Dieser Monat liegt außerhalb des Vertragszeitraums (" . date('d.m.Y',$contract->contract_begin) . "-" . date('d.m.Y',$contract->contract_end) . ")"))); 
                 $this->no_timesheet = true;
                 $this->month = $month;
                 $this->year = $year;
