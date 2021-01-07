@@ -92,7 +92,7 @@ use Studip\Button, Studip\LinkButton;
                             <input style='width: 80px;' type='text' pattern="<?= $time_pattern ?>" <?= (!$is_editable)? 'readonly' : ''?> class='end size-s studip-timepicker' id ='' name ='end[<?= $i ?>]' value='<?= $records[$j]['end'] ?>' placeholder="hh:mm" >
                         </td>
                         <td>
-                           <input style='width: 80px;' type='text' readonly class='sum' name ='sum[<?= $i ?>]' value ='<?= $records[$j]['sum'] ?>' >
+                           <input style='width: 80px;' type='text' pattern="<?= $break_pattern ?>" <?= ($records[$j]['defined_comment'] == 'Urlaub')? '' : 'readonly' ?> class='sum' name ='sum[<?= $i ?>]' value ='<?= $records[$j]['sum'] ?>' >
                         </td>
                         <td>
                            <input type='date'
@@ -124,7 +124,7 @@ use Studip\Button, Studip\LinkButton;
                             <? endif ?>
                         </td>
                         <td>
-                           <input style='width:210px' type='text' <?= (!$is_editable)? 'readonly' : ''?> id ='' name ='comment[<?= $i ?>]' value ='<?= ($uni_closed)? 'Stundenerfassung nicht zulässig' : $records[$j]['comment'] ?>' >
+                           <input style='width:210px' type='text' <?= (!$is_editable)? 'readonly' : ''?> id ='' name ='comment[<?= $i ?>]' value ='<?= ($uni_closed)? 'Arbeitszeiterfassung nicht zulässig' : $records[$j]['comment'] ?>' >
                         </td>
                         <td>
                             <? if ($is_editable && !$timesheet->locked) : ?>
@@ -188,7 +188,7 @@ use Studip\Button, Studip\LinkButton;
                             <? endif ?>
                         </td>
                         <td>
-                           <input style='width:210px' type='text' <?= (!$is_editable)? 'readonly' : ''?> class ='comment' name ='comment[<?= $i ?>]' value ='<?= ($uni_closed)? 'Stundenerfassung nicht zulässig' :''?>' >
+                           <input style='width:210px' type='text' <?= (!$is_editable)? 'readonly' : ''?> class ='comment' name ='comment[<?= $i ?>]' value ='<?= ($uni_closed)? 'Arbeitszeiterfassung nicht zulässig' :''?>' >
                         </td>
                          <td>
                         </td>
