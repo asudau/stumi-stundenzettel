@@ -42,6 +42,9 @@ class TimesheetController extends StudipController {
         //allgemeine Stundenzettel-Übersichtsseite für Stumis verwendet automatisch den aktuell laufenden Vertrag
         if (!$contract_id && $this->stumirole) {
             $contract_id = StundenzettelStumiContract::getCurrentContractId($GLOBALS['user']->user_id);
+             if (!$contract_id) {
+                 $contract_id = StundenzettelStumiContract::getSomeContractId($GLOBALS['user']->user_id);
+             }
         }
         $this->contract = StundenzettelStumiContract::find($contract_id);
         $this->timesheets = StundenzettelTimesheet::findByContract_id($contract_id, 'ORDER by `year` ASC, `month` ASC'); 
@@ -118,7 +121,7 @@ class TimesheetController extends StudipController {
     }
     
     
-    public function timesheet_action($timesheet_id)
+    public function timesheet_action($timesheet_id = NULL)
     {
         if ($this->stumirole){
             Navigation::activateItem('tools/hilfskraft-stundenverwaltung/timetracking');
@@ -133,6 +136,9 @@ class TimesheetController extends StudipController {
             $contract_id = StundenzettelStumiContract::getCurrentContractId($GLOBALS['user']->user_id);
             //$timesheet = StundenzettelTimesheet::getContractTimesheet($contract_id, date('m', time()), date('Y', time()));
             //$timesheet_id = $timesheet->id;
+            if (!$contract_id){
+                $contract_id = StundenzettelStumiContract::getSomeContractId($GLOBALS['user']->user_id);
+            }
             $this->redirect('timesheet/select/' . $contract_id . '/' . date('m', time()) . '/' . date('Y', time()));
         }
 
@@ -195,6 +201,7 @@ class TimesheetController extends StudipController {
             $begin_array = Request::getArray('begin');
             $end_array = Request::getArray('end');
             $break_array = Request::getArray('break');
+            $sum_array = Request::getArray('sum');
             $mktime_array = Request::getArray('entry_mktime');
             $defined_comment_array = Request::getArray('defined_comment');
             $comment_array = Request::getArray('comment');
@@ -214,7 +221,12 @@ class TimesheetController extends StudipController {
                     $record->entry_mktime = $mktime_array[$i];
                     $record->defined_comment = ($record->isHoliday()) ? 'Feiertag' : $defined_comment_array[$i];
                     $record->comment = ($record->isUniClosed()) ? '' : $comment_array[$i];
-                    $record->calculate_sum();
+                    if ($record->defined_comment == 'Urlaub'){
+                        $pts =  explode(':', $sum_array[$i]);
+                        $record->sum =  sprintf("%02s", $pts[0]) . ':' . sprintf("%02s", $pts[1]);
+                    } else {
+                        $record->calculate_sum();
+                    }
                     $record->store();
             }
 
