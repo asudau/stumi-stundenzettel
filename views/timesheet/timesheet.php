@@ -128,7 +128,7 @@ use Studip\Button, Studip\LinkButton;
                         </td>
                         <td>
                             <? if ($is_editable && !$timesheet->locked) : ?>
-                             <a href='' class='edit_action' onclick='return clearLine(event, "[<?= $i ?>]"); return false;'> <?= Icon::create('decline', clickable) ?> </a>
+                             <a href='' class='edit_action' onclick='return clearLine(event, "[<?= $i ?>]"); return false;'> <?= Icon::create('decline', Icon::ROLE_CLICKABLE) ?> </a>
                             <? endif ?>
                         </td>
                     </tr>
@@ -453,9 +453,15 @@ use Studip\Button, Studip\LinkButton;
             var rec_index = name.substring(15, 19);
             if(this.value == '')  {
                 enable_timetracking(rec_index);
+                document.getElementsByName('sum' + rec_index)[0].readOnly = true;
                 document.getElementsByName('sum' + rec_index)[0].value = '';
                 document.getElementsByName('entry_mktime' + rec_index)[0].value = '';
+            } else if(this.value == 'Urlaub') {
+                disable_timetracking(rec_index);
+                document.getElementsByName('sum' + rec_index)[0].readOnly = false;
+                document.getElementsByName('sum' + rec_index)[0].value = '';
             } else {
+                document.getElementsByName('sum' + rec_index)[0].readOnly = true;
                 disable_timetracking(rec_index);
                 autocalc_sum(rec_index);
             }
