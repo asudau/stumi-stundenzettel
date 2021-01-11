@@ -48,6 +48,10 @@ class StundenzettelTimesheet extends \SimpleORMap
         $config['additional_fields']['int_status']['get'] = function ($item) {
             return $item->finished + $item->approved + $item->received + $item->complete ;     
         };
+        
+        $config['additional_fields']['overdue']['get'] = function ($item) {
+            return strtotime($item->year . '-' . intval($item->month) + 1 . '-04') < time();;     
+        };
 
         parent::configure($config);
     }
@@ -55,6 +59,51 @@ class StundenzettelTimesheet extends \SimpleORMap
     static function getContractTimesheet($contract_id, $month, $year){
         $timesheet = StundenzettelTimesheet::findOneBySQL('`contract_id` LIKE ? AND `month` = ? AND `year` = ?', [$contract_id, $month, $year]);
         return $timesheet;
+    }
+    
+    function getCurrentState($status, $user_status){
+        if ($user_status == 'stumi'){
+            switch ($status){
+                case 'finished':
+                    if ($this->finished) return 'true';
+                    if (!$this->finished && $this->overdue) return 'overdue';
+                    else return 'false';
+                case 'approved':
+                    if ($this->approved) return 'true';
+                    if (!$this->approved && $this->finished) return 'waiting';
+                    else return 'false';
+                case 'received':
+                    if ($this->received) return 'true';
+                    else return 'false';
+                case 'complete':
+                    if ($this->received) return 'true';
+                    else return 'false';
+            }
+        }
+        
+         if ($user_status == 'admin'){
+            switch ($status){
+                case 'finished':
+                    if ($this->finished) return 'true';
+                    if (!$this->finished && $this->overdue) return 'overdue';
+                    else return 'false';
+                case 'approved':
+                    if ($this->approved) return 'true';
+                    if (!$this->approved && $this->finished) return 'waiting';
+                    if (!$this->approved && $this->finished && $this->overdue) return 'overdue';
+                    else return 'false';
+                case 'received':
+                    if ($this->received) return 'true';
+                    if (!$this->received && $this->approved) return 'waiting';
+                    if (!$this->received && $this->approved && $this->overdue) return 'overdue';
+                    else return 'false';
+                case 'complete':
+                    if ($this->complete) return 'true';
+                    if (!$this->complete && $this->received) return 'waiting';
+                    if (!$this->complete && $this->received && $this->overdue) return 'overdue';
+                    else return 'false';
+            }
+        }
     }
     
     function build_pdf()
@@ -98,7 +147,7 @@ class StundenzettelTimesheet extends \SimpleORMap
         
         //$this->Cell(0, 0, $content, 0, 1, 'L', 0, '', 0, false, 'C', 'C');
         foreach ($records as $record){
-            $record->calculate_sum();
+            //$record->calculate_sum();
             $content = $record->begin . '  ' . $record->break . '  ' . $record->end . '  ' . $record->sum . '  ' .
                     $record->defined_comment . '  ' . $record->comment . '   ' . $record->entry_mktime ;
             $pdf->SetX(44);
