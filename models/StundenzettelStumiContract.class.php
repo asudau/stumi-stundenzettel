@@ -69,35 +69,27 @@ class StundenzettelStumiContract extends \SimpleORMap
         );
     
     private static $staus_array = array(
+        'true_icon_role' => Icon::ROLE_STATUS_GREEN,
+        'false_icon_role' => Icon::ROLE_NAVIGATION,
+        'waiting_icon_role' => Icon::ROLE_SORT,
+        'overdue_icon_role' => Icon::ROLE_STATUS_RED,
         'finished' => array(
             'icon' => 'radiobutton-checked',
-            'true_icon_role' => Icon::ROLE_STATUS_GREEN,
-            'false_icon_role' => Icon::ROLE_NAVIGATION,
-            'waiting_icon_role' => Icon::ROLE_SORT,
             'true_tooltip' => 'Digitaler Stundenzettel eingereicht',
             'false_tooltip' => 'Digitaler Stundenzettel noch nicht eingereicht'
             ),
         'approved' => array(
             'icon' => 'accept',
-            'true_icon_role' => Icon::ROLE_STATUS_GREEN,
-            'false_icon_role' => Icon::ROLE_NAVIGATION,
-            'waiting_icon_role' => Icon::ROLE_SORT,
             'true_tooltip' => 'Digitaler Stundenzettel durch verantwortliche/n Mitarbeiter/in freigegeben',
             'false_tooltip' => 'Digitaler Stundenzettel noch nicht durch verantwortliche/n Mitarbeiter/in geprüft und freigegebn'
             ),
         'received' => array(
             'icon' => 'inbox',
-            'true_icon_role' => Icon::ROLE_STATUS_GREEN,
-            'false_icon_role' => Icon::ROLE_NAVIGATION,
-            'waiting_icon_role' => Icon::ROLE_SORT,
             'true_tooltip' => 'Papierausdruck liegt unterschrieben im Sekretariat vor',
             'false_tooltip' => 'Papierausdruck liegt noch nicht im Sekretariat vor'
             ),
         'complete' => array(
             'icon' => 'lock-locked',
-            'true_icon_role' => Icon::ROLE_STATUS_GREEN,
-            'false_icon_role' => Icon::ROLE_NAVIGATION,
-            'waiting_icon_role' => Icon::ROLE_SORT,
             'true_tooltip' => 'Vorgang abgeschlossen',
             'false_tooltip' => 'Vorgang offen'
             ),
@@ -143,6 +135,12 @@ class StundenzettelStumiContract extends \SimpleORMap
             }
         }
         return $contract_id;
+    }
+    
+    static function getSomeContractId($user_id)
+    {
+        $contracts = self::findByStumi_id($user_id);
+        return $contracts[0]->id;
     }
     
     static function getCurrentContracts()
