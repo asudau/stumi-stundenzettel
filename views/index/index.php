@@ -32,7 +32,7 @@
                     <td><?= date('d.m.Y', $contract->contract_begin) ?>
                         <? if (StundenzettelContractBegin::find($contract->id)) : ?>
                             <? $begin_data = StundenzettelContractBegin::find($contract->id); ?>
-                            <?= Icon::create('info-circle', 'clickable',  
+                            <?= Icon::create('info-circle', Icon::ROLE_CLICKABLE,  
                                     ['title' => 'Beginn der elektronischen Erfassung: ' . $begin_data->begin_digital_recording_month . '/' . $begin_data->begin_digital_recording_year ]);?>
                         <? endif ?>
                     </td>
@@ -46,9 +46,9 @@
                     <td><?= User::findOneByUser_Id($contract->supervisor)->username ?></td>
                     <td>
                         <? if ($adminrole) : ?>
-                            <a onclick="return confirm('Eintrag löschen?')" href='<?=$this->controller->url_for('index/delete/' . $contract->id) ?>' title='Eintrag löschen' ><?=Icon::create('trash')?></a>
-                            <a  href='<?=$this->controller->url_for('index/edit/' . $contract->id) ?>' title='Vertragsdaten bearbeiten' data-dialog='size=auto'><?=Icon::create('edit')?></a>
-                            <a  href='<?=$this->controller->url_for('index/add_contract_begin_data/' . $contract->id) ?>' title='Zeitpunkt für Beginn digitaler Erfassung defnieren' data-dialog='size=auto'><?=Icon::create('date')?></a>                      
+                            <a onclick="return confirm('Eintrag löschen?')" href='<?=$this->controller->url_for('index/delete/' . $contract->id) ?>' title='Eintrag löschen' ><?=Icon::create('trash', Icon::ROLE_CLICKABLE)?></a>
+                            <a  href='<?=$this->controller->url_for('index/edit/' . $contract->id) ?>' title='Vertragsdaten bearbeiten' data-dialog='size=auto'><?=Icon::create('edit', Icon::ROLE_CLICKABLE)?></a>
+                            <a  href='<?=$this->controller->url_for('index/add_contract_begin_data/' . $contract->id) ?>' title='Zeitpunkt für Beginn digitaler Erfassung defnieren' data-dialog='size=auto'><?=Icon::create('date', Icon::ROLE_CLICKABLE)?></a>                      
                             <? endif ?>
                     </td>
 
@@ -69,7 +69,7 @@
                     <td> -- </td>
                     <td> -- </td>
                     <td>
-                       <a  href='<?=$this->controller->url_for('index/new/'. $inst_id[0] . '/' . $stumi->user_id) ?>' title='Vertrag hinzufügen' data-dialog='size=auto'><?=Icon::create('add')?></a>
+                       <a  href='<?=$this->controller->url_for('index/new/'. $inst_id[0] . '/' . $stumi->user_id) ?>' title='Vertrag hinzufügen' data-dialog='size=auto'><?=Icon::create('add', Icon::ROLE_CLICKABLE)?></a>
                     </td>
                     </tr>
 
