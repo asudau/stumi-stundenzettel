@@ -62,22 +62,27 @@ class TimesheetController extends StudipController {
         }
         Navigation::activateItem('tools/hilfskraft-stundenverwaltung/timesheets');
         
-        $this->contracts = StundenzettelStumiContract::getCurrentContracts();
+        //if its later than the 18.th of current month
         if (strftime('%e', time()) > 18) {
             $this->next_month = strftime('%b', strtotime("+1 month", time()));
             $this->last_month = strftime('%b', time());
             $this->next_month_num = strftime('%m', strtotime("+1 month", time()));
+            $this->next_month_year = strftime('%Y', strtotime("+1 month", time()));
             $this->last_month_num = strftime('%m', time());
+            $this->last_month_year = strftime('%Y', time());
         } else {
             $this->next_month = strftime('%b', time());
             $this->last_month = strftime('%b', strtotime("-1 month", time()));
             $this->next_month_num = strftime('%m', time());
+            $this->next_month_year = strftime('%Y', time());
             $this->last_month_num = strftime('%m', strtotime("-1 month", time()));
+            $this->last_month_year = strftime('%Y', strtotime("-1 month", time()));
         }
+        $this->contracts = StundenzettelStumiContract::getContractsByMonth($this->last_month_num, $this->last_month_year);
         
         foreach ($this->contracts as $contract) {
-            $this->timesheets[$contract->id]['last_month'] = StundenzettelTimesheet::getContractTimesheet($contract->id, $this->last_month_num, date('Y', time()));
-            $this->timesheets[$contract->id]['next_month'] = StundenzettelTimesheet::getContractTimesheet($contract->id, $this->next_month_num, date('Y', time()));
+            $this->timesheets[$contract->id]['last_month'] = StundenzettelTimesheet::getContractTimesheet($contract->id, $this->last_month_num, $this->last_month_year);
+            $this->timesheets[$contract->id]['next_month'] = StundenzettelTimesheet::getContractTimesheet($contract->id, $this->next_month_num, $this->next_month_year);
         }
         
         $this->status_infos = StundenzettelStumiContract::getStaus_array();

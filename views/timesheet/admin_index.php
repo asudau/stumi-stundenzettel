@@ -37,16 +37,17 @@
                     </td>
                     <td data-sort-value= <?= $timesheet_next_month->int_status ?>>  
                         <? if ($timesheet_next_month->int_status) : ?>
+                            <? if ($timesheet_next_month) : ?>
                             <?= Icon::create($status_infos['finished']['icon'], $status_infos[$timesheet_next_month->getCurrentState('finished', 'admin') . '_icon_role'], ['title' =>  $status_infos['finished'][$timesheet_last_month->getCurrentState('finished', 'admin') . '_tooltip']] )?>      
                             <?= Icon::create($status_infos['approved']['icon'], $status_infos[$timesheet_next_month->getCurrentState('approved', 'admin') . '_icon_role'], ['title' =>  $status_infos['approved'][$timesheet_last_month->getCurrentState('approved', 'admin') . '_tooltip']] )?> 
                             <?= Icon::create($status_infos['received']['icon'], $status_infos[$timesheet_next_month->getCurrentState('received', 'admin') . '_icon_role'], ['title' =>  $status_infos['received'][$timesheet_last_month->getCurrentState('received', 'admin') . '_tooltip']] )?> 
                             <?= Icon::create($status_infos['complete']['icon'], $status_infos[$timesheet_next_month->getCurrentState('complete', 'admin') . '_icon_role'], ['title' =>  $status_infos['complete'][$timesheet_last_month->getCurrentState('complete', 'admin') . '_tooltip']] )?>
-                        
-                        <? else : ?>
-                            <?= Icon::create($status_infos['finished']['icon'], $status_infos['false_icon_role'], ['title' =>  $status_infos['finished'][$timesheet_last_month->getCurrentState('finished', 'admin') . '_tooltip']] )?>      
-                            <?= Icon::create($status_infos['approved']['icon'], $status_infos['false_icon_role'], ['title' =>  $status_infos['approved'][$timesheet_last_month->getCurrentState('approved', 'admin') . '_tooltip']] )?> 
-                            <?= Icon::create($status_infos['received']['icon'], $status_infos['false_icon_role'], ['title' =>  $status_infos['received'][$timesheet_last_month->getCurrentState('received', 'admin') . '_tooltip']] )?> 
-                            <?= Icon::create($status_infos['complete']['icon'], $status_infos['false_icon_role'], ['title' =>  $status_infos['complete'][$timesheet_last_month->getCurrentState('complete', 'admin') . '_tooltip']] )?>
+                            <? endif ?>
+                        <? elseif ($timesheet_next_month): ?>
+                            <?= Icon::create($status_infos['finished']['icon'], $status_infos['false_icon_role'], ['title' =>  $status_infos['finished'][$timesheet_next_month->getCurrentState('finished', 'admin') . '_tooltip']] )?>      
+                            <?= Icon::create($status_infos['approved']['icon'], $status_infos['false_icon_role'], ['title' =>  $status_infos['approved'][$timesheet_next_month->getCurrentState('approved', 'admin') . '_tooltip']] )?> 
+                            <?= Icon::create($status_infos['received']['icon'], $status_infos['false_icon_role'], ['title' =>  $status_infos['received'][$timesheet_next_month->getCurrentState('received', 'admin') . '_tooltip']] )?> 
+                            <?= Icon::create($status_infos['complete']['icon'], $status_infos['false_icon_role'], ['title' =>  $status_infos['complete'][$timesheet_next_month->getCurrentState('complete', 'admin') . '_tooltip']] )?>
                         
                         <? endif ?>
                     </td>

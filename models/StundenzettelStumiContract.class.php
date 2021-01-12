@@ -143,9 +143,14 @@ class StundenzettelStumiContract extends \SimpleORMap
         return $contracts[0]->id;
     }
     
-    static function getCurrentContracts()
+    static function getContractsByMonth($month, $year)
     {
-        $contracts = self::findBySQL('contract_begin < ? AND contract_end > ?', [time(), time()]);
+        $begin_lastmonth = strtotime(date("y-m",strtotime("-1 month")) . '-01');
+        $end_nextmonth = strtotime(date("y-m",strtotime("+1 month")) . '-28');
+        $month_begin = strtotime($year . '-' . $month  . '-01' );
+        $month_end = strtotime($year . '-' . $month  . '-28' );
+        //$contracts = self::findBySQL('contract_begin < ? AND contract_end > ?', [$end_nextmonth, $begin_lastmonth]);
+        $contracts = self::findBySQL('contract_begin < ? AND contract_end > ?', [$month_end, $month_begin]);
         return $contracts;
     }
     
