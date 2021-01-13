@@ -36,6 +36,7 @@ class StundenzettelTimesheet extends \SimpleORMap
             }
         };
         
+        //gibt an, ob der Monat, für welchen der Stundenzettel angelegt wurde bereits abgelaufen ist
         $config['additional_fields']['month_completed']['get'] = function ($item) {
             $days_per_month = cal_days_in_month(CAL_GREGORIAN, $item->month, $item->year);
             return strtotime($item->year . '-' . $item->month . '-' . $days_per_month) < time();
@@ -50,7 +51,9 @@ class StundenzettelTimesheet extends \SimpleORMap
         };
         
         $config['additional_fields']['overdue']['get'] = function ($item) {
-            return strtotime($item->year . '-' . intval($item->month) + 1 . '-04') < time();;     
+            $offset_overdue = '04';
+            $due_time = strtotime("+1 month", strtotime($item->year . '-' . $item->month . '-' . $offset_overdue));
+            return $due_time < time();;     
         };
 
         parent::configure($config);
