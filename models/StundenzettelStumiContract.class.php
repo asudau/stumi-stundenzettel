@@ -76,22 +76,29 @@ class StundenzettelStumiContract extends \SimpleORMap
         'finished' => array(
             'icon' => 'radiobutton-checked',
             'true_tooltip' => 'Digitaler Stundenzettel eingereicht',
-            'false_tooltip' => 'Digitaler Stundenzettel noch nicht eingereicht'
+            'false_tooltip' => 'Digitaler Stundenzettel noch nicht eingereicht',
+            'overdue_tooltip' => 'Einreichen des digitalen Stundenzettels überfällig'
             ),
         'approved' => array(
             'icon' => 'accept',
             'true_tooltip' => 'Digitaler Stundenzettel durch verantwortliche/n Mitarbeiter/in freigegeben',
-            'false_tooltip' => 'Digitaler Stundenzettel noch nicht durch verantwortliche/n Mitarbeiter/in geprüft und freigegebn'
+            'false_tooltip' => 'Digitaler Stundenzettel noch nicht durch verantwortliche/n Mitarbeiter/in geprüft und freigegeben',
+            'waiting_tooltip' => 'Warten auf Freigabe durch verantwortliche/n Mitarbeiter/in',
+            'overdue_tooltip' => 'Prüfung und Freigabe durch verantwortliche/n Mitarbeiter/in überfällig'
             ),
         'received' => array(
             'icon' => 'inbox',
             'true_tooltip' => 'Papierausdruck liegt unterschrieben im Sekretariat vor',
-            'false_tooltip' => 'Papierausdruck liegt noch nicht im Sekretariat vor'
+            'false_tooltip' => 'Papierausdruck liegt noch nicht im Sekretariat vor',
+            'waiting_tooltip' => 'Warten auf Eintreffen das ausgedruckten Stundenzettels im Sekretariat',
+            'overdue_tooltip' => 'Eintreffen des Papierausdrucks im Sekretariat überfällig'
             ),
         'complete' => array(
             'icon' => 'lock-locked',
             'true_tooltip' => 'Vorgang abgeschlossen',
-            'false_tooltip' => 'Vorgang offen'
+            'false_tooltip' => 'Vorgang offen',
+            'waiting_tooltip' => 'Weiterleiten des Stundenzettel ans Personaldezernat',
+            'overdue_tooltip' => 'Vorgang überfällig',
             ),
         );
     

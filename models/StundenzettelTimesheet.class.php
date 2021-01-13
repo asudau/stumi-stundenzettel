@@ -77,6 +77,28 @@ class StundenzettelTimesheet extends \SimpleORMap
                     else return 'false';
                 case 'received':
                     if ($this->received) return 'true';
+                    if (!$this->received && $this->overdue) return 'overdue';
+                    else return 'false';
+                case 'complete':
+                    if ($this->received) return 'true';
+                    else return 'false';
+            }
+        }
+        
+        if ($user_status == 'supervisor'){
+            switch ($status){
+                case 'finished':
+                    if ($this->finished) return 'true';
+                    if (!$this->finished && $this->overdue) return 'overdue';
+                    else return 'false';
+                case 'approved':
+                    if ($this->approved) return 'true';
+                    if (!$this->approved && $this->finished && !$this->overdue) return 'waiting';
+                    if (!$this->approved && $this->finished && $this->overdue) return 'overdue';
+                    else return 'false';
+                case 'received':
+                    if ($this->received) return 'true';
+                    if (!$this->received && $this->overdue) return 'overdue';
                     else return 'false';
                 case 'complete':
                     if ($this->received) return 'true';

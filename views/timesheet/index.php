@@ -6,6 +6,7 @@
     <h1> Diese Ansicht fehlt noch, Für die Übersicht über Stundenzettel einer Person, einfach die Person anklicken. </h1>
     
 <?php elseif ($adminrole || $supervisorrole) : ?>    
+    <? $role = ($adminrole) ? 'admin' : 'supervisor' ?>
     <h1> <?= $stumi->nachname ?>, <?= $stumi->vorname ?> </h1>
     Vertragslaufzeit: <?= date('d.m.Y', $contract->contract_begin) ?> bis <?= date('d.m.Y', $contract->contract_end) ?>
 
@@ -25,24 +26,12 @@
                     <td><a href='<?=$this->controller->url_for('timesheet/timesheet/' . $timesheet->id) ?>' title='Stundenzettel editieren'><?= $timesheet->month ?>/<?= $timesheet->year ?></a>
                     </td>
                     <td><?= ($timesheet->sum) ? : '0:00' ?> / <?= $timesheet->contract->contract_hours ?></td>
-                    <td><?= ($timesheet->month_completed) ? $timesheet->timesheet_balance : 'ausstehend' ?></td>
+                    <td><?= ($timesheet->month_completed) ? $timesheet->timesheet_balance : '(laufend)' ?></td>
                     <td>  
-                        <?= ($timesheet->finished) ?  
-                             Icon::create($status_infos['finished']['icon'], $status_infos['true_icon_role'], ['title' =>  $status_infos['finished']['true_tooltip']] ) :
-                             Icon::create($status_infos['finished']['icon'], $status_infos['false_icon_role'], ['title' =>  $status_infos['finished']['false_tooltip']] ) 
-                        ?>
-                        <?= ($timesheet->approved) ?  
-                             Icon::create($status_infos['approved']['icon'], $status_infos['true_icon_role'], ['title' =>  $status_infos['approved']['true_tooltip']] ) :
-                             Icon::create($status_infos['approved']['icon'], $status_infos['false_icon_role'], ['title' =>  $status_infos['approved']['false_tooltip']] ) 
-                        ?>
-                        <?= ($timesheet->received) ?  
-                             Icon::create($status_infos['received']['icon'], $status_infos['true_icon_role'], ['title' =>  $status_infos['received']['true_tooltip']] ) :
-                             Icon::create($status_infos['received']['icon'], $status_infos['false_icon_role'], ['title' =>  $status_infos['received']['false_tooltip']] ) 
-                        ?>
-                        <?= ($timesheet->complete) ?  
-                             Icon::create($status_infos['complete']['icon'], $status_infos['true_icon_role'], ['title' =>  $status_infos['complete']['true_tooltip']] ) :
-                             Icon::create($status_infos['complete']['icon'], $status_infos['false_icon_role'], ['title' =>  $status_infos['complete']['false_tooltip']] ) 
-                        ?>
+                        <?= Icon::create($status_infos['finished']['icon'], $status_infos[$timesheet->getCurrentState('finished', $role) . '_icon_role'], ['title' =>  $status_infos['finished'][$timesheet->getCurrentState('finished', $role) . '_tooltip']] )?>
+                        <?= Icon::create($status_infos['approved']['icon'], $status_infos[$timesheet->getCurrentState('approved', $role) . '_icon_role'], ['title' =>  $status_infos['approved'][$timesheet->getCurrentState('approved', $role) . '_tooltip']] )?>
+                        <?= Icon::create($status_infos['received']['icon'], $status_infos[$timesheet->getCurrentState('received', $role) . '_icon_role'], ['title' =>  $status_infos['received'][$timesheet->getCurrentState('received', $role) . '_tooltip']] )?>
+                        <?= Icon::create($status_infos['complete']['icon'], $status_infos[$timesheet->getCurrentState('complete', $role) . '_icon_role'], ['title' =>  $status_infos['complete'][$timesheet->getCurrentState('complete', $role) . '_tooltip']] )?>
                     </td>
                 </tr>
                 <?php endforeach ?>
@@ -69,24 +58,12 @@
                     <td><a href='<?=$this->controller->url_for('timesheet/timesheet/' . $timesheet->id) ?>' title='Stundenzettel editieren'><?= $timesheet->month ?>/<?= $timesheet->year ?></a>
                     </td>
                     <td><?= ($timesheet->sum) ? : '0:00' ?> / <?= $timesheet->contract->contract_hours ?></td>
-                    <td><?= ($timesheet->month_completed) ? $timesheet->timesheet_balance : 'ausstehend' ?></td>
+                    <td><?= ($timesheet->month_completed) ? $timesheet->timesheet_balance : '(laufend)' ?></td>
                     <td>
-                        <?= ($timesheet->finished) ?  
-                             Icon::create($status_infos['finished']['icon'], $status_infos['true_icon_role'], ['title' =>  $status_infos['finished']['true_tooltip']] ) :
-                             Icon::create($status_infos['finished']['icon'], $status_infos['false_icon_role'], ['title' =>  $status_infos['finished']['false_tooltip']] ) 
-                        ?>
-                        <?= ($timesheet->approved) ?  
-                             Icon::create($status_infos['approved']['icon'], $status_infos['true_icon_role'], ['title' =>  $status_infos['approved']['true_tooltip']] ) :
-                             Icon::create($status_infos['approved']['icon'], $status_infos['false_icon_role'], ['title' =>  $status_infos['approved']['false_tooltip']] ) 
-                        ?>
-                        <?= ($timesheet->received) ?  
-                             Icon::create($status_infos['received']['icon'], $status_infos['true_icon_role'], ['title' =>  $status_infos['received']['true_tooltip']] ) :
-                             Icon::create($status_infos['received']['icon'], $status_infos['false_icon_role'], ['title' =>  $status_infos['received']['false_tooltip']] ) 
-                        ?>
-                        <?= ($timesheet->complete) ?  
-                             Icon::create($status_infos['complete']['icon'], $status_infos['true_icon_role'], ['title' =>  $status_infos['complete']['true_tooltip']] ) :
-                             Icon::create($status_infos['complete']['icon'], $status_infos['false_icon_role'], ['title' =>  $status_infos['complete']['false_tooltip']] ) 
-                        ?>
+                        <?= Icon::create($status_infos['finished']['icon'], $status_infos[$timesheet->getCurrentState('finished', 'stumi') . '_icon_role'], ['title' =>  $status_infos['finished'][$timesheet->getCurrentState('finished', 'stumi') . '_tooltip']] )?>
+                        <?= Icon::create($status_infos['approved']['icon'], $status_infos[$timesheet->getCurrentState('approved', 'stumi') . '_icon_role'], ['title' =>  $status_infos['approved'][$timesheet->getCurrentState('approved', 'stumi') . '_tooltip']] )?>
+                        <?= Icon::create($status_infos['received']['icon'], $status_infos[$timesheet->getCurrentState('received', 'stumi') . '_icon_role'], ['title' =>  $status_infos['received'][$timesheet->getCurrentState('received', 'stumi') . '_tooltip']] )?>
+                        <?= Icon::create($status_infos['complete']['icon'], $status_infos[$timesheet->getCurrentState('complete', 'stumi') . '_icon_role'], ['title' =>  $status_infos['complete'][$timesheet->getCurrentState('complete', 'stumi') . '_tooltip']] )?>
                     </td>
                 </tr>
                 <?php endforeach ?>
