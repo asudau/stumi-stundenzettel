@@ -118,7 +118,7 @@ use Studip\Button, Studip\LinkButton;
                                 <?php foreach ($plugin->getCommentOptions() as $entry_value): ?>
                                     <option 
                                         <?= ($records[$j]['defined_comment'] == $entry_value) ? 'selected' : ''?> 
-                                        <?= ($entry_value == 'Urlaub') ? '' : 'disabled' ?> value="<?=$entry_value?>"><?= $entry_value ?></option>
+                                        <?= ($entry_value == 'Urlaub' || $entry_value == 'Krank') ? '' : 'disabled' ?> value="<?=$entry_value?>"><?= $entry_value ?></option>
                                 <?php endforeach ?>
                             </select>
                             <? endif ?>
