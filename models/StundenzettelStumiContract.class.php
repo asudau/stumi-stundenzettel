@@ -215,12 +215,13 @@ class StundenzettelStumiContract extends \SimpleORMap
     function getClaimedVacation($year)
     {
         $timesheets = StundenzettelTimesheet::findBySQL('`contract_id` LIKE ? AND `year` LIKE ?', [$this->id, $year]);
-        $vacation_days = 0;
+        $claimed_vacation = 0;
         foreach ($timesheets as $timesheet) {
             $records = StundenzettelRecord::findBySQL('`timesheet_id` = ? AND `defined_comment` = "Urlaub"', [$timesheet->id]);
-            $vacation_days += sizeof($records);
+            foreach ($records as $record) {
+                $claimed_vacation += $record['sum'];
+            }
         }
-        $claimed_vacation = StundenzettelTimesheet::multiplyMinutes($this->default_workday_time_in_minutes, $vacation_days);
         
         if (StundenzettelContractBegin::find($this->id)) {    
             $contract_data = StundenzettelContractBegin::find($this->id);
