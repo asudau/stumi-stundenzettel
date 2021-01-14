@@ -219,7 +219,9 @@ use Studip\Button, Studip\LinkButton;
 <? endif ?>  
     
 <? if ($supervisorrole) : ?>
-     <?= LinkButton::create(_('Korrektheit bestätigen'), $controller->url_for('timesheet/approve/' . $timesheet->id) ) ?>
+    <?= LinkButton::create(_('Korrektheit bestätigen'), $controller->url_for('timesheet/approve/' . $timesheet->id) ) ?>
+<? elseif ($adminrole) : ?>
+    <?= LinkButton::create(_('Eingang bestätigen'), $controller->url_for('timesheet/received/' . $timesheet->id) ) ?>
 <? endif ?>    
 
 

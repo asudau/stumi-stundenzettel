@@ -64,15 +64,15 @@ class TimesheetController extends StudipController {
         
         //if its later than the 18.th of current month
         if (strftime('%e', time()) > 18) {
-            $this->next_month = strftime('%b', strtotime("+1 month", time()));
-            $this->last_month = strftime('%b', time());
+            $this->next_month = strftime('%B', strtotime("+1 month", time()));
+            $this->last_month = strftime('%B', time());
             $this->next_month_num = strftime('%m', strtotime("+1 month", time()));
             $this->next_month_year = strftime('%Y', strtotime("+1 month", time()));
             $this->last_month_num = strftime('%m', time());
             $this->last_month_year = strftime('%Y', time());
         } else {
-            $this->next_month = strftime('%b', time());
-            $this->last_month = strftime('%b', strtotime("-1 month", time()));
+            $this->next_month = strftime('%B', time());
+            $this->last_month = strftime('%B', strtotime("-1 month", time()));
             $this->next_month_num = strftime('%m', time());
             $this->next_month_year = strftime('%Y', time());
             $this->last_month_num = strftime('%m', strtotime("-1 month", time()));
@@ -292,8 +292,22 @@ class TimesheetController extends StudipController {
         if($timesheet && $this->adminrole){
             $timesheet->received = true;
             $timesheet->store();
-            PageLayout::postMessage(MessageBox::success(_("Vorliegen in Papierform bestätigt.")));
-            $this->redirect('timesheet/index/'. $timesheet->contract->id);
+            PageLayout::postMessage(MessageBox::success(_("Vorliegen in Papierform bestätigt: ") . $timesheet->contract->stumi->nachname . '/' . strftime('%B', strtotime("2020-" . $timesheet->month . "-01") )) );
+            $this->redirect('timesheet/admin_index/'. $timesheet->contract->id);
+        } else {
+            PageLayout::postMessage(MessageBox::error(_("Fehler: Sie sind zu dieser aktion nicht berechtigt.")));
+            $this->redirect('timesheet/index');
+        }
+    }
+    
+    public function complete_action($timesheet_id)
+    {
+        $timesheet = StundenzettelTimesheet::find($timesheet_id);
+        if($timesheet && $this->adminrole){
+            $timesheet->complete = true;
+            $timesheet->store();
+            PageLayout::postMessage(MessageBox::success(_("Vorgang abgeschlossen.")));
+            $this->redirect('timesheet/admin_index/'. $timesheet->contract->id);
         } else {
             PageLayout::postMessage(MessageBox::error(_("Fehler: Sie sind zu dieser aktion nicht berechtigt.")));
             $this->redirect('timesheet/index');
