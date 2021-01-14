@@ -68,6 +68,8 @@ use Studip\Button, Studip\LinkButton;
             <?php $j = 0; ?>
          
             <?php for ($i = 1; $i <= $days_per_month; $i++) : ?>
+            
+<!--                für diesen Tag liegt bereits ein Eintrag vor       -->
                 <?php if ($records[$j]['day'] == $i ) : ?>
                     <? $holiday = $records[$j]->isHoliday(); ?>
                     <? $weekend = $records[$j]->isWeekend(); ?>
@@ -133,6 +135,8 @@ use Studip\Button, Studip\LinkButton;
                         </td>
                     </tr>
                     <?php $j++; ?>
+                    
+<!--                für diesen Tag liegt noch kein Eintrag vor       -->
                 <?php else: ?>
                     <? $date = $i . '.' . $timesheet->month . '.'  . $timesheet->year; ?>
                     <? $weekend = StundenzettelRecord::isDateWeekend($date); ?>
