@@ -485,59 +485,6 @@ use Studip\Button, Studip\LinkButton;
 //        return false;
 //        }
 }
-
-    inputs = document.getElementsByTagName('begin');
-    for (index = 0; index < inputs.length; ++index) {
-        // deal with inputs[index] element.
-        inputs[index].onchange = function () {
-            var begin = document.getElementsByName('begin[1]')[0].value;
-            var end = document.getElementsByName('end[1]')[0].value;
-            document.getElementsByName('sum[1]')[0].value = begin + end;
-            document.getElementsByName('sum[1]')[0].removeAttribute("disabled");
-            if (this.value != ''){
-                document.getElementsByName(this.getAttribute("name"))[0].classList.remove("needs_fill");
-            }
-        };
-    }
-
-
-    //Ersteinschreibung Auslandshochschulen, dann Staat Pflichtfeld
-    document.getElementsByName("hochschule_erst")[1].onchange = function () {
-        if (this.value == '2'){
-            document.getElementsByName("staat_hochschule_erst")[1].removeAttribute("disabled");
-            //document.getElementsByName("staat_hochschule_erst")[0].style.display = "";
-        } else {
-            //document.getElementsByName("staat_hochschule_erst")[1].value = "-- nicht erforderlich --";
-            document.getElementsByName("staat_hochschule_erst")[1].setAttribute("disabled", true);
-            //$("tr[staat_hochschule_erst]").hide();//.removeClass( "required");
-            //document.getElementsByName("staat_hochschule_erst")[0].style.display = "none";//.removeAttribute("class");
-        }
-        if (this.value != ''){
-            document.getElementsByName(this.getAttribute("name"))[0].classList.remove("needs_fill");
-        }
-    };
-
-    document.getElementsByName("art_reg_prom")[1].onchange = function () {
-        if (this.value == '3' || this.value == '2' ){
-            document.getElementsByName("promotionsende_monat")[1].removeAttribute("disabled");
-            document.getElementsByName("promotionsende_monat")[0].classList.add("needs_fill");
-            document.getElementsByName("promotionsende_jahr")[1].removeAttribute("disabled");
-            document.getElementsByName("promotionsende_jahr")[0].classList.add("needs_fill");
-            //document.getElementsByName("staat_hochschule_erst")[0].style.display = "";
-        } else {
-            //document.getElementsByName("promotionsende_monat")[1].value = "-- nicht erforderlich --";
-            document.getElementsByName("promotionsende_monat")[1].childNodes[1].value = 'NULL';
-            document.getElementsByName("promotionsende_monat")[1].setAttribute("disabled", true);
-            document.getElementsByName("promotionsende_monat")[0].classList.remove("needs_fill");
-            document.getElementsByName("promotionsende_jahr")[1].value = '';
-            document.getElementsByName("promotionsende_jahr")[1].setAttribute("disabled", true);
-            document.getElementsByName("promotionsende_jahr")[0].classList.remove("needs_fill");
-            //$("tr[staat_hochschule_erst]").hide();//.removeClass( "required");
-            //document.getElementsByName("staat_hochschule_erst")[0].style.display = "none";//.removeAttribute("class");
-        }
-        if (this.value != ''){
-            document.getElementsByName(this.getAttribute("name"))[0].classList.remove("needs_fill");
-        }
-    };
+    
 
 </script>
