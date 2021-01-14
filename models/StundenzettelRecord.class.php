@@ -103,7 +103,8 @@ class StundenzettelRecord extends \SimpleORMap
     
     static function isDateHoliday($date)
     {
-        return array_key_exists(substr($date, 0, 6), self::$holidays_nds);
+        $day = date('d.m.', strtotime($date));
+        return array_key_exists($day, self::$holidays_nds);
     }
     
     static function isUniClosedOnDate($date)
