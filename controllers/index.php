@@ -112,12 +112,13 @@ class IndexController extends StudipController {
         
     }
     
-    public function edit_action($contract_id)
+    public function edit_action($contract_id, $following_contract = NULL)
     {   
         $this->contract = StundenzettelStumiContract::find($contract_id);
         $this->inst_id = $this->contract->inst_id;
-        $this->stumi = User::find($this->contract->stumi_id);
+        $this->stumi = $this->contract->stumi;
         $supervisor = User::find($this->contract->supervisor);
+        $this->following_contract = $following_contract;
         
         $this->search = QuickSearch::get('user_id', new StandardSearch('user_id'))
             ->defaultValue($this->contract->supervisor, $supervisor->vorname . ' ' . $supervisor->nachname)
@@ -130,11 +131,11 @@ class IndexController extends StudipController {
     public function add_contract_begin_data_action($contract_id)
     {   
         $this->contract = StundenzettelStumiContract::find($contract_id);
-        $this->stumi = User::find($this->contract->stumi_id);
+        $this->stumi = User::find($this->contract->stumi);
         $this->contract_data = StundenzettelContractBegin::find($contract_id); 
     }
     
-    public function save_action($inst_id, $stumi_id, $contract_id)
+    public function save_action($inst_id, $stumi_id, $contract_id = NULL)
     {   
         if ($this->plugin->hasStumiAdminrole ()) {
             
@@ -142,7 +143,7 @@ class IndexController extends StudipController {
             $contract = StundenzettelStumiContract::find($contract_id);
             $message = _("Änderungen gespeichert.");
             
-            if (!$contract){
+            if (!$contract || Request::get('following_contract')){
                 $contract = new StundenzettelStumiContract();
                 $message = _("Vertrag angelegt.");
             }

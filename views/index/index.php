@@ -49,7 +49,7 @@
                             <a onclick="return confirm('Eintrag löschen?')" href='<?=$this->controller->url_for('index/delete/' . $contract->id) ?>' title='Eintrag löschen' ><?=Icon::create('trash', Icon::ROLE_CLICKABLE)?></a>
                             <a  href='<?=$this->controller->url_for('index/edit/' . $contract->id) ?>' title='Vertragsdaten bearbeiten' data-dialog='size=auto'><?=Icon::create('edit', Icon::ROLE_CLICKABLE)?></a>
                             <a  href='<?=$this->controller->url_for('index/add_contract_begin_data/' . $contract->id) ?>' title='Zeitpunkt für Beginn digitaler Erfassung defnieren' data-dialog='size=auto'><?=Icon::create('date', Icon::ROLE_CLICKABLE)?></a>
-                            <a  href='<?=$this->controller->url_for('index/new/'. $inst_id[0] . '/' . $stumi->user_id) ?>' title='Weiteren Vertrag anlegen' data-dialog='size=auto'><?=Icon::create('add', Icon::ROLE_CLICKABLE)?></a>
+                            <a  href='<?=$this->controller->url_for('index/edit/'. $contract->id . '/1') ?>' title='Folgevertrag anlegen' data-dialog='size=auto'><?=Icon::create('add', Icon::ROLE_CLICKABLE)?></a>
                             <? endif ?>
                     </td>
 

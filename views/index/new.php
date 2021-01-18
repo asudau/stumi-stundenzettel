@@ -5,8 +5,11 @@ use Studip\Button, Studip\LinkButton;
 
 <html>
 
-<form class='default' method="post" action="<?= $controller->url_for('index/save/' . $inst_id . '/' . $stumi->id . '/' . $contract->id) ?>">
+<form class='default' method="post" action="<?= $controller->url_for('index/save/' . $inst_id . '/' . $stumi->user_id . '/' . $contract->id ) ?>">
     <?= CSRFProtection::tokenTag() ?>
+    <? if ($following_contract) : ?>
+        <input type='hidden' name ='following_contract' value='true' >
+    <? endif ?>
     
     <section>
         <label>
@@ -18,14 +21,22 @@ use Studip\Button, Studip\LinkButton;
         <label>
             <?= _('Vertragsbeginn') ?>
         </label>
-        <input type='date' name="begin" value='<?= ($contract) ? date('Y-m-d', $contract->contract_begin) : ''?>' ></input>
+        <input type='date' style='max-width: 9em;' 
+               <? if ($following_contract) : ?>
+                min="<?= date('Y-m-d', strtotime('+1 day', $contract->contract_end)) ?>" 
+                name="begin" value='<?= ($contract) ? date('Y-m-d', strtotime('+1 day', $contract->contract_end)) : ''?>' >
+               <? else : ?>
+                name="begin" value='<?= ($contract) ? date('Y-m-d', $contract->contract_begin) : ''?>' >
+               <? endif ?>
+               </input>
     </section>
     
     <section>
         <label>
             <?= _('Vertragsende') ?>
         </label>
-        <input type='date' name="end" value='<?= ($contract) ? date('Y-m-d', $contract->contract_end) : ''?>' ></input>
+        <input type='date' style='max-width: 9em;' 
+               name="end" value='<?= ($contract && !$following_contract) ? date('Y-m-d', $contract->contract_end) : ''?>' ></input>
     </section>
     
     <section>
