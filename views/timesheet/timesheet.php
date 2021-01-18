@@ -105,12 +105,13 @@ use Studip\Button, Studip\LinkButton;
                         </td>
                         <td>
                            <? if (!$uni_closed || $holiday || $weekend) : ?>
-                           <select <?= (!$is_editable)? 'disabled' : ''?> class='defined_comment' name ='defined_comment[<?= $i ?>]'>
+                           <select <?= ($holiday || $weekend)? 'disabled' : ''?> class='defined_comment' name ='defined_comment[<?= $i ?>]'>
                                 <option value=""> -- </option>
                                 <?php foreach ($plugin->getCommentOptions() as $entry_value): ?>
                                     <option 
                                     <?= ($records[$j]['defined_comment'] == $entry_value) ? 'selected' : ''?> 
                                     <?= ($entry_value == 'Feiertag') ? 'disabled' : '' ?> 
+                                    <?= (!$is_editable && $entry_value == 'Krank') ? 'disabled' : '' ?>  
                                         value="<?=$entry_value?>"><?= $entry_value ?></option>
                                 <?php endforeach ?>
                             </select>
@@ -172,15 +173,21 @@ use Studip\Button, Studip\LinkButton;
                                   name ='entry_mktime[<?= $i ?>]' value='' >
                         </td>
                         <td>
+                            
+<!--                        für Feiertage und Wochenenden ggf. Bearbeitung sperren und passenden Wert setzen          -->
                             <? if (!$uni_closed || $holiday || $weekend) : ?>
-                           <select <?= (!$is_editable)? 'disabled' : ''?> class='defined_comment' name ='defined_comment[<?= $i ?>]'>
+                           <select <?= ($holiday || $weekend)? 'disabled' : ''?> class='defined_comment' name ='defined_comment[<?= $i ?>]'>
                                 <option <?= ($holiday) ? '' : 'selected' ?> value=""> -- </option>
                                 <?php foreach ($plugin->getCommentOptions() as $entry_value): ?>
                                     <option 
                                         <?= ($holiday && ($entry_value == 'Feiertag')) ? 'selected' : ''?> 
-                                        <?= ($entry_value == 'Feiertag') ? 'disabled' : '' ?> value="<?=$entry_value?>"><?= $entry_value ?></option>
+                                        <?= ($entry_value == 'Feiertag') ? 'disabled' : '' ?> 
+                                        <?= (!$is_editable && $entry_value == 'Krank') ? 'disabled' : '' ?> 
+                                        value="<?=$entry_value?>"><?= $entry_value ?>
+                                    </option>
                                 <?php endforeach ?>
                             </select>
+<!--                        falls die Uni geschlossen ist          -->
                             <? else : ?>
                             <select class='defined_comment' name ='defined_comment[<?= $i ?>]'>
                                 <option selected value=""> -- </option>
@@ -457,16 +464,18 @@ use Studip\Button, Studip\LinkButton;
         inputs[index].onchange = function () {
             var name = this.getAttribute("name");
             var rec_index = name.substring(15, 19);
-            if(this.value == '')  {
+            if(this.value == '')  { //keine Auswahl
                 enable_timetracking(rec_index);
                 document.getElementsByName('sum' + rec_index)[0].readOnly = true;
                 document.getElementsByName('sum' + rec_index)[0].value = '';
                 document.getElementsByName('entry_mktime' + rec_index)[0].value = '';
+                document.getElementsByName('sum' + rec_index)[0].removeAttribute("required");
             } else if(this.value == 'Urlaub') {
                 disable_timetracking(rec_index);
                 document.getElementsByName('sum' + rec_index)[0].readOnly = false;
                 document.getElementsByName('sum' + rec_index)[0].value = '';
-            } else {
+                document.getElementsByName('sum' + rec_index)[0].setAttribute("required", "");
+            } else { //Feiertag und Krankheit
                 document.getElementsByName('sum' + rec_index)[0].readOnly = true;
                 disable_timetracking(rec_index);
                 autocalc_sum(rec_index);
