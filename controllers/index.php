@@ -54,6 +54,8 @@ class IndexController extends StudipController {
             }
             if (sizeof($this->inst_id) == 0) { //local testing with root
                 $this->inst_id[] = '477d184367f48cc210f74bb4f779c7b7';
+            } else { //TODO temporäre direkte Zuweisung der Einrichtung virtUOS, muss später dynamisch erfolgen
+                $this->inst_id[] = '355217603013d7675d68951087429924';
             }
         
             //get all stumis and contracts
