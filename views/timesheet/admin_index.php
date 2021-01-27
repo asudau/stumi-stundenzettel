@@ -23,8 +23,8 @@
                 <tr>  
                     <? $timesheet_last_month = $timesheets[$contract->id]['last_month']; ?>
                     <? $timesheet_next_month = $timesheets[$contract->id]['next_month']; ?>
-                    <td><?= $contract->stumi->nachname ?>, <?= $contract->stumi->vorname ?>
-                        <a href='<?=$this->controller->url_for('timesheet/timesheet/' . $timesheet->id) ?>' title='Stundenzettel einsehen'><?= $timesheet->month ?><?= $timesheet->year ?></a>
+                    <td>
+                        <a href='<?=$this->controller->url_for('timesheet/index/' . $contract->id) ?>' title='Stundenzettel einsehen'><?= $contract->stumi->nachname ?>, <?= $contract->stumi->vorname ?></a>
                     </td>
                     <td><?= $contract->getWorktimeBalance() ?></td>
                     <td data-sort-value= <?= $timesheet_last_month->int_status ?> >  
