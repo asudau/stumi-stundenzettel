@@ -7,19 +7,19 @@ use Studip\Button, Studip\LinkButton;
 </div>
 
 <?php if ($no_timesheet) : ?>
-    <p>Name, Vorname: <b><?= User::findOneByUser_Id($contract->stumi_id)->nachname ?>, <?= User::findOneByUser_Id($contract->stumi_id)->vorname ?></b></p>
-    <p>Fachbereich/Organisationseinheit: <b><?= Institute::find($contract->inst_id)->name ?></b></p>
+    <p>Name, Vorname: <b><?= htmlready(User::findOneByUser_Id($contract->stumi_id)->nachname) ?>, <?= htmlready(User::findOneByUser_Id($contract->stumi_id)->vorname) ?></b></p>
+    <p>Fachbereich/Organisationseinheit: <b><?= htmlready(Institute::find($contract->inst_id)->name) ?></b></p>
 
     <p>Monat/Jahr: 
-        <form name="month_select" method="post"  action="<?= $controller->url_for('timesheet/select/' . $contract->id) ?>">
+        <form name="month_select" method="post"  action="<?= $controller->url_for('timesheet/select/' . htmlready($contract->id)) ?>">
             <select name ='month' onchange="this.form.submit()">
                 <?php foreach ($plugin->getMonths() as $entry_value): ?>
-                    <option <?= ($month == $entry_value) ? 'selected' : '' ?> value="<?=$entry_value?>"><?= $entry_value ?></option>
+                    <option <?= ($month == $entry_value) ? 'selected' : '' ?> value="<?=htmlready($entry_value)?>"><?= htmlready($entry_value) ?></option>
                 <?php endforeach ?>
             </select>
             <select  name ='year' onchange="this.form.submit()">
                 <?php foreach ($plugin->getYears() as $entry_value): ?>
-                    <option <?= ($year == $entry_value) ? 'selected' : '' ?> value="<?=$entry_value?>"><?= $entry_value ?></option>
+                    <option <?= ($year == $entry_value) ? 'selected' : '' ?> value="<?=htmlready($entry_value)?>"><?= htmlready($entry_value) ?></option>
                 <?php endforeach ?>
             </select>
         </form>
@@ -27,27 +27,27 @@ use Studip\Button, Studip\LinkButton;
     
 <?php elseif ($stumirole || $timesheet->finished): ?>
     
-    <p>Name, Vorname: <b><?= User::findOneByUser_Id($timesheet->stumi_id)->nachname ?>, <?= User::findOneByUser_Id($timesheet->stumi_id)->vorname ?></b></p>
-    <p>Fachbereich/Organisationseinheit: <b><?= Institute::find($inst_id)->name ?></b></p>
-    <p>Monatsarbeitszeit laut Arbeitsvertrag: <b><?= $timesheet->contract->contract_hours ?> Stunden </b></p>
-    <p>Diesen Monat erfasst: <b> <?= $timesheet->sum ?> Stunden </b></p>
+    <p>Name, Vorname: <b><?= htmlready(User::findOneByUser_Id($timesheet->stumi_id)->nachname) ?>, <?= htmlready(User::findOneByUser_Id($timesheet->stumi_id)->vorname) ?></b></p>
+    <p>Fachbereich/Organisationseinheit: <b><?= htmlready(Institute::find($inst_id)->name) ?></b></p>
+    <p>Monatsarbeitszeit laut Arbeitsvertrag: <b><?= htmlready($timesheet->contract->contract_hours) ?> Stunden </b></p>
+    <p>Diesen Monat erfasst: <b> <?= htmlready($timesheet->sum) ?> Stunden </b></p>
     <p>Monat/Jahr: 
-        <form name="month_select" method="post"  action="<?= $controller->url_for('timesheet/select/' . $timesheet->contract_id) ?>">
+        <form name="month_select" method="post"  action="<?= $controller->url_for('timesheet/select/' . htmlready($timesheet->contract_id)) ?>">
             <select name ='month' onchange="this.form.submit()">
                 <?php foreach ($plugin->getMonths() as $entry_value): ?>
-                    <option <?= ($timesheet->month == $entry_value) ? 'selected' : '' ?> value="<?=$entry_value?>"><?= $entry_value ?></option>
+                    <option <?= ($timesheet->month == $entry_value) ? 'selected' : '' ?> value="<?=htmlready($entry_value)?>"><?= htmlready($entry_value) ?></option>
                 <?php endforeach ?>
             </select>
             <select  name ='year' onchange="this.form.submit()">
                 <?php foreach ($plugin->getYears() as $entry_value): ?>
-                    <option <?= ($timesheet->year == $entry_value) ? 'selected' : '' ?> value="<?=$entry_value?>"><?= $entry_value ?></option>
+                    <option <?= ($timesheet->year == $entry_value) ? 'selected' : '' ?> value="<?=htmlready($entry_value)?>"><?= htmlready($entry_value) ?></option>
                 <?php endforeach ?>
             </select>
         </form>
     </p> 
 
 
-<form id="timesheet_form" method="post" class='<?= $adminrole ? 'admin' : '' ?> <?= $timesheet->locked ? 'locked' : '' ?>' action="<?= $controller->url_for('timesheet/save_timesheet', $timesheet->id) ?>" class="default collapsable">
+<form id="timesheet_form" method="post" class='<?= $adminrole ? 'admin' : '' ?> <?= $timesheet->locked ? 'locked' : '' ?>' action="<?= $controller->url_for('timesheet/save_timesheet', htmlready($timesheet->id)) ?>" class="default collapsable">
     <?= CSRFProtection::tokenTag() ?>
     <div style="overflow:scroll;">
         <table class='sortable-table default' style='width: auto;'>
@@ -76,8 +76,8 @@ use Studip\Button, Studip\LinkButton;
                     <? $date = $records[$j]->getDate(); ?>
                     <? $uni_closed = StundenzettelRecord::isUniClosedOnDate($date); ?>
                     <? $is_editable = StundenzettelRecord::isEditable($date); ?>
-                    <tr id ='entry[<?= $i ?>]' class='<?= ($weekend)? 'weekend' : ''?> <?= ($holiday)? 'holiday' : ''?> <?= $records[$j]['defined_comment'] ?>' >
-                        <input type='hidden' name ='record_id[<?= $i ?>]' value='<?= $records[$j]['id'] ?>' >
+                    <tr id ='entry[<?= $i ?>]' class='<?= ($weekend)? 'weekend' : ''?> <?= ($holiday)? 'holiday' : ''?> <?= htmlready($records[$j]['defined_comment']) ?>' >
+                        <input type='hidden' name ='record_id[<?= $i ?>]' value='<?= htmlready($records[$j]['id']) ?>' >
                         <td>
                             <?= $i ?>
                         </td>
@@ -85,23 +85,23 @@ use Studip\Button, Studip\LinkButton;
                             <?= strftime("%A", strtotime($date)) ?>
                         </td>
                         <td >
-                            <input style='width: 80px;' type='text' pattern="<?= $time_pattern ?>" <?= (!$is_editable)? 'readonly' : ''?> class='begin size-s studip-timepicker' id ='' name ='begin[<?= $i ?>]' value='<?= $records[$j]['begin'] ?>' placeholder="hh:mm" >
+                            <input style='width: 80px;' type='text' pattern="<?= $time_pattern ?>" <?= (!$is_editable)? 'readonly' : ''?> class='begin size-s studip-timepicker' id ='' name ='begin[<?= $i ?>]' value='<?= htmlready($records[$j]['begin']) ?>' placeholder="hh:mm" >
                         </td>
                         <td>
-                            <input style='width: 80px;' type='text' pattern="<?= $break_pattern ?>" <?= (!$is_editable)? 'readonly' : ''?> class='break' name ='break[<?= $i ?>]' value ='<?= $records[$j]['break'] ?>' placeholder="hh:mm">
+                            <input style='width: 80px;' type='text' pattern="<?= $break_pattern ?>" <?= (!$is_editable)? 'readonly' : ''?> class='break' name ='break[<?= $i ?>]' value ='<?= htmlready($records[$j]['break']) ?>' placeholder="hh:mm">
                         </td>
                         <td>
-                            <input style='width: 80px;' type='text' pattern="<?= $time_pattern ?>" <?= (!$is_editable)? 'readonly' : ''?> class='end size-s studip-timepicker' id ='' name ='end[<?= $i ?>]' value='<?= $records[$j]['end'] ?>' placeholder="hh:mm" >
+                            <input style='width: 80px;' type='text' pattern="<?= $time_pattern ?>" <?= (!$is_editable)? 'readonly' : ''?> class='end size-s studip-timepicker' id ='' name ='end[<?= $i ?>]' value='<?= htmlready($records[$j]['end']) ?>' placeholder="hh:mm" >
                         </td>
                         <td>
-                           <input style='width: 80px;' type='text' pattern="<?= $break_pattern ?>" <?= ($records[$j]['defined_comment'] == 'Urlaub')? '' : 'readonly' ?> class='sum' name ='sum[<?= $i ?>]' value ='<?= $records[$j]['sum'] ?>' >
+                           <input style='width: 80px;' type='text' pattern="<?= $break_pattern ?>" <?= ($records[$j]['defined_comment'] == 'Urlaub')? '' : 'readonly' ?> class='sum' name ='sum[<?= $i ?>]' value ='<?= htmlready($records[$j]['sum']) ?>' >
                         </td>
                         <td>
                            <input type='date'
                                   min="<?= date('Y-m-d', strtotime($date)) ?>" max="<?= date('Y-m-d', strtotime('+1 week', strtotime($date))) ?>" 
                                   <?= (!$is_editable)? 'readonly' : ''?> 
                                   class='entry_mktime <?= ($records[$j]['entry_mktime'] == '00-00-000') ? 'empty_date' :'' ?>' 
-                                  name ='entry_mktime[<?= $i ?>]' value='<?= $records[$j]['entry_mktime'] ?>' >
+                                  name ='entry_mktime[<?= $i ?>]' value='<?= htmlready($records[$j]['entry_mktime']) ?>' >
                         </td>
                         <td>
                            <? if (!$uni_closed || $holiday || $weekend) : ?>
@@ -112,7 +112,7 @@ use Studip\Button, Studip\LinkButton;
                                     <?= ($records[$j]['defined_comment'] == $entry_value) ? 'selected' : ''?> 
                                     <?= ($entry_value == 'Feiertag') ? 'disabled' : '' ?> 
                                     <?= (!$is_editable && $entry_value == 'Krank') ? 'disabled' : '' ?>  
-                                        value="<?=$entry_value?>"><?= $entry_value ?></option>
+                                        value="<?=htmlready($entry_value)?>"><?= htmlready($entry_value) ?></option>
                                 <?php endforeach ?>
                             </select>
                            <? else : ?>
@@ -121,13 +121,13 @@ use Studip\Button, Studip\LinkButton;
                                 <?php foreach ($plugin->getCommentOptions() as $entry_value): ?>
                                     <option 
                                         <?= ($records[$j]['defined_comment'] == $entry_value) ? 'selected' : ''?> 
-                                        <?= ($entry_value == 'Urlaub' || $entry_value == 'Krank') ? '' : 'disabled' ?> value="<?=$entry_value?>"><?= $entry_value ?></option>
+                                        <?= ($entry_value == 'Urlaub' || $entry_value == 'Krank') ? '' : 'disabled' ?> value="<?=htmlready($entry_value)?>"><?= htmlready($entry_value) ?></option>
                                 <?php endforeach ?>
                             </select>
                             <? endif ?>
                         </td>
                         <td>
-                           <input style='width:210px' type='text' <?= (!$is_editable)? 'readonly' : ''?> id ='' name ='comment[<?= $i ?>]' value ='<?= ($uni_closed)? 'Arbeitszeiterfassung nicht zulässig' : $records[$j]['comment'] ?>' >
+                           <input style='width:210px' type='text' <?= (!$is_editable)? 'readonly' : ''?> id ='' name ='comment[<?= $i ?>]' value ='<?= ($uni_closed)? 'Arbeitszeiterfassung nicht zulässig' : htmlready($records[$j]['comment']) ?>' >
                         </td>
                         <td>
                             <? if ($is_editable && !$timesheet->locked) : ?>
@@ -162,7 +162,7 @@ use Studip\Button, Studip\LinkButton;
                             <input style='width: 80px;' type='text' pattern="<?= $time_pattern ?>" <?= (!$is_editable)? 'readonly' : ''?> class='end' name ='end[<?= $i ?>]' value='' placeholder="hh:mm" >
                         </td>
                         <td>
-                           <input style='width: 80px;' type='text' readonly class ='sum' name ='sum[<?= $i ?>]' value ='<?= (!$weekend && $holiday) ? $timesheet->contract->default_workday_time : ''?>' >
+                           <input style='width: 80px;' type='text' readonly class ='sum' name ='sum[<?= $i ?>]' value ='<?= (!$weekend && $holiday) ? htmlready($timesheet->contract->default_workday_time) : ''?>' >
                         </td>
                         <td>
                             <!-- data-datepicker='{">":<?= $date ?>}' -->
@@ -183,7 +183,7 @@ use Studip\Button, Studip\LinkButton;
                                         <?= ($holiday && ($entry_value == 'Feiertag')) ? 'selected' : ''?> 
                                         <?= ($entry_value == 'Feiertag') ? 'disabled' : '' ?> 
                                         <?= (!$is_editable && $entry_value == 'Krank') ? 'disabled' : '' ?> 
-                                        value="<?=$entry_value?>"><?= $entry_value ?>
+                                        value="<?= htmlready($entry_value)?>"><?= htmlready($entry_value) ?>
                                     </option>
                                 <?php endforeach ?>
                             </select>
@@ -193,7 +193,7 @@ use Studip\Button, Studip\LinkButton;
                                 <option selected value=""> -- </option>
                                 <?php foreach ($plugin->getCommentOptions() as $entry_value): ?>
                                     <option 
-                                        <?= ($entry_value == 'Urlaub') ? '' : 'disabled' ?> value="<?=$entry_value?>"><?= $entry_value ?></option>
+                                        <?= ($entry_value == 'Urlaub') ? '' : 'disabled' ?> value="<?= htmlready($entry_value) ?>"><?= htmlready($entry_value) ?></option>
                                 <?php endforeach ?>
                             </select>
                             <? endif ?>
@@ -213,7 +213,7 @@ use Studip\Button, Studip\LinkButton;
                     <td></td>
                     <td></td>
                     <td>
-                       <input style='width:80px' type='text' readonly class ='comment' name ='' value ='<?= $timesheet->sum ?>' >
+                       <input style='width:80px' type='text' readonly class ='comment' name ='' value ='<?= htmlready($timesheet->sum) ?>' >
                     </td>
                     <td></td>
                     <td></td>
@@ -230,9 +230,9 @@ use Studip\Button, Studip\LinkButton;
 <? endif ?>  
     
 <? if ($supervisorrole && $timesheet->finished) : ?>
-    <?= LinkButton::create(_('Korrektheit bestätigen'), $controller->url_for('timesheet/approve/' . $timesheet->id) ) ?>
+    <?= LinkButton::create(_('Korrektheit bestätigen'), $controller->url_for('timesheet/approve/' . htmlready($timesheet->id)) ) ?>
 <? elseif ($adminrole && $timesheet->finished) : ?>
-    <?= LinkButton::create(_('Eingang bestätigen'), $controller->url_for('timesheet/received/' . $timesheet->id) ) ?>
+    <?= LinkButton::create(_('Eingang bestätigen'), $controller->url_for('timesheet/received/' . htmlready($timesheet->id)) ) ?>
 <? endif ?>    
 
 
@@ -387,8 +387,8 @@ use Studip\Button, Studip\LinkButton;
     }
     
     function getDateofRow(row_index){
-        var month = <?= $timesheet->month ?>;
-        var year = <?= $timesheet->year ?>;
+        var month = <?= htmlready($timesheet->month) ?>;
+        var year = <?= htmlready($timesheet->year) ?>;
         var day = row_index;
         var row_date = new Date(year + '-' + month + '-' + day);
         return row_date;
@@ -418,7 +418,7 @@ use Studip\Button, Studip\LinkButton;
     }
     
     function autocalc_sum(row_index){
-        var default_workday_time = '<?= $timesheet->contract->default_workday_time ?>';
+        var default_workday_time = '<?= htmlready($timesheet->contract->default_workday_time) ?>';
         document.getElementsByName('sum' + row_index)[0].value = default_workday_time;
     }
     

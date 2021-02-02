@@ -5,7 +5,7 @@ use Studip\Button, Studip\LinkButton;
 
 <html>
 
-<form class='default' method="post" action="<?= $controller->url_for('index/save/' . $inst_id . '/' . $stumi->user_id . '/' . $contract->id ) ?>">
+<form class='default' method="post" action="<?= $controller->url_for('index/save/' . htmlready($inst_id) . '/' . htmlready($stumi->user_id) . '/' . htmlready($contract->id) ) ?>">
     <?= CSRFProtection::tokenTag() ?>
     <? if ($following_contract) : ?>
         <input type='hidden' name ='following_contract' value='true' >
@@ -13,7 +13,7 @@ use Studip\Button, Studip\LinkButton;
     
     <section>
         <label>
-            <h2><?= _('Name: ') ?> <?=$stumi->vorname?> <?=$stumi->nachname?></h2>
+            <h2><?= _('Name: ') ?> <?=htmlready($stumi->vorname)?> <?=htmlready($stumi->nachname)?></h2>
         </label>
     </section>
     
@@ -43,7 +43,7 @@ use Studip\Button, Studip\LinkButton;
         <label>
             <?= _('Stundenumfang') ?>
         </label>
-        <input type='text' name="hours" placeholder='00:00' value='<?= ($contract) ? $contract->contract_hours : ''?>'></input>
+        <input type='text' name="hours" placeholder='00:00' value='<?= ($contract) ? htmlready($contract->contract_hours) : ''?>'></input>
     </section>
     
     <section>
