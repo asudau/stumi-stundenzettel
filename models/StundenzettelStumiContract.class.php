@@ -102,6 +102,13 @@ class StundenzettelStumiContract extends \SimpleORMap
             ),
         );
     
+    public function __construct($id = null)
+    {
+        parent::__construct($id);
+
+        $this->registerCallback('before_store', 'before_store');
+    }
+    
     protected static function configure($config = array())
     {
         $config['db_table'] = 'stundenzettel_stumi_contracts';
@@ -132,6 +139,21 @@ class StundenzettelStumiContract extends \SimpleORMap
         parent::configure($config);
     }
     
+    //Laufzeitüberschneidungen mit bestehenden Verträgen der Einrichtung prüfen
+    protected function before_store()
+    {
+        $contracts = self::findBySQL('stumi_id = ? AND inst_id = ?', [$this->stumi_id, $this->inst_id]);
+        foreach ($contracts as $contract){
+            if ($contract->id != $this->id){
+                if ( (($this->contract_begin < $contract->contract_begin) && ($contract->contract_begin < $this->contract_end)) ||  
+                     (($this->contract_begin < $contract->contract_end) && ($contract->contract_end < $this->contract_end)) ||
+                     (($contract->contract_begin < $this->contract_begin) && ($contract->contract_end > $this->contract_end)) ) {
+                    throw new Exception(sprintf(_('Laufzeitüberschneidung mit bestehendem Vertrag')));
+                }
+            }
+        }
+    }
+    
     static function getCurrentContractId($user_id)
     {
         $contracts = self::findByStumi_id($user_id);
@@ -159,6 +181,18 @@ class StundenzettelStumiContract extends \SimpleORMap
         //$contracts = self::findBySQL('contract_begin < ? AND contract_end > ?', [$end_nextmonth, $begin_lastmonth]);
         $contracts = self::findBySQL('contract_begin < ? AND contract_end > ?', [$month_end, $month_begin]);
         return $contracts;
+    }
+    
+    //TODO Institutsbezogen
+     static function getUserContractsByMonth($user_id, $month, $year)
+    {
+        $begin_lastmonth = strtotime(date("y-m",strtotime("-1 month")) . '-01');
+        $end_nextmonth = strtotime(date("y-m",strtotime("+1 month")) . '-28');
+        $month_begin = strtotime($year . '-' . $month  . '-01' );
+        $month_end = strtotime($year . '-' . $month  . '-28' );
+        //$contracts = self::findBySQL('contract_begin < ? AND contract_end > ?', [$end_nextmonth, $begin_lastmonth]);
+        $contract = self::findOneBySQL('stumi_id = ? AND contract_begin < ? AND contract_end > ?', [$user_id, $month_end, $month_begin]);
+        return $contract;
     }
     
     static function getStaus_array()
@@ -193,6 +227,7 @@ class StundenzettelStumiContract extends \SimpleORMap
         }
     }
     
+    //unterscheidet sich von monthPartOfContract, weil der offizielle Aufzeichnungsbeginn vom Vertragsbeginn abweichen kann
     function monthWithinRecordingTime($month, $year)
     {
         if (StundenzettelContractBegin::find($this->id)) {    
@@ -256,20 +291,45 @@ class StundenzettelStumiContract extends \SimpleORMap
         return $balance_time;
     }
 
-    function add_missing_timesheets()
+    function reassign_timesheets()
     {
+        //durchlaufe alle Monate seit Vertragsbeginn bis heute
         $current_month = date('m', time());
         $current_year = date('Y', time());
         $month = new DateTime();
         $month->setTimestamp($this->contract_begin);
-        $i = 0;
-        if ($this->contract_begin < strtotime($current_year . '-' . $current_month . '-01')) {
-            while ($month->getTimestamp() < time()){
-                $this->add_timesheet($month->format('m'), date('Y', $this->contract_begin));
-                $month->modify('+1 month');
+        
+        while ($month->getTimestamp() < $this->contract_end){
+            //noch kein Stundenzettel zugeordnet 
+            if (!StundenzettelTimesheet::getContractTimesheet($this->id, $month->format('m'), $month->format('Y')) ){
+                //falls einer existiert, ordne ihn diesem Vertrag zu
+                if (StundenzettelTimesheet::findBySQL('`stumi_id` LIKE ? AND `month` LIKE ? AND `year` LIKE ? AND inst_id LIKE ?', [$this->stumi_id, $month->format('n'), $month->format('Y'), $this->inst_id]) ) {
+                    $timesheet = StundenzettelTimesheet::findOneBySQL('`stumi_id` LIKE ? AND `month` LIKE ? AND `year` LIKE ? AND inst_id LIKE ?', [$this->stumi_id, $month->format('n'), $month->format('Y'), $this->inst_id]);
+                    var_dump([$this->stumi_id, $month->format('n'), $month->format('Y'), $this->inst_id]); 
+                    $timesheet->contract_id = $this->id;
+                    $timesheet->store();
+                //falls die Vergangenheit betroffen ist, lege nachträglich an
+                } else if ($month->getTimestamp() < time()){
+                    $this->add_timesheet($month->format('n'), $month->format('Y'));
+                }
             }
+            $month->modify('+1 month');
         }
+
     }
+    
+//    function reassign_timesheets(){
+//        $timesheets = StundenzettelTimesheet::findByContract_Id($this->id);
+//        foreach ($timesheets as $timesheet){
+//            if (!$this->monthPartOfContract($timesheet->month, $timesheet->year)){
+//                $matching_contract = $this->getUserContractsByMonth($this->stumi_id, $timesheet->month, $timesheet->year);
+//                if($matching_contract){
+//                    $timesheet->contract_id = $matching_contract->id;
+//                    $timesheet->store();
+//                }
+//            }
+//        }
+//    }
     
     function add_timesheet($month, $year)
     {
