@@ -159,7 +159,9 @@ class IndexController extends StudipController {
             $contract->supervisor = Request::get('user_id');            
             $contract->store();
             
-            $contract->add_missing_timesheets();
+            //TODO refactoring der beiden Funktionen
+            $contract->reassign_timesheets();
+            //$contract->add_missing_timesheets();
             
             PageLayout::postMessage(MessageBox::success($message)); 
             
