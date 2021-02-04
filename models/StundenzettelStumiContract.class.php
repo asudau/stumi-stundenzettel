@@ -251,7 +251,7 @@ class StundenzettelStumiContract extends \SimpleORMap
     
     function getRemainingVacation($year)
     {
-        return StundenzettelTimesheet::subtractTimes($this->getVacationEntitlement($year), $this->getClaimedVacation($year));;
+        return StundenzettelTimesheet::stundenzettel_strtotimespan($this->getVacationEntitlement($year)) - $this->getClaimedVacation($year);
     }
     
     function getClaimedVacation($year)
@@ -268,7 +268,7 @@ class StundenzettelStumiContract extends \SimpleORMap
         if (StundenzettelContractBegin::find($this->id)) {    
             $contract_data = StundenzettelContractBegin::find($this->id);
             if ($contract_data->begin_digital_recording_year){
-                $claimed_vacation = StundenzettelTimesheet::addTimes($claimed_vacation, $contract_data->vacation_claimed);
+                $claimed_vacation = $claimed_vacation + $contract_data->vacation_claimed;
             }
         }
         
@@ -278,15 +278,15 @@ class StundenzettelStumiContract extends \SimpleORMap
     function getWorktimeBalance()
     {
         $timesheets = StundenzettelTimesheet::findBySQL('`contract_id` LIKE ?', [$this->id]);
-        $balance_time = '0:0';
+        $balance_time = 0;
         foreach ($timesheets as $timesheet) {
             if ($timesheet->month_completed && $this->monthWithinRecordingTime($timesheet->month, $timesheet->year)) {
-                $balance_time = StundenzettelTimesheet::addTimes($balance_time, $timesheet->timesheet_balance);
+                $balance_time += $timesheet->timesheet_balance;
             }
         }
         if (StundenzettelContractBegin::find($this->id)) {    
             $contract_data = StundenzettelContractBegin::find($this->id);
-            $balance_time = StundenzettelTimesheet::addTimes($balance_time, $contract_data->balance); 
+            $balance_time += $contract_data->balance; 
         }
         return $balance_time;
     }

@@ -25,8 +25,8 @@
                 <tr>  
                     <td><a href='<?=$this->controller->url_for('timesheet/timesheet/' . htmlready($timesheet->id)) ?>' title='Stundenzettel editieren'><?= htmlready($timesheet->month) ?>/<?= htmlready($timesheet->year) ?></a>
                     </td>
-                    <td><?= ($timesheet->sum) ? : '0:00' ?> / <?= htmlready($timesheet->contract->contract_hours) ?></td>
-                    <td><?= ($timesheet->month_completed) ? htmlready($timesheet->timesheet_balance) : '(ausstehend)' ?></td>
+                    <td><?= ($timesheet->sum) ? StundenzettelTimesheet::stundenzettel_strftimespan($timesheet->sum) : '0:00' ?> / <?= htmlready($timesheet->contract->contract_hours) ?></td>
+                    <td><?= ($timesheet->month_completed) ? htmlready(StundenzettelTimesheet::stundenzettel_strftimespan($timesheet->timesheet_balance)) : '(ausstehend)' ?></td>
                     <td>  
                         <?= Icon::create($status_infos['finished']['icon'], $status_infos[$timesheet->getCurrentState('finished', $role) . '_icon_role'], ['title' =>  $status_infos['finished'][$timesheet->getCurrentState('finished', $role) . '_tooltip']] )?>
                         <?= Icon::create($status_infos['approved']['icon'], $status_infos[$timesheet->getCurrentState('approved', $role) . '_icon_role'], ['title' =>  $status_infos['approved'][$timesheet->getCurrentState('approved', $role) . '_tooltip']] )?>
@@ -57,8 +57,8 @@
                 <tr>  
                     <td><a href='<?=$this->controller->url_for('timesheet/timesheet/' . $timesheet->id) ?>' title='Stundenzettel editieren'><?= $timesheet->month ?>/<?= $timesheet->year ?></a>
                     </td>
-                    <td><?= ($timesheet->sum) ? : '0:00' ?> / <?= htmlready($timesheet->contract->contract_hours) ?></td>
-                    <td><?= ($timesheet->month_completed) ? htmlready($timesheet->timesheet_balance) : '(ausstehend)' ?></td>
+                    <td><?= ($timesheet->sum) ? StundenzettelTimesheet::stundenzettel_strftimespan($timesheet->sum) : '0:00' ?> / <?= htmlready($timesheet->contract->contract_hours) ?></td>
+                    <td><?= ($timesheet->month_completed) ? htmlready(StundenzettelTimesheet::stundenzettel_strftimespan($timesheet->timesheet_balance)) : '(ausstehend)' ?></td>
                     <td>
                         <?= Icon::create($status_infos['finished']['icon'], $status_infos[$timesheet->getCurrentState('finished', 'stumi') . '_icon_role'], ['title' =>  $status_infos['finished'][$timesheet->getCurrentState('finished', 'stumi') . '_tooltip']] )?>
                         <?= Icon::create($status_infos['approved']['icon'], $status_infos[$timesheet->getCurrentState('approved', 'stumi') . '_icon_role'], ['title' =>  $status_infos['approved'][$timesheet->getCurrentState('approved', 'stumi') . '_tooltip']] )?>

@@ -30,6 +30,8 @@ class IndexController extends StudipController {
         if ($this->plugin->isStumiSupervisor ()) {
             $this->supervisorrole = true;
         }
+        
+        $this->balance_pattern = '^(00:00)|(0)|((0[1-9]|1\d|2[0-3]):([0-5]\d))|(([1-9]|1\d|2[0-3]):([0-5]\d))|(00:(0[1-5]|[1-9]0|[1-5][1-9]))$';
 
     }
 
@@ -133,7 +135,7 @@ class IndexController extends StudipController {
     public function add_contract_begin_data_action($contract_id)
     {   
         $this->contract = StundenzettelStumiContract::find($contract_id);
-        $this->stumi = User::find($this->contract->stumi);
+        $this->stumi = User::find($this->contract->stumi_id);
         $this->contract_data = StundenzettelContractBegin::find($contract_id); 
     }
     
@@ -201,8 +203,8 @@ class IndexController extends StudipController {
         
         $begin_data->begin_digital_recording_month = Request::get('begin_month');
         $begin_data->begin_digital_recording_year = Request::get('begin_year');
-        $begin_data->vacation_claimed = Request::get('vacation_claimed');
-        $begin_data->balance = Request::get('balance');
+        $begin_data->vacation_claimed = StundenzettelTimesheet::stundenzettel_strtotimespan(Request::get('vacation_claimed'));
+        $begin_data->balance = StundenzettelTimesheet::stundenzettel_strtotimespan(Request::get('balance'));
         
         if($begin_data->store()){
             PageLayout::postMessage(MessageBox::success(_("Vertragsdaten gespeichert"))); 

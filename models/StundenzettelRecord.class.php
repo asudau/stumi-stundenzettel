@@ -52,21 +52,13 @@ class StundenzettelRecord extends \SimpleORMap
     }
     
     function calculate_sum(){
-        $begintime = strtotime($this->begin);
-        $endtime = strtotime($this->end);
         if(in_array($this->defined_comment, ['Urlaub', 'Krank', 'Feiertag']) && !$this->isWeekend() ) {
-            $this->sum = $this->timesheet->contract->default_workday_time;
-        } else if( $begintime > 0 && $endtime > 0 ) {
-            $this->sum = StundenzettelTimesheet::calcTimeDifference($this->begin, $this->end, $this->break);
+            $this->sum = StundenzettelTimesheet::stundenzettel_strtotimespan($this->timesheet->contract->default_workday_time);
+        } else if( $this->begin > 0 && $this->end > $this->begin ) {
+            $this->sum = $this->end - $this->begin - $this->break;
         } else {
             $this->sum = '';
         }
-    }
-    
-    function sum_to_seconds()
-    {
-        $sum = explode(':', $this->sum);
-        return $sum[0]*3600 + $sum[1]*60;
     }
     
     function getWeekday() 

@@ -30,7 +30,7 @@ class StundenzettelTimesheet extends \SimpleORMap
         
         $config['additional_fields']['timesheet_balance']['get'] = function ($item) {
             if ($item->month_completed){
-                return self::subtractTimes($item->sum, $item->contract->contract_hours);
+                return $item->sum - ($item->contract->contract_hours * 3600);
             } else {
                 return '';
             }
@@ -203,95 +203,16 @@ class StundenzettelTimesheet extends \SimpleORMap
     function calculate_sum(){
         if (!$this->locked){
             $records = StundenzettelRecord::findByTimesheet_Id($this->id);
-            $sum_seconds = 0;
+            $sum = 0;
             foreach ($records as $record){
-                $sum += $record->sum_to_seconds();   
+                $sum += $record->sum;   
             }
-            $minutes = ($sum/60)%60;
-            $hours = floor(($sum/60)/ 60);
-            $this->sum = sprintf("%02s", $hours) . ':' . sprintf("%02s", $minutes);
+            $this->sum = $sum;
             $this->store();
         }
     }
     
-    static function calcTimeDifference($timea, $timeb, $break = '0:0'){
-        $timea_pts = explode(':', $timea);
-        $timeb_pts = explode(':', $timeb);
-        $break_pts = explode(':', $break);
-        
-        $begin_minutes = intval($timea_pts[1]);
-        $begin_hours = intval($timea_pts[0]);
-
-        $end_minutes = intval($timeb_pts[1]);
-        $end_hours = intval($timeb_pts[0]);
-
-        $break_minutes = intval($break_pts[1]);
-        $break_hours = intval($break_pts[0]);
-
-        $minutes_total = 0;
-        $hours_total = 0;
-
-        //reduce timeslot by break
-        if (($begin_minutes + $break_minutes) >= 60) {
-            $begin_hours = $begin_hours + 1;
-            $begin_minutes = ($begin_minutes + $break_minutes) - 60;
-        } else {
-            $begin_minutes = $begin_minutes + $break_minutes;
-        }
-        $begin_hours = $begin_hours + $break_hours;
-
-        if (($end_minutes + (60 - $begin_minutes)) >= 60) {
-            $minutes_total = ($end_minutes + (60 - $begin_minutes)) - 60;
-        } else {
-            $end_hours -= 1;
-            $minutes_total = $end_minutes + (60 - $begin_minutes);
-        }
-
-        $hours_total = $end_hours - $begin_hours;
-
-        return (sprintf("%02s", $hours_total) . ':' . sprintf("%02s", $minutes_total));
-    }
-    
-    static function addTimes($timea, $timeb){
-        $timea_pts = explode(':', $timea);
-        $timeb_pts = explode(':', $timeb);
-        
-        $timea_minutes = intval($timea_pts[1]);
-        $timea_hours = intval($timea_pts[0]);
-
-        $timeb_minutes = intval($timeb_pts[1]);
-        $timeb_hours = intval($timeb_pts[0]);
-        
-        $minutes_total = 0;
-        $hours_total = 0;
-        
-        if ($timea_hours < 0 && $timeb_hours < 0){
-            return '-' . self::addTimes(substr($timea, 1), substr($timeb, 1));
-        } else if ($timea_hours < 0 && $timeb_hours > 0){
-            return self::subtractTimes($timeb, substr($timea, 1));
-        } else if ($timea_hours > 0 && $timeb_hours < 0){
-            return self::subtractTimes($timea, substr($timeb, 1));
-        }
-        
-        $timea_minutes = intval($timea_pts[1]) + intval($timea_pts[0]) * 60;
-        $timeb_minutes = intval($timeb_pts[1]) + intval($timeb_pts[0]) * 60;
-        
-        $minutes_total = $timea_minutes + $timeb_minutes;
-        $hours = floor($minutes_total / 60);
-        $minutes = $minutes_total % 60;
-        
-        return sprintf("%02s", $hours) . ':' . sprintf("%02s", $minutes);
-//        if (($timea_minutes + $timeb_minutes) >= 60) {
-//            $hours_total += 1;
-//            $minutes_total = ($timea_minutes + $timeb_minutes) - 60;
-//        } else {
-//            $minutes_total = $timea_minutes + $timeb_minutes;
-//        }
-//        
-//        $hours_total = $timea_hours + $timeb_hours;
-//        return (sprintf("%02s", $hours_total) . ':' . sprintf("%02s", $minutes_total));        
-    }
-    
+    //wird für vacation Berechnung noch benutzt
     static function subtractTimes($timea, $timeb){
         $timea_pts = explode(':', $timea);
         $timeb_pts = explode(':', $timeb);
@@ -311,18 +232,46 @@ class StundenzettelTimesheet extends \SimpleORMap
         return (sprintf("%02s", $hours) . ':' . sprintf("%02s", abs($minutes)));        
     }
     
-    static function multiplyMinutes($minutes, $factor){
-        $minutes_total = $minutes * $factor;
-        $hours = floor($minutes_total / 60);
-        $minutes = $minutes_total % 60;
-        return sprintf("%02s", $hours) . ':' . sprintf("%02s", $minutes);
+    static function stundenzettel_strtotimespan($string){
+        $pts = explode(':', $string);
+        $minutes = intval($pts[1]);
+        $hours = intval($pts[0]);
+        $minutes_total = $minutes + $hours * 60;
+        $timespan = $minutes_total * 60;
+        if ($hours < 0) {
+            return '-' . $timespan;
+        } else {
+            return $timespan;
+        }
     }
     
-    static function multiplyTime($time, $factor){
-        //TODO: test
-        $time_pts = explode(':', $time);
-        $minutes_multiplied = self::multiplyMinutes(intval($time_pts[1]), $factor);
-        $hours_multiplied = intval($time_pts[0]) * $factor;
-        return addTimes($minutes_multiplied, $hours_multiplied);  
+    static function stundenzettel_strftimespan($timespan){
+        $hours = floor($timespan / 3600);
+        $minutes = ($timespan % 3600) / 60;
+        $str = (sprintf("%02s", $hours) . ':' . sprintf("%02s", abs($minutes))); 
+        if ($timespan < 0){
+            return '-' . $str;
+        } else {
+            return $str;
+        }
+    }
+    
+    static function stundenzettel_strtotime($string){
+        $hours = intval(explode(':', $string)[0]);
+        $time = strtotime($string);
+        if ($hours < 0) {
+            return '-' . $time;
+        } else {
+            return $time;
+        }
+    }
+    
+    static function stundenzettel_strftime($format, $time){
+        $str = strftime($format, $time);
+        if ($time < 0){
+            return '-' . $str;
+        } else {
+            return $str;
+        }
     }
 }

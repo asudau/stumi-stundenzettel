@@ -225,15 +225,20 @@ class TimesheetController extends StudipController {
                     $record->timesheet_id = $timesheet_id;
                     $record->day = $i;
                 }
-                    $record->begin = $begin_array[$i];
-                    $record->end = $end_array[$i];
-                    $record->break = $break_array[$i];
+                    if ($begin_array[$i]) {
+                        $record->begin = strtotime($begin_array[$i]);
+                    }
+                    if ($end_array[$i]) {
+                        $record->end = strtotime($end_array[$i]);
+                    }
+                    if ($break_array[$i]) {
+                        $record->break = StundenzettelTimesheet::stundenzettel_strtotimespan($break_array[$i]);
+                    }
                     $record->entry_mktime = $mktime_array[$i];
                     $record->defined_comment = ($record->isHoliday()) ? 'Feiertag' : $defined_comment_array[$i];
                     $record->comment = ($record->isUniClosed()) ? '' : $comment_array[$i];
                     if ($record->defined_comment == 'Urlaub'){
-                        $pts =  explode(':', $sum_array[$i]);
-                        $record->sum =  sprintf("%02s", $pts[0]) . ':' . sprintf("%02s", $pts[1]);
+                        $record->sum =  StundenzettelTimesheet::stundenzettel_strtotimespan($sum_array[$i]);
                     } else {
                         $record->calculate_sum();
                     }

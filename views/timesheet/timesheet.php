@@ -30,7 +30,7 @@ use Studip\Button, Studip\LinkButton;
     <p>Name, Vorname: <b><?= htmlready(User::findOneByUser_Id($timesheet->stumi_id)->nachname) ?>, <?= htmlready(User::findOneByUser_Id($timesheet->stumi_id)->vorname) ?></b></p>
     <p>Fachbereich/Organisationseinheit: <b><?= htmlready(Institute::find($inst_id)->name) ?></b></p>
     <p>Monatsarbeitszeit laut Arbeitsvertrag: <b><?= htmlready($timesheet->contract->contract_hours) ?> Stunden </b></p>
-    <p>Diesen Monat erfasst: <b> <?= htmlready($timesheet->sum) ?> Stunden </b></p>
+    <p>Diesen Monat erfasst: <b> <?= htmlready(StundenzettelTimesheet::stundenzettel_strftimespan($timesheet->sum)) ?> Stunden </b></p>
     <p>Monat/Jahr: 
         <form name="month_select" method="post"  action="<?= $controller->url_for('timesheet/select/' . htmlready($timesheet->contract_id)) ?>">
             <select name ='month' onchange="this.form.submit()">
@@ -85,16 +85,16 @@ use Studip\Button, Studip\LinkButton;
                             <?= strftime("%A", strtotime($date)) ?>
                         </td>
                         <td >
-                            <input style='width: 80px;' type='text' pattern="<?= $time_pattern ?>" <?= (!$is_editable)? 'readonly' : ''?> class='begin size-s studip-timepicker' id ='' name ='begin[<?= $i ?>]' value='<?= htmlready($records[$j]['begin']) ?>' placeholder="hh:mm" >
+                            <input style='width: 80px;' type='text' pattern="<?= $time_pattern ?>" <?= (!$is_editable)? 'readonly' : ''?> class='begin size-s studip-timepicker' id ='' name ='begin[<?= $i ?>]' value='<?= ($records[$j]['begin']) ? StundenzettelTimesheet::stundenzettel_strftime('%H:%M', $records[$j]['begin']) : '' ?>' placeholder="hh:mm" >
                         </td>
                         <td>
-                            <input style='width: 80px;' type='text' pattern="<?= $break_pattern ?>" <?= (!$is_editable)? 'readonly' : ''?> class='break' name ='break[<?= $i ?>]' value ='<?= htmlready($records[$j]['break']) ?>' placeholder="hh:mm">
+                            <input style='width: 80px;' type='text' pattern="<?= $break_pattern ?>" <?= (!$is_editable)? 'readonly' : ''?> class='break' name ='break[<?= $i ?>]' value ='<?= ($records[$j]['break']) ? StundenzettelTimesheet::stundenzettel_strftimespan($records[$j]['break']) : '' ?>' placeholder="hh:mm">
                         </td>
                         <td>
-                            <input style='width: 80px;' type='text' pattern="<?= $time_pattern ?>" <?= (!$is_editable)? 'readonly' : ''?> class='end size-s studip-timepicker' id ='' name ='end[<?= $i ?>]' value='<?= htmlready($records[$j]['end']) ?>' placeholder="hh:mm" >
+                            <input style='width: 80px;' type='text' pattern="<?= $time_pattern ?>" <?= (!$is_editable)? 'readonly' : ''?> class='end size-s studip-timepicker' id ='' name ='end[<?= $i ?>]' value='<?= ($records[$j]['end']) ? StundenzettelTimesheet::stundenzettel_strftime('%H:%M', $records[$j]['end']) : '' ?>' placeholder="hh:mm" >
                         </td>
                         <td>
-                           <input style='width: 80px;' type='text' pattern="<?= $break_pattern ?>" <?= ($records[$j]['defined_comment'] == 'Urlaub')? '' : 'readonly' ?> class='sum' name ='sum[<?= $i ?>]' value ='<?= htmlready($records[$j]['sum']) ?>' >
+                            <input style='width: 80px;' type='text' pattern="<?= $break_pattern ?>" <?= ($records[$j]['defined_comment'] == 'Urlaub')? '' : 'readonly' ?> class='sum' name ='sum[<?= $i ?>]' value ='<?= htmlready(StundenzettelTimesheet::stundenzettel_strftimespan($records[$j]['sum'])) ?>' >
                         </td>
                         <td>
                            <input type='date'
@@ -213,7 +213,7 @@ use Studip\Button, Studip\LinkButton;
                     <td></td>
                     <td></td>
                     <td>
-                       <input style='width:80px' type='text' readonly class ='comment' name ='' value ='<?= htmlready($timesheet->sum) ?>' >
+                        <input style='width:80px' type='text' readonly class ='comment' name ='' value ='<?= htmlready(StundenzettelTimesheet::stundenzettel_strftimespan($timesheet->sum)) ?>' >
                     </td>
                     <td></td>
                     <td></td>
