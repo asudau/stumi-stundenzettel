@@ -246,7 +246,7 @@ class StundenzettelTimesheet extends \SimpleORMap
     }
     
     static function stundenzettel_strftimespan($timespan){
-        $hours = floor($timespan / 3600);
+        $hours = floor(abs($timespan) / 3600);
         $minutes = ($timespan % 3600) / 60;
         $str = (sprintf("%02s", $hours) . ':' . sprintf("%02s", abs($minutes))); 
         return $str;
