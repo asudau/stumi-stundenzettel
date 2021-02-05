@@ -233,15 +233,16 @@ class StundenzettelTimesheet extends \SimpleORMap
     }
     
     static function stundenzettel_strtotimespan($string){
+        $negative = strpos($string, '-');
         $pts = explode(':', $string);
         $minutes = intval($pts[1]);
         $hours = intval($pts[0]);
-        $minutes_total = $minutes + $hours * 60;
+        $minutes_total = $minutes + abs($hours) * 60;
         $timespan = $minutes_total * 60;
-        if ($hours < 0) {
-            return '-' . $timespan;
-        } else {
+        if ($negative === false) {
             return $timespan;
+        } else {
+            return '-' . $timespan;
         }
     }
     
@@ -249,7 +250,9 @@ class StundenzettelTimesheet extends \SimpleORMap
         $hours = floor(abs($timespan) / 3600);
         $minutes = ($timespan % 3600) / 60;
         $str = (sprintf("%02s", $hours) . ':' . sprintf("%02s", abs($minutes))); 
-        return $str;
+        if ($timespan < 0) {
+            return '-' . $str;
+        } else return $str;
     }
     
     static function stundenzettel_strtotime($string){
