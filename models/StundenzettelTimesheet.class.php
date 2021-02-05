@@ -249,11 +249,7 @@ class StundenzettelTimesheet extends \SimpleORMap
         $hours = floor($timespan / 3600);
         $minutes = ($timespan % 3600) / 60;
         $str = (sprintf("%02s", $hours) . ':' . sprintf("%02s", abs($minutes))); 
-        if ($timespan < 0){
-            return '-' . $str;
-        } else {
-            return $str;
-        }
+        return $str;
     }
     
     static function stundenzettel_strtotime($string){
