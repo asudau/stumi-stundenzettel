@@ -27,11 +27,11 @@ class StumiStundenzettelTables extends Migration
             `supervisor` varchar(32) COLLATE latin1_bin NULL,
             `contract_begin` int(11) NOT NULL ,
             `contract_end` int(11) NOT NULL ,
-            `last_year_vacation_remaining` int(11) NOT NULL,
-            `begin_digital_recording_month` int(2) NOT NULL,
-            `begin_digital_recording_year` int(4) NOT NULL,
-            `begin_balance` int(11) NOT NULL,
-            `begin_vacation_claimed` int(11) NOT NULL,
+            `last_year_vacation_remaining` int(11) NULL,
+            `begin_digital_recording_month` int(2) NULL,
+            `begin_digital_recording_year` int(4) NULL,
+            `begin_balance` int(11) NULL,
+            `begin_vacation_claimed` int(11) NULL,
             PRIMARY KEY (id)
         ) ");
         
