@@ -191,14 +191,14 @@ class IndexController extends StudipController {
     
     public function save_contract_begin_data_action($contract_id)
     {   
-        $this->contract = StundenzettelStumiContract::find($contract_id);
+        $contract = StundenzettelStumiContract::find($contract_id);
         
-        $this->contract->begin_digital_recording_month = Request::get('begin_month');
-        $this->contract->begin_digital_recording_year = Request::get('begin_year');
-        $this->contract->begin_vacation_claimed = StundenzettelTimesheet::stundenzettel_strtotimespan(Request::get('vacation_claimed'));
-        $this->contract->begin_balance = StundenzettelTimesheet::stundenzettel_strtotimespan(Request::get('balance'));
+        $contract->begin_digital_recording_month = Request::get('begin_month');
+        $contract->begin_digital_recording_year = Request::get('begin_year');
+        $contract->begin_vacation_claimed = StundenzettelTimesheet::stundenzettel_strtotimespan(Request::get('vacation_claimed'));
+        $contract->begin_balance = StundenzettelTimesheet::stundenzettel_strtotimespan(Request::get('balance'));
         
-        if($begin_data->store()){
+        if($contract->store()){
             PageLayout::postMessage(MessageBox::success(_("Vertragsdaten gespeichert"))); 
         } else {
             PageLayout::postMessage(MessageBox::error(_("Daten konnten nicht gespeichert werden"))); 
