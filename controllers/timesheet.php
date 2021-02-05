@@ -37,7 +37,7 @@ class TimesheetController extends StudipController {
 
     public function index_action($contract_id = NULL)
     {
-        Navigation::activateItem('tools/hilfskraft-stundenverwaltung/timesheets');
+        Navigation::activateItem('tools/stundenzettelverwaltung/timesheets');
         
         //allgemeine Stundenzettel-Übersichtsseite für Stumis verwendet automatisch den aktuell laufenden Vertrag
         if (!$contract_id && $this->stumirole) {
@@ -60,7 +60,7 @@ class TimesheetController extends StudipController {
         if (!$this->adminrole){
             throw new AccessDeniedException(_("Sie haben keine Zugriffsberechtigung."));
         }
-        Navigation::activateItem('tools/hilfskraft-stundenverwaltung/timesheets');
+        Navigation::activateItem('tools/stundenzettelverwaltung/timesheets');
         
         //if its later than the 18.th of current month
         if (strftime('%e', time()) > 18) {
@@ -90,7 +90,7 @@ class TimesheetController extends StudipController {
     
     public function select_action($contract_id, $month = '', $year = '')
     {
-        Navigation::activateItem('tools/hilfskraft-stundenverwaltung/timesheets');
+        Navigation::activateItem('tools/stundenzettelverwaltung/timesheets');
         if (Request::get('month')) {
             $month = Request::get('month');
             $year = Request::get('year');
@@ -129,9 +129,9 @@ class TimesheetController extends StudipController {
     public function timesheet_action($timesheet_id = NULL)
     {
         if ($this->stumirole){
-            Navigation::activateItem('tools/hilfskraft-stundenverwaltung/timetracking');
+            Navigation::activateItem('tools/stundenzettelverwaltung/timetracking');
         } else {
-            Navigation::activateItem('tools/hilfskraft-stundenverwaltung/timesheets');
+            Navigation::activateItem('tools/stundenzettelverwaltung/timesheets');
         }
         
         $sidebar = Sidebar::Get();

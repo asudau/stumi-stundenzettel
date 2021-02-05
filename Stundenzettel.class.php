@@ -1,7 +1,7 @@
 <?php
 
 /**
- * HilfskraftStundenzettel.class.php
+ * Stundenzettel.class.php
  *
  * ...
  *
@@ -12,7 +12,7 @@
 require_once 'constants.inc.php';
 require_once 'models/StundenzettelStumiContract.class.php';
 
-class HilfskraftStundenzettel extends StudipPlugin implements SystemPlugin
+class Stundenzettel extends StudipPlugin implements SystemPlugin
 {
 
     public function __construct()
@@ -22,7 +22,7 @@ class HilfskraftStundenzettel extends StudipPlugin implements SystemPlugin
 
         //Personen mit Verwaltungsrolle für Stumis oder Stumis mit in StudIP hinterlegtem Arbeitsvertrag
         if( $this->hasStumiContract () ){
-            $this->setupHilfskraftNavigation();
+            $this->setupStundenzettelNavigation();
         } else if( $this->hasStumiAdminrole() ) {
             $this->setupAdminNavigation();
         } else if ($this->isStumiSupervisor()) {
@@ -37,7 +37,7 @@ class HilfskraftStundenzettel extends StudipPlugin implements SystemPlugin
     
     private function setupAdminNavigation()
     {
-        $navigation = new Navigation('Hilfskraft-Stundenzettelverwaltung');
+        $navigation = new Navigation('Stundenzettelverwaltung');
         $navigation->setURL(PluginEngine::getURL($this, array(), 'index'));
 
         $item = new Navigation(_('Übersicht'), PluginEngine::getURL($this, array(), 'index'));
@@ -46,10 +46,10 @@ class HilfskraftStundenzettel extends StudipPlugin implements SystemPlugin
         $item = new Navigation(_('Stundenzettel verwalten'), PluginEngine::getURL($this, array(), 'timesheet/admin_index'));
         $navigation->addSubNavigation('timesheets', $item);
 
-        Navigation::addItem('tools/hilfskraft-stundenverwaltung', $navigation);  
+        Navigation::addItem('tools/stundenzettelverwaltung', $navigation);  
     }
     
-    private function setupHilfskraftNavigation()
+    private function setupStundenzettelNavigation()
     {
         $navigation = new Navigation('Stundenzettel');
         $navigation->setURL(PluginEngine::getURL($this, array(), 'timesheet/timesheet'));
@@ -63,12 +63,12 @@ class HilfskraftStundenzettel extends StudipPlugin implements SystemPlugin
         $item = new Navigation(_('Vertragsübersicht'), PluginEngine::getURL($this, array(), 'index'));
         $navigation->addSubNavigation('index', $item);
 
-        Navigation::addItem('tools/hilfskraft-stundenverwaltung', $navigation);  
+        Navigation::addItem('tools/stundenzettelverwaltung', $navigation);  
     }
     
     private function setupSupervisorNavigation()
     {
-        $navigation = new Navigation('Hilfskraft-Stundenzettelverwaltung');
+        $navigation = new Navigation('Stundenzettelverwaltung');
         $navigation->setURL(PluginEngine::getURL($this, array(), 'index'));
 
         $item = new Navigation(_('Übersicht'), PluginEngine::getURL($this, array(), 'index'));
@@ -77,7 +77,7 @@ class HilfskraftStundenzettel extends StudipPlugin implements SystemPlugin
         $item = new Navigation(_('Stundenzettel verwalten'), PluginEngine::getURL($this, array(), 'timesheet'));
         $navigation->addSubNavigation('timesheets', $item);
 
-        Navigation::addItem('tools/hilfskraft-stundenverwaltung', $navigation);  
+        Navigation::addItem('tools/stundenzettelverwaltung', $navigation);  
     }
     
     public function getCommentOptions ()

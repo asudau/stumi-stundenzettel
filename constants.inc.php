@@ -2,4 +2,4 @@
 
 namespace Stundenzettelverwaltung;
 
-const STUNDENVERWALTUNG_ROLE = 'Hilfskraft-Stundenzettelverwaltung';
+const STUNDENVERWALTUNG_ROLE = 'Stundenzettelverwaltung';

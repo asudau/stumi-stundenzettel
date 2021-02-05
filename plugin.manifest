@@ -1,5 +1,5 @@
-pluginname=Hilfskraft-Stundenzettel
-pluginclassname=HilfskraftStundenzettel
+pluginname=Stundenzettel
+pluginclassname=Stundenzettel
 origin=virtUOS
 version=1.0
 studipMinVersion=3.5
