@@ -30,10 +30,9 @@
                     <td><a href='<?=$this->controller->url_for('timesheet/index/' . htmlready($contract->id)) ?>' title='Stundenzettel einsehen'><?= htmlready($stumi->nachname) ?>, <?= htmlready($stumi->vorname) ?></a>
                     </td>
                     <td><?= date('d.m.Y', $contract->contract_begin) ?>
-                        <? if (StundenzettelContractBegin::find($contract->id)) : ?>
-                            <? $begin_data = StundenzettelContractBegin::find($contract->id); ?>
+                        <? if ($contract->begin_digital_recording_month && $contract->begin_digital_recording_year) : ?>
                             <?= Icon::create('info-circle', Icon::ROLE_CLICKABLE,  
-                                    ['title' => 'Beginn der elektronischen Erfassung: ' . htmlready($begin_data->begin_digital_recording_month) . '/' . htmlready($begin_data->begin_digital_recording_year) ]);?>
+                                    ['title' => 'Beginn der elektronischen Erfassung: ' . htmlready($contract->begin_digital_recording_month) . '/' . htmlready($contract->begin_digital_recording_year) ]);?>
                         <? endif ?>
                     </td>
                     <td><?= date('d.m.Y', $contract->contract_end) ?></td>

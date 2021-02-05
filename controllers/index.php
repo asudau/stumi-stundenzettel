@@ -136,7 +136,6 @@ class IndexController extends StudipController {
     {   
         $this->contract = StundenzettelStumiContract::find($contract_id);
         $this->stumi = User::find($this->contract->stumi_id);
-        $this->contract_data = StundenzettelContractBegin::find($contract_id); 
     }
     
     public function save_action($inst_id, $stumi_id, $contract_id = NULL)
@@ -192,19 +191,12 @@ class IndexController extends StudipController {
     
     public function save_contract_begin_data_action($contract_id)
     {   
-        $begin_data = StundenzettelContractBegin::find($contract_id);
-//        $this->contract = StundenzettelStumiContract::find($contract_id);
-//        $this->inst_id = $this->contract->inst_id;
-//        $this->stumi = User::find($this->contract->stumi_id);
-        if (!$begin_data) {
-            $begin_data = new StundenzettelContractBegin();
-            $begin_data->contract_id = $contract_id;
-        }
+        $this->contract = StundenzettelStumiContract::find($contract_id);
         
-        $begin_data->begin_digital_recording_month = Request::get('begin_month');
-        $begin_data->begin_digital_recording_year = Request::get('begin_year');
-        $begin_data->vacation_claimed = StundenzettelTimesheet::stundenzettel_strtotimespan(Request::get('vacation_claimed'));
-        $begin_data->balance = StundenzettelTimesheet::stundenzettel_strtotimespan(Request::get('balance'));
+        $this->contract->begin_digital_recording_month = Request::get('begin_month');
+        $this->contract->begin_digital_recording_year = Request::get('begin_year');
+        $this->contract->begin_vacation_claimed = StundenzettelTimesheet::stundenzettel_strtotimespan(Request::get('vacation_claimed'));
+        $this->contract->begin_balance = StundenzettelTimesheet::stundenzettel_strtotimespan(Request::get('balance'));
         
         if($begin_data->store()){
             PageLayout::postMessage(MessageBox::success(_("Vertragsdaten gespeichert"))); 

@@ -238,10 +238,9 @@ class StundenzettelStumiContract extends \SimpleORMap
     //unterscheidet sich von monthPartOfContract, weil der offizielle Aufzeichnungsbeginn vom Vertragsbeginn abweichen kann
     function monthWithinRecordingTime($month, $year)
     {
-        if (StundenzettelContractBegin::find($this->id)) {    
-            $contract_data = StundenzettelContractBegin::find($this->id);
-            if (($year == $contract_data->begin_digital_recording_year && $month < $contract_data->begin_digital_recording_month) ||
-                  $year < $contract_data->begin_digital_recording_year  ){
+        if ($this->begin_digital_recording_month && $this->begin_digital_recording_year) {    
+            if (($year == $this->begin_digital_recording_year && $month < $this->begin_digital_recording_month) ||
+                  $year < $this->begin_digital_recording_year  ){
                 return false;
             } else return true;
         } else return true;
@@ -273,11 +272,8 @@ class StundenzettelStumiContract extends \SimpleORMap
             }
         }
         
-        if (StundenzettelContractBegin::find($this->id)) {    
-            $contract_data = StundenzettelContractBegin::find($this->id);
-            if ($contract_data->begin_digital_recording_year){
-                $claimed_vacation = $claimed_vacation + $contract_data->vacation_claimed;
-            }
+        if ($this->begin_vacation_claimed && $contract_data->begin_digital_recording_year == $year) {    
+            $claimed_vacation = $claimed_vacation + $this->begin_vacation_claimed;
         }
         
         return $claimed_vacation;
@@ -292,9 +288,8 @@ class StundenzettelStumiContract extends \SimpleORMap
                 $balance_time += $timesheet->timesheet_balance;
             }
         }
-        if (StundenzettelContractBegin::find($this->id)) {    
-            $contract_data = StundenzettelContractBegin::find($this->id);
-            $balance_time += $contract_data->balance; 
+        if ($this->begin_balance) {    
+            $balance_time += $this->begin_balance; 
         }
         return $balance_time;
     }
