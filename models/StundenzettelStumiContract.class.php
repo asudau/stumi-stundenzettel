@@ -217,14 +217,22 @@ class StundenzettelStumiContract extends \SimpleORMap
         return $month;
     }
     
-    function monthPartOfContract($month, $year){
-        $contract_begin_data = StundenzettelContractBegin::find($this->id);
-        if ($contract_begin_data){ //digitale Stundenerfassung beginnt erst zu späterem Zeitpunkt
-            return ( strtotime($contract_begin_data->begin_digital_recording_year . '-' . $contract_begin_data->begin_digital_recording_month . '-01') < strtotime($year . '-' . $month . '-28')) && 
-                    (strtotime($year . '-' . $month . '-01') < intval($this->contract_end));
-        } else {
-            return (intval($this->contract_begin) < strtotime($year . '-' . $month . '-28')) && (strtotime($year . '-' . $month . '-01') < intval($this->contract_end)); 
+    function monthPartOfContract($month, $year)
+    {
+        return (intval($this->contract_begin) < strtotime($year . '-' . $month . '-28')) && (strtotime($year . '-' . $month . '-01') < intval($this->contract_end)); 
+    }
+    
+    function monthWithVacationEntitlement($year)
+    {
+        $contract_month_in_year = 12;
+        if (($this->contract_end < strtotime('01.07.' . $year)) || ($this->contract_begin > strtotime('01.07.' . $year))) {
+            for ($i = 1; $i<= 12; $i++) {
+                if (!$this->monthPartOfContract($i, $year)){
+                    $contract_month_in_year --;
+                }
+            }
         }
+        return $contract_month_in_year;
     }
     
     //unterscheidet sich von monthPartOfContract, weil der offizielle Aufzeichnungsbeginn vom Vertragsbeginn abweichen kann
@@ -242,7 +250,7 @@ class StundenzettelStumiContract extends \SimpleORMap
     
     function getVacationEntitlement($year)
     {
-        $dezimal_entitlement = $this->contract_hours * $this->getContractDuration() * 0.077; //TODO nicht duration sondern pro Jahr
+        $dezimal_entitlement = $this->contract_hours * $this->monthWithVacationEntitlement($year) * 0.077; 
         $entitlement_hours = floor($dezimal_entitlement);
         $entitlement_minutes = ($dezimal_entitlement - $entitlement_hours) * 60;
         return sprintf("%02s", $entitlement_hours) . ':' . sprintf("%02s", round($entitlement_minutes) ); //round($entitlement_minutes, 3)
@@ -305,7 +313,6 @@ class StundenzettelStumiContract extends \SimpleORMap
                 //falls einer existiert, ordne ihn diesem Vertrag zu
                 if (StundenzettelTimesheet::findBySQL('`stumi_id` LIKE ? AND `month` LIKE ? AND `year` LIKE ? AND inst_id LIKE ?', [$this->stumi_id, $month->format('n'), $month->format('Y'), $this->inst_id]) ) {
                     $timesheet = StundenzettelTimesheet::findOneBySQL('`stumi_id` LIKE ? AND `month` LIKE ? AND `year` LIKE ? AND inst_id LIKE ?', [$this->stumi_id, $month->format('n'), $month->format('Y'), $this->inst_id]);
-                    var_dump([$this->stumi_id, $month->format('n'), $month->format('Y'), $this->inst_id]); 
                     $timesheet->contract_id = $this->id;
                     $timesheet->store();
                 //falls die Vergangenheit betroffen ist, lege nachträglich an
