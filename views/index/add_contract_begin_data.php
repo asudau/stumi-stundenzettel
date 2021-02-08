@@ -34,14 +34,14 @@ use Studip\Button, Studip\LinkButton;
         <label>
             <?= _('Bereits beanspruchter Urlaub im laufenden Jahr:') ?>
         </label>
-        <input type='text' pattern="<?= $balance_pattern ?>" required name="vacation_claimed" placeholder='hh:mm' value='<?= ($contract->begin_vacation_claimed) ? StundenzettelTimesheet::stundenzettel_strftimespan($contract->begin_vacation_claimed) : ''?>' ></input>
+        <input type='text' pattern="<?= $balance_pattern ?>" required name="vacation_claimed" placeholder='hh:mm' value='<?= ($contract->begin_vacation_claimed) ? htmlready(StundenzettelTimesheet::stundenzettel_strftimespan($contract->begin_vacation_claimed)) : ''?>' ></input>
     </section>
     
     <section>
         <label>
             <?= _('Stundenkonto zu Beginn der digitalen Aufzeichnung:') ?>
         </label>
-        <input type='text' pattern="<?= $balance_pattern ?>" required name="balance" placeholder='(-)hh:mm' value='<?= ($contract->begin_balance) ? StundenzettelTimesheet::stundenzettel_strftimespan($contract->begin_balance) : ''?>'></input>
+        <input type='text' pattern="<?= $balance_pattern ?>" required name="balance" placeholder='(-)hh:mm' value='<?= ($contract->begin_balance) ? htmlready(StundenzettelTimesheet::stundenzettel_strftimespan($contract->begin_balance)) : ''?>'></input>
     </section>
 
     <footer data-dialog-button>

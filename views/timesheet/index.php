@@ -25,7 +25,7 @@
                 <tr>  
                     <td><a href='<?=$this->controller->url_for('timesheet/timesheet/' . htmlready($timesheet->id)) ?>' title='Stundenzettel editieren'><?= htmlready($timesheet->month) ?>/<?= htmlready($timesheet->year) ?></a>
                     </td>
-                    <td><?= ($timesheet->sum) ? StundenzettelTimesheet::stundenzettel_strftimespan($timesheet->sum) : '0:00' ?> / <?= htmlready($timesheet->contract->contract_hours) ?></td>
+                    <td><?= ($timesheet->sum) ? htmlready(StundenzettelTimesheet::stundenzettel_strftimespan($timesheet->sum)) : '0:00' ?> / <?= htmlready($timesheet->contract->contract_hours) ?></td>
                     <td><?= ($timesheet->month_completed) ? htmlready(StundenzettelTimesheet::stundenzettel_strftimespan($timesheet->timesheet_balance)) : '(ausstehend)' ?></td>
                     <td>  
                         <?= Icon::create($status_infos['finished']['icon'], $status_infos[$timesheet->getCurrentState('finished', $role) . '_icon_role'], ['title' =>  $status_infos['finished'][$timesheet->getCurrentState('finished', $role) . '_tooltip']] )?>
@@ -55,7 +55,7 @@
             <?php if ($timesheets) : ?>
                 <?php foreach ($timesheets as $timesheet): ?>
                 <tr>  
-                    <td><a href='<?=$this->controller->url_for('timesheet/timesheet/' . $timesheet->id) ?>' title='Stundenzettel editieren'><?= $timesheet->month ?>/<?= $timesheet->year ?></a>
+                    <td><a href='<?=$this->controller->url_for('timesheet/timesheet/' . htmlready($timesheet->id)) ?>' title='Stundenzettel editieren'><?= htmlready($timesheet->month) ?>/<?= htmlready($timesheet->year) ?></a>
                     </td>
                     <td><?= ($timesheet->sum) ? StundenzettelTimesheet::stundenzettel_strftimespan($timesheet->sum) : '0:00' ?> / <?= htmlready($timesheet->contract->contract_hours) ?></td>
                     <td><?= ($timesheet->month_completed) ? htmlready(StundenzettelTimesheet::stundenzettel_strftimespan($timesheet->timesheet_balance)) : '(ausstehend)' ?></td>

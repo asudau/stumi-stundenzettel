@@ -36,12 +36,12 @@
                         <? endif ?>
                     </td>
                     <td><?= date('d.m.Y', $contract->contract_end) ?></td>
-                    <td><?= $contract->getContractDuration() ?></td>
+                    <td><?= htmlready($contract->getContractDuration()) ?></td>
                     <td><?= htmlready($contract->contract_hours) ?></td>
                     <td><?= htmlready($contract->default_workday_time) ?></td>
-                    <td><?= StundenzettelTimesheet::stundenzettel_strftimespan($contract->getWorktimeBalance()) ?></td>
-                    <td><?= StundenzettelTimesheet::stundenzettel_strftimespan($contract->getClaimedVacation(date('Y', time())))?> von <?= $contract->getVacationEntitlement(date('Y', time()))?></td>
-                    <td><?= StundenzettelTimesheet::stundenzettel_strftimespan($contract->getRemainingVacation(date('Y', time())))?></td>
+                    <td><?= htmlready(StundenzettelTimesheet::stundenzettel_strftimespan($contract->getWorktimeBalance())) ?></td>
+                    <td><?= htmlready(StundenzettelTimesheet::stundenzettel_strftimespan($contract->getClaimedVacation(date('Y', time()))))?> von <?= htmlready($contract->getVacationEntitlement(date('Y', time())))?></td>
+                    <td><?= htmlready(StundenzettelTimesheet::stundenzettel_strftimespan($contract->getRemainingVacation(date('Y', time()))))?></td>
                     <td><?= htmlready(User::findOneByUser_Id($contract->supervisor)->username) ?></td>
                     <td>
                         <? if ($adminrole) : ?>
@@ -57,7 +57,7 @@
 
            <?php else : ?>
                 <tr> 
-                    <td><?= $stumi->nachname ?>, <?= $stumi->vorname ?>
+                    <td><?= htmlready($stumi->nachname) ?>, <?= htmlready($stumi->vorname) ?>
                     </td>
                     <td> -- </td>
                     <td> -- </td>
@@ -100,8 +100,8 @@
                     <td><?= date('d.m.Y', $contract->contract_begin) ?></td>
                     <td><?= date('d.m.Y', $contract->contract_end) ?></td>
                     <td><?= htmlready($contract->contract_hours) ?></td>
-                    <td><?= StundenzettelTimesheet::stundenzettel_strftimespan($contract->getWorktimeBalance()) ?></td>
-                    <td><?= StundenzettelTimesheet::stundenzettel_strftimespan($contract->getRemainingVacation(date('Y', time()))) ?>/<?= $contract->getVacationEntitlement(date('Y', time())) ?></td>
+                    <td><?= htmlready(StundenzettelTimesheet::stundenzettel_strftimespan($contract->getWorktimeBalance())) ?></td>
+                    <td><?= htmlready(StundenzettelTimesheet::stundenzettel_strftimespan($contract->getRemainingVacation(date('Y', time())))) ?>/<?= htmlready($contract->getVacationEntitlement(date('Y', time()))) ?></td>
                     <td><?= htmlready(User::findOneByUser_Id($contract->supervisor)->username) ?></td>
                 </tr>
             <?php endforeach ?>
