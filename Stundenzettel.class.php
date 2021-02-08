@@ -10,7 +10,7 @@
  */
 
 require_once 'constants.inc.php';
-require_once 'models/StundenzettelStumiContract.class.php';
+require_once 'models/StundenzettelContract.class.php';
 
 class Stundenzettel extends StudipPlugin implements SystemPlugin
 {
@@ -106,12 +106,12 @@ class Stundenzettel extends StudipPlugin implements SystemPlugin
     
     public function hasStumiContract ()
     {
-        return StundenzettelStumiContract::findByStumi_id($GLOBALS['user']->user_id);
+        return StundenzettelContract::findByStumi_id($GLOBALS['user']->user_id);
     }
     
     public function isStumiSupervisor ()
     {
-        return StundenzettelStumiContract::findBySupervisor($GLOBALS['user']->user_id);
+        return StundenzettelContract::findBySupervisor($GLOBALS['user']->user_id);
     }
 
     public function perform($unconsumed_path)

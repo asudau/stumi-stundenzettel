@@ -25,7 +25,7 @@ class StundenzettelTimesheet extends \SimpleORMap
         $config['db_table'] = 'stundenzettel_timesheets';
         
         $config['belongs_to']['contract'] = [
-            'class_name'  => 'StundenzettelStumiContract',
+            'class_name'  => 'StundenzettelContract',
             'foreign_key' => 'contract_id',];
         
         $config['additional_fields']['timesheet_balance']['get'] = function ($item) {
@@ -157,16 +157,16 @@ class StundenzettelTimesheet extends \SimpleORMap
         //$this->SetTextColor(0,127,75);
         // Page number
         $pdf->SetX(90);
-        $pdf->Write(5, studip_utf8encode(User::find($this->stumi_id)->nachname . ', ' .  User::find($this->stumi_id)->vorname));
+        $pdf->Write(5, User::find($this->stumi_id)->nachname . ', ' .  User::find($this->stumi_id)->vorname);
         $pdf->Ln();
         $pdf->SetX(90);
-        $pdf->Write(5, studip_utf8encode(my_substr(Institute::find($this->inst_id)->name ,0,50)));
+        $pdf->Write(5, my_substr(Institute::find($this->inst_id)->name ,0,50));
         $pdf->Ln();
         $pdf->SetX(90);
-        $pdf->Write(6, studip_utf8encode($this->month . '/' . $this->year));
+        $pdf->Write(6, $this->month . '/' . $this->year);
         $pdf->Ln();
         $pdf->SetX(90);
-        $pdf->Write(5, studip_utf8encode(StundenzettelStumiContract::find($this->contract_id)->contract_hours));
+        $pdf->Write(5, StundenzettelContract::find($this->contract_id)->contract_hours);
         $pdf->Ln(21);
         $pdf->SetFont('helvetica', '', 9.5);
         

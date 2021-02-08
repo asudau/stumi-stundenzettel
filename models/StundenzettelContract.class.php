@@ -12,7 +12,7 @@
  * @property int           $contract_end
  */
 
-class StundenzettelStumiContract extends \SimpleORMap
+class StundenzettelContract extends \SimpleORMap
 {
     
     private static $dezimal_to_minute = array(

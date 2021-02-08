@@ -68,7 +68,7 @@ class IndexController extends StudipController {
                     $stumi = User::find($member->user_id);
                     if (!$this->search || strpos(strtolower($stumi->username . ' ' . $stumi->vorname . ' ' . $stumi->nachname), strtolower($this->search))) {
                         $this->stumis[] = $stumi;
-                        $this->stumi_contracts[$member->user_id] = StundenzettelStumiContract::findBySQL('`stumi_id` LIKE ? AND `inst_id` LIKE ?', [$member->user_id, $this->inst_id[0]]);
+                        $this->stumi_contracts[$member->user_id] = StundenzettelContract::findBySQL('`stumi_id` LIKE ? AND `inst_id` LIKE ?', [$member->user_id, $this->inst_id[0]]);
                     }
                 }
             }
@@ -77,11 +77,11 @@ class IndexController extends StudipController {
         if ($this->supervisorrole) {
             
             //get stumis for this user
-            $stumi_contracts = StundenzettelStumiContract::findBySupervisor(User::findCurrent()->user_id);
+            $stumi_contracts = StundenzettelContract::findBySupervisor(User::findCurrent()->user_id);
             foreach($stumi_contracts as $contract){
                 if(!in_array($contract->stumi_id, $this->stumis)){
                     $this->stumis[] = User::find($contract->stumi_id);
-                    $this->stumi_contracts[$contract->stumi_id] = StundenzettelStumiContract::findBySQL('`stumi_id` LIKE ? AND `supervisor` LIKE ?', [$contract->stumi_id, User::findCurrent()->user_id]);
+                    $this->stumi_contracts[$contract->stumi_id] = StundenzettelContract::findBySQL('`stumi_id` LIKE ? AND `supervisor` LIKE ?', [$contract->stumi_id, User::findCurrent()->user_id]);
                 }
             }   
             //setup navigation
@@ -97,7 +97,7 @@ class IndexController extends StudipController {
         if ($this->stumirole) {
 
             $this->stumi = User::find($GLOBALS['user']->user_id);
-            $this->stumi_contracts = StundenzettelStumiContract::findByStumi_id($this->stumi->user_id);
+            $this->stumi_contracts = StundenzettelContract::findByStumi_id($this->stumi->user_id);
             foreach($this->stumi_contracts as $contract){
                 if(!in_array($inst_id, $this->inst_id)){
                     $this->inst_id[] = $inst_id;
@@ -119,7 +119,7 @@ class IndexController extends StudipController {
     
     public function edit_action($contract_id, $following_contract = NULL)
     {   
-        $this->contract = StundenzettelStumiContract::find($contract_id);
+        $this->contract = StundenzettelContract::find($contract_id);
         $this->inst_id = $this->contract->inst_id;
         $this->stumi = $this->contract->stumi;
         $supervisor = User::find($this->contract->supervisor);
@@ -135,7 +135,7 @@ class IndexController extends StudipController {
     
     public function add_contract_begin_data_action($contract_id)
     {   
-        $this->contract = StundenzettelStumiContract::find($contract_id);
+        $this->contract = StundenzettelContract::find($contract_id);
         $this->stumi = User::find($this->contract->stumi_id);
     }
     
@@ -144,11 +144,11 @@ class IndexController extends StudipController {
         if ($this->plugin->hasStumiAdminrole ()) {
             
             $this->adminrole = true;
-            $contract = StundenzettelStumiContract::find($contract_id);
+            $contract = StundenzettelContract::find($contract_id);
             $message = _("Änderungen gespeichert.");
             
             if (!$contract || Request::get('following_contract')){
-                $contract = new StundenzettelStumiContract();
+                $contract = new StundenzettelContract();
                 $message = _("Vertrag angelegt.");
             }
             
@@ -177,7 +177,7 @@ class IndexController extends StudipController {
     
     public function delete_action($contract_id)
     {   
-        $contract = StundenzettelStumiContract::find($contract_id);
+        $contract = StundenzettelContract::find($contract_id);
             
         if($contract->delete()){
             PageLayout::postMessage(MessageBox::success(_("Vertrag gelöscht"))); 
@@ -192,7 +192,7 @@ class IndexController extends StudipController {
     
     public function save_contract_begin_data_action($contract_id)
     {   
-        $contract = StundenzettelStumiContract::find($contract_id);
+        $contract = StundenzettelContract::find($contract_id);
         
         $contract->begin_digital_recording_month = Request::get('begin_month');
         $contract->begin_digital_recording_year = Request::get('begin_year');

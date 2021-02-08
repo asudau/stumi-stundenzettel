@@ -19,7 +19,7 @@ class StumiStundenzettelTables extends Migration
         
         $db = DBManager::get();
         //add db-table for stumis
-        $db->exec("CREATE TABLE IF NOT EXISTS `stundenzettel_stumi_contracts` (
+        $db->exec("CREATE TABLE IF NOT EXISTS `stundenzettel_contracts` (
             `id` int(11) NOT NULL AUTO_INCREMENT,
             `stumi_id` varchar(32) COLLATE latin1_bin NOT NULL,
             `inst_id` varchar(32) COLLATE latin1_bin NOT NULL,
@@ -72,7 +72,7 @@ class StumiStundenzettelTables extends Migration
     {
         $db = DBManager::get();
 
-        $db->exec("DROP TABLE stundenzettel_stumi_contracts");
+        $db->exec("DROP TABLE stundenzettel_contracts");
         $db->exec("DROP TABLE stundenzettel_timesheets");
         $db->exec("DROP TABLE stundenzettel_records");
 

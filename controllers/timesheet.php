@@ -41,18 +41,18 @@ class TimesheetController extends StudipController {
         
         //allgemeine Stundenzettel-Übersichtsseite für Stumis verwendet automatisch den aktuell laufenden Vertrag
         if (!$contract_id && $this->stumirole) {
-            $contract_id = StundenzettelStumiContract::getCurrentContractId($GLOBALS['user']->user_id);
+            $contract_id = StundenzettelContract::getCurrentContractId($GLOBALS['user']->user_id);
              if (!$contract_id) {
-                 $contract_id = StundenzettelStumiContract::getSomeContractId($GLOBALS['user']->user_id);
+                 $contract_id = StundenzettelContract::getSomeContractId($GLOBALS['user']->user_id);
              }
         }
-        $this->contract = StundenzettelStumiContract::find($contract_id);
+        $this->contract = StundenzettelContract::find($contract_id);
         $this->timesheets = StundenzettelTimesheet::findByContract_id($contract_id, 'ORDER by `year` ASC, `month` ASC'); 
         $this->stumi = User::find($this->contract->stumi_id);
         
         $this->records = StundenzettelRecord::findByTimesheet_Id($timesheet_id, 'ORDER BY day ASC');
         
-        $this->status_infos = StundenzettelStumiContract::getStaus_array();
+        $this->status_infos = StundenzettelContract::getStaus_array();
 
     }
     public function admin_index_action()
@@ -78,14 +78,14 @@ class TimesheetController extends StudipController {
             $this->last_month_num = strftime('%m', strtotime("-1 month", time()));
             $this->last_month_year = strftime('%Y', strtotime("-1 month", time()));
         }
-        $this->contracts = StundenzettelStumiContract::getContractsByMonth($this->last_month_num, $this->last_month_year);
+        $this->contracts = StundenzettelContract::getContractsByMonth($this->last_month_num, $this->last_month_year);
         
         foreach ($this->contracts as $contract) {
             $this->timesheets[$contract->id]['last_month'] = StundenzettelTimesheet::getContractTimesheet($contract->id, $this->last_month_num, $this->last_month_year);
             $this->timesheets[$contract->id]['next_month'] = StundenzettelTimesheet::getContractTimesheet($contract->id, $this->next_month_num, $this->next_month_year);
         }
         
-        $this->status_infos = StundenzettelStumiContract::getStaus_array();
+        $this->status_infos = StundenzettelContract::getStaus_array();
     }
     
     public function select_action($contract_id, $month = '', $year = '')
@@ -95,7 +95,7 @@ class TimesheetController extends StudipController {
             $month = Request::get('month');
             $year = Request::get('year');
         }
-        $contract = StundenzettelStumiContract::find($contract_id);
+        $contract = StundenzettelContract::find($contract_id);
         $this->timesheet = StundenzettelTimesheet::getContractTimesheet($contract_id, $month, $year);
         if (!$this->timesheet && $this->stumirole) {
             if ($contract->monthWithinRecordingTime($month, $year)) {
@@ -138,11 +138,11 @@ class TimesheetController extends StudipController {
         //Sidebar::Get()->setTitle('Stundenzettel von ' . $GLOBALS['user']->username);
         
         if(!$timesheet_id && $this->stumirole){
-            $contract_id = StundenzettelStumiContract::getCurrentContractId($GLOBALS['user']->user_id);
+            $contract_id = StundenzettelContract::getCurrentContractId($GLOBALS['user']->user_id);
             //$timesheet = StundenzettelTimesheet::getContractTimesheet($contract_id, date('m', time()), date('Y', time()));
             //$timesheet_id = $timesheet->id;
             if (!$contract_id){
-                $contract_id = StundenzettelStumiContract::getSomeContractId($GLOBALS['user']->user_id);
+                $contract_id = StundenzettelContract::getSomeContractId($GLOBALS['user']->user_id);
             }
             $this->redirect('timesheet/select/' . $contract_id . '/' . date('m', time()) . '/' . date('Y', time()));
         }

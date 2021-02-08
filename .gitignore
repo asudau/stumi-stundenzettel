@@ -3,3 +3,4 @@
 .idea/stumi-stundenzettel.iml
 /nbproject/private/
 *.zip
+/nbproject/project.properties

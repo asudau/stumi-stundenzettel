@@ -1,6 +1,6 @@
 pluginname=Stundenzettel
 pluginclassname=Stundenzettel
 origin=virtUOS
-version=1.0
+version=2.0
 studipMinVersion=3.5
 studipMaxVersion=4.2.99
