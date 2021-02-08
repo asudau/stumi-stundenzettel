@@ -176,13 +176,13 @@ class StundenzettelTimesheet extends \SimpleORMap
             $content = $record->begin . '  ' . $record->break . '  ' . $record->end . '  ' . $record->sum . '  ' .
                     $record->defined_comment . '  ' . $record->comment . '   ' . $record->entry_mktime ;
             $pdf->SetX(44);
-            $pdf->Write($line_height, $record->begin);
+            $pdf->Write($line_height, ($record->begin) ? self::stundenzettel_strftime('%H:%M', $record->begin) : '');
             $pdf->SetX(61);
-            $pdf->Write($line_height, $record->break);
+            $pdf->Write($line_height, ($record->break) ? self::stundenzettel_strftimespan($record->break) : '');
             $pdf->SetX(74);
-            $pdf->Write($line_height, $record->end);
+            $pdf->Write($line_height, ($record->end) ? self::stundenzettel_strftime('%H:%M', $record->end) : '');
             $pdf->SetX(94);
-            $pdf->Write($line_height, $record->sum);
+            $pdf->Write($line_height, ($record->sum) ? self::stundenzettel_strftimespan($record->sum) : '');
             $pdf->SetX(114);
             $pdf->Write($line_height, ($record->sum && $record->defined_comment != 'Feiertag') ? date('d.m.Y', strtotime($record->entry_mktime)) : '');
             $pdf->SetX(136);
@@ -192,8 +192,9 @@ class StundenzettelTimesheet extends \SimpleORMap
             
         }
 
+        $pdf->SetY(209);
         $pdf->SetX(94);
-        $pdf->Write($line_height, $record->timesheet->sum);
+        $pdf->Write($line_height, self::stundenzettel_strftimespan($record->timesheet->sum));
   
         $fileid = time();   
         $pdf->Output( 'Stundenzettel_' . $this->month . '-' . $this->year . '_' . User::find($this->stumi_id)->nachname . '.pdf', 'D');
