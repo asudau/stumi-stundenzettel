@@ -79,7 +79,8 @@ class IndexController extends StudipController {
             //get stumis for this user
             $stumi_contracts = StundenzettelContract::findBySupervisor(User::findCurrent()->user_id);
             foreach($stumi_contracts as $contract){
-                if(!in_array($contract->stumi_id, $this->stumis)){
+                if(!in_array($contract->stumi_id, $this->stumi_ids)){
+                    $this->stumi_ids[] = $contract->stumi_id;
                     $this->stumis[] = User::find($contract->stumi_id);
                     $this->stumi_contracts[$contract->stumi_id] = StundenzettelContract::findBySQL('`stumi_id` LIKE ? AND `supervisor` LIKE ?', [$contract->stumi_id, User::findCurrent()->user_id]);
                 }
