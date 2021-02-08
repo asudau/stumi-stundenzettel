@@ -90,6 +90,10 @@ class TimesheetController extends StudipController {
     
     public function select_action($contract_id, $month = '', $year = '')
     {
+        if ( !($this->adminrole || $this->plugin->can_access_contract_timesheets($contract_id))) {
+            throw new AccessDeniedException(_("Sie haben keine Zugriffsberechtigung"));
+        }
+        
         Navigation::activateItem('tools/stundenzettelverwaltung/timesheets');
         if (Request::get('month')) {
             $month = Request::get('month');
@@ -128,6 +132,10 @@ class TimesheetController extends StudipController {
     
     public function timesheet_action($timesheet_id = NULL)
     {
+        if ( !($this->adminrole || $this->plugin->can_access_timesheet($timesheet_id))) {
+            throw new AccessDeniedException(_("Sie haben keine Zugriffsberechtigung"));
+        }
+        
         if ($this->stumirole){
             Navigation::activateItem('tools/stundenzettelverwaltung/timetracking');
         } else {
@@ -203,6 +211,10 @@ class TimesheetController extends StudipController {
     
     public function save_timesheet_action($timesheet_id)
     {
+        if ( !($timesheet->stumi_id == User::findCurrent()->user_id)) {
+            throw new AccessDeniedException(_("Sie haben keine Zugriffsberechtigung"));
+        }
+        
         $timesheet = StundenzettelTimesheet::find($timesheet_id);
         
          if (!$timesheet->locked) {
@@ -259,6 +271,10 @@ class TimesheetController extends StudipController {
     
     public function pdf_action($timesheet_id)
     {
+        if ( !($timesheet->stumi_id == User::findCurrent()->user_id)) {
+            throw new AccessDeniedException(_("Sie haben keine Zugriffsberechtigung"));
+        }
+        
         $timesheet = StundenzettelTimesheet::find($timesheet_id);
         if($timesheet){
             $timesheet->build_pdf();
@@ -271,6 +287,10 @@ class TimesheetController extends StudipController {
     public function send_action($timesheet_id)
     {
         $timesheet = StundenzettelTimesheet::find($timesheet_id);
+        if ( !($timesheet->stumi_id == User::findCurrent()->user_id)) {
+            throw new AccessDeniedException(_("Sie haben keine Zugriffsberechtigung"));
+        }
+        
         if($timesheet){
             $timesheet->finished = true;
             $timesheet->store();
@@ -285,6 +305,11 @@ class TimesheetController extends StudipController {
     public function approve_action($timesheet_id)
     {
         $timesheet = StundenzettelTimesheet::find($timesheet_id);
+        
+        if ( !($timesheet->contract->supervisor == User::findCurrent()->user_id)) {
+            throw new AccessDeniedException(_("Sie haben keine Zugriffsberechtigung"));
+        }
+        
         if($timesheet && User::findCurrent()->user_id == $timesheet->contract->supervisor){
             $timesheet->approved = true;
             $timesheet->store();
@@ -298,6 +323,10 @@ class TimesheetController extends StudipController {
     
     public function received_action($timesheet_id)
     {
+        if ( !$this->adminrole ) {
+            throw new AccessDeniedException(_("Sie haben keine Zugriffsberechtigung"));
+        }
+        
         $timesheet = StundenzettelTimesheet::find($timesheet_id);
         if($timesheet && $this->adminrole){
             $timesheet->received = true;
@@ -312,6 +341,10 @@ class TimesheetController extends StudipController {
     
     public function complete_action($timesheet_id)
     {
+        if ( !$this->adminrole ) {
+            throw new AccessDeniedException(_("Sie haben keine Zugriffsberechtigung"));
+        }
+        
         $timesheet = StundenzettelTimesheet::find($timesheet_id);
         if($timesheet && $this->adminrole){
             $timesheet->complete = true;

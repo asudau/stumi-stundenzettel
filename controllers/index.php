@@ -108,6 +108,10 @@ class IndexController extends StudipController {
     
     public function new_action($inst_id, $stumi_id)
     {   
+        if ( !$this->adminrole ) {
+            throw new AccessDeniedException(_("Sie haben keine Zugriffsberechtigung"));
+        }
+        
         $this->inst_id = $inst_id;
         $this->stumi = User::find($stumi_id);
         
@@ -119,6 +123,10 @@ class IndexController extends StudipController {
     
     public function edit_action($contract_id, $following_contract = NULL)
     {   
+        if ( !$this->adminrole ) {
+            throw new AccessDeniedException(_("Sie haben keine Zugriffsberechtigung"));
+        }
+        
         $this->contract = StundenzettelContract::find($contract_id);
         $this->inst_id = $this->contract->inst_id;
         $this->stumi = $this->contract->stumi;
@@ -135,41 +143,42 @@ class IndexController extends StudipController {
     
     public function add_contract_begin_data_action($contract_id)
     {   
+        if ( !$this->adminrole ) {
+            throw new AccessDeniedException(_("Sie haben keine Zugriffsberechtigung"));
+        }
+        
         $this->contract = StundenzettelContract::find($contract_id);
         $this->stumi = User::find($this->contract->stumi_id);
     }
     
     public function save_action($inst_id, $stumi_id, $contract_id = NULL)
     {   
-        if ($this->plugin->hasStumiAdminrole ()) {
-            
-            $this->adminrole = true;
-            $contract = StundenzettelContract::find($contract_id);
-            $message = _("Änderungen gespeichert.");
-            
-            if (!$contract || Request::get('following_contract')){
-                $contract = new StundenzettelContract();
-                $message = _("Vertrag angelegt.");
-            }
-            
-            //get all stumis an contracts
-            $contract->inst_id = $inst_id;
-            $contract->stumi_id = $stumi_id;
-            $contract->contract_begin = strtotime(Request::get('begin'));
-            $contract->contract_end = strtotime(Request::get('end'));
-            $contract->contract_hours = Request::get('hours');
-            $contract->supervisor = Request::get('user_id');            
-            $contract->store();
-            
-            //TODO refactoring der beiden Funktionen
-            $contract->reassign_timesheets();
-            //$contract->add_missing_timesheets();
-            
-            PageLayout::postMessage(MessageBox::success($message)); 
-            
-        } else {
-            PageLayout::postMessage(MessageBox::error(_("Keine Berechtigung."))); 
+        if ( !$this->adminrole ) {
+            throw new AccessDeniedException(_("Sie haben keine Zugriffsberechtigung"));
         }
+
+        $contract = StundenzettelContract::find($contract_id);
+        $message = _("Änderungen gespeichert.");
+
+        if (!$contract || Request::get('following_contract')){
+            $contract = new StundenzettelContract();
+            $message = _("Vertrag angelegt.");
+        }
+
+        //get all stumis an contracts
+        $contract->inst_id = $inst_id;
+        $contract->stumi_id = $stumi_id;
+        $contract->contract_begin = strtotime(Request::get('begin'));
+        $contract->contract_end = strtotime(Request::get('end'));
+        $contract->contract_hours = Request::get('hours');
+        $contract->supervisor = Request::get('user_id');            
+        $contract->store();
+
+        //TODO refactoring der beiden Funktionen
+        $contract->reassign_timesheets();
+        //$contract->add_missing_timesheets();
+
+        PageLayout::postMessage(MessageBox::success($message)); 
         
         $this->redirect('index/');
 
@@ -177,6 +186,10 @@ class IndexController extends StudipController {
     
     public function delete_action($contract_id)
     {   
+        if ( !$this->adminrole ) {
+            throw new AccessDeniedException(_("Sie haben keine Zugriffsberechtigung"));
+        }
+        
         $contract = StundenzettelContract::find($contract_id);
             
         if($contract->delete()){
@@ -192,6 +205,10 @@ class IndexController extends StudipController {
     
     public function save_contract_begin_data_action($contract_id)
     {   
+        if ( !$this->adminrole ) {
+            throw new AccessDeniedException(_("Sie haben keine Zugriffsberechtigung"));
+        }
+        
         $contract = StundenzettelContract::find($contract_id);
         
         $contract->begin_digital_recording_month = Request::get('begin_month');

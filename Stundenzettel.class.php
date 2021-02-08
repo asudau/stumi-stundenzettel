@@ -113,6 +113,22 @@ class Stundenzettel extends StudipPlugin implements SystemPlugin
     {
         return StundenzettelContract::findBySupervisor($GLOBALS['user']->user_id);
     }
+    
+    public function can_access_contract_timesheets($contract_id)
+    {
+        $contract = StundenzettelContract::find($contract_id);
+        if ($contract->supervisor == User::findCurrent()->user_id || $contract->stumi_id == User::findCurrent()->user_id ){
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    public function can_access_timesheet($timesheet_id) 
+    {
+        $timesheet = StundenzettelTimesheet::find($timesheet_id);
+        return self::can_access_contract_timesheets($timesheet->contract_id);
+    }
 
     public function perform($unconsumed_path)
     {
