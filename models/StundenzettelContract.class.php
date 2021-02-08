@@ -111,7 +111,7 @@ class StundenzettelContract extends \SimpleORMap
     
     protected static function configure($config = array())
     {
-        $config['db_table'] = 'stundenzettel_stumi_contracts';
+        $config['db_table'] = 'stundenzettel_contracts';
         
         $config['belongs_to']['stumi'] = [
             'class_name'  => 'User',
