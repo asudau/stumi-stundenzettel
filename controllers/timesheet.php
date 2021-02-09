@@ -132,7 +132,7 @@ class TimesheetController extends StudipController {
     
     public function timesheet_action($timesheet_id = NULL)
     {
-        if ( !($this->adminrole || $this->plugin->can_access_timesheet($timesheet_id))) {
+         if ( ($timesheet_id) && !($this->adminrole || $this->plugin->can_access_timesheet($timesheet_id))) {
             throw new AccessDeniedException(_("Sie haben keine Zugriffsberechtigung"));
         }
         
@@ -155,7 +155,7 @@ class TimesheetController extends StudipController {
             $this->redirect('timesheet/select/' . $contract_id . '/' . date('m', time()) . '/' . date('Y', time()));
         }
 
-        $this->timesheet = StundenzettelTimesheet::find($timesheet_id);
+        $this->timesheet = StundenzettelTimesheet::find($timesheet_id);  
         $this->days_per_month = cal_days_in_month(CAL_GREGORIAN, $this->timesheet->month, $this->timesheet->year); 
         $this->inst_id = $this->timesheet->inst_id;
         $this->stumi_id = $this->timesheet->stumi_id;
@@ -211,11 +211,11 @@ class TimesheetController extends StudipController {
     
     public function save_timesheet_action($timesheet_id)
     {
+        
+        $timesheet = StundenzettelTimesheet::find($timesheet_id);
         if ( !($timesheet->stumi_id == User::findCurrent()->user_id)) {
             throw new AccessDeniedException(_("Sie haben keine Zugriffsberechtigung"));
         }
-        
-        $timesheet = StundenzettelTimesheet::find($timesheet_id);
         
          if (!$timesheet->locked) {
              
