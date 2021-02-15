@@ -353,8 +353,6 @@ class StundenzettelContract extends \SimpleORMap
                 $timesheet->month = $month;
                 $timesheet->year = $year;
                 $timesheet->contract_id = $this->id;
-                $timesheet->stumi_id = $this->stumi_id;
-                $timesheet->inst_id = $this->inst_id;
                 $timesheet->store();
             }
         }

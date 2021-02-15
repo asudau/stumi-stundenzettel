@@ -108,8 +108,6 @@ class TimesheetController extends StudipController {
                 $timesheet->month = $month;
                 $timesheet->year = $year;
                 $timesheet->contract_id = $contract_id;
-                $timesheet->stumi_id = $contract->stumi_id;
-                $timesheet->inst_id = $contract->inst_id;
                 $timesheet->store();
                 $this->redirect('timesheet/timesheet/' . $timesheet->id);
             } else {
@@ -157,8 +155,8 @@ class TimesheetController extends StudipController {
 
         $this->timesheet = StundenzettelTimesheet::find($timesheet_id);  
         $this->days_per_month = cal_days_in_month(CAL_GREGORIAN, $this->timesheet->month, $this->timesheet->year); 
-        $this->inst_id = $this->timesheet->inst_id;
-        $this->stumi_id = $this->timesheet->stumi_id;
+        $this->inst_id = $this->timesheet->contract->inst_id;
+        $this->stumi_id = $this->timesheet->contract->stumi_id;
         $this->records = StundenzettelRecord::findByTimesheet_Id($timesheet_id, 'ORDER BY day ASC');
         
         if($this->timesheet->locked || $this->adminrole) {
@@ -213,7 +211,7 @@ class TimesheetController extends StudipController {
     {
         
         $timesheet = StundenzettelTimesheet::find($timesheet_id);
-        if ( !($timesheet->stumi_id == User::findCurrent()->user_id)) {
+        if ( !($timesheet->contract->stumi_id == User::findCurrent()->user_id)) {
             throw new AccessDeniedException(_("Sie haben keine Zugriffsberechtigung"));
         }
         
@@ -271,7 +269,7 @@ class TimesheetController extends StudipController {
     
     public function pdf_action($timesheet_id)
     {
-        if ( !($timesheet->stumi_id == User::findCurrent()->user_id)) {
+        if ( !($timesheet->contract->stumi_id == User::findCurrent()->user_id)) {
             throw new AccessDeniedException(_("Sie haben keine Zugriffsberechtigung"));
         }
         
@@ -287,7 +285,7 @@ class TimesheetController extends StudipController {
     public function send_action($timesheet_id)
     {
         $timesheet = StundenzettelTimesheet::find($timesheet_id);
-        if ( !($timesheet->stumi_id == User::findCurrent()->user_id)) {
+        if ( !($timesheet->contract->stumi_id == User::findCurrent()->user_id)) {
             throw new AccessDeniedException(_("Sie haben keine Zugriffsberechtigung"));
         }
         

@@ -39,8 +39,6 @@ class StumiStundenzettelTables extends Migration
         $db->exec("CREATE TABLE IF NOT EXISTS `stundenzettel_timesheets` (
             `id` int(11) NOT NULL AUTO_INCREMENT,
             `contract_id` int(11) NOT NULL,
-            `stumi_id` varchar(32) COLLATE latin1_bin NOT NULL,
-            `inst_id` varchar(32) COLLATE latin1_bin NOT NULL,
             `month` int(2) NOT NULL,
             `year` int(4) NOT NULL,
             `finished` tinyint(1) NOT NULL DEFAULT '0',

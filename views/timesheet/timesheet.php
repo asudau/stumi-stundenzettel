@@ -27,7 +27,7 @@ use Studip\Button, Studip\LinkButton;
     
 <?php elseif ($stumirole || $timesheet->finished): ?>
     
-    <p>Name, Vorname: <b><?= htmlready(User::findOneByUser_Id($timesheet->stumi_id)->nachname) ?>, <?= htmlready(User::findOneByUser_Id($timesheet->stumi_id)->vorname) ?></b></p>
+    <p>Name, Vorname: <b><?= htmlready(User::findOneByUser_Id($timesheet->contract->stumi_id)->nachname) ?>, <?= htmlready(User::findOneByUser_Id($timesheet->contract->stumi_id)->vorname) ?></b></p>
     <p>Fachbereich/Organisationseinheit: <b><?= htmlready(Institute::find($inst_id)->name) ?></b></p>
     <p>Monatsarbeitszeit laut Arbeitsvertrag: <b><?= htmlready($timesheet->contract->contract_hours) ?> Stunden </b></p>
     <p>Diesen Monat erfasst: <b> <?= htmlready(StundenzettelTimesheet::stundenzettel_strftimespan($timesheet->sum)) ?> Stunden </b></p>
