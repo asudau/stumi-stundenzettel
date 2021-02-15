@@ -179,7 +179,18 @@ class StundenzettelContract extends \SimpleORMap
         $month_begin = strtotime($year . '-' . $month  . '-01' );
         $month_end = strtotime($year . '-' . $month  . '-28' );
         //$contracts = self::findBySQL('contract_begin < ? AND contract_end > ?', [$end_nextmonth, $begin_lastmonth]);
-        $contracts = self::findBySQL('contract_begin < ? AND contract_end > ?', [$month_end, $month_begin]);
+        $all_contracts = self::findBySQL('contract_begin < ? AND contract_end > ?', [$month_end, $month_begin]);
+        
+        if (Stundenzettel::hasStumiAdminrole()){
+            return $all_contracts;
+        } else {
+            foreach ($all_contracts as $contract){
+                if ($contract->stumi_id == User::findCurrent()->user_id || $contract->supervisor == User::findCurrent()->user_id){
+                    $contracts[] = $contract;
+                }
+            }
+        }
+        
         return $contracts;
     }
     
