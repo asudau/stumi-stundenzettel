@@ -74,7 +74,7 @@ class Stundenzettel extends StudipPlugin implements SystemPlugin
         $item = new Navigation(_('Übersicht'), PluginEngine::getURL($this, array(), 'index'));
         $navigation->addSubNavigation('index', $item);
 
-        $item = new Navigation(_('Stundenzettel verwalten'), PluginEngine::getURL($this, array(), 'timesheet'));
+        $item = new Navigation(_('Stundenzettel verwalten'), PluginEngine::getURL($this, array(), 'timesheet/admin_index'));
         $navigation->addSubNavigation('timesheets', $item);
 
         Navigation::addItem('tools/stundenzettelverwaltung', $navigation);  
