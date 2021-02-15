@@ -57,7 +57,7 @@ class TimesheetController extends StudipController {
     }
     public function admin_index_action()
     {
-        if (!$this->adminrole){
+        if (!($this->adminrole || $this->supervisorrole)){
             throw new AccessDeniedException(_("Sie haben keine Zugriffsberechtigung."));
         }
         Navigation::activateItem('tools/stundenzettelverwaltung/timesheets');
@@ -238,10 +238,10 @@ class TimesheetController extends StudipController {
                     $record->day = $i;
                 }
                     if ($begin_array[$i]) {
-                        $record->begin = strtotime($begin_array[$i]);
+                        $record->begin = strtotime($record->getDate() . ' ' . $begin_array[$i]);
                     }
                     if ($end_array[$i]) {
-                        $record->end = strtotime($end_array[$i]);
+                        $record->end = strtotime($record->getDate() . ' ' . $end_array[$i]);
                     }
                     if ($break_array[$i]) {
                         $record->break = StundenzettelTimesheet::stundenzettel_strtotimespan($break_array[$i]);
