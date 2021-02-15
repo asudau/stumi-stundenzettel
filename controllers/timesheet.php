@@ -269,11 +269,12 @@ class TimesheetController extends StudipController {
     
     public function pdf_action($timesheet_id)
     {
+        
+        $timesheet = StundenzettelTimesheet::find($timesheet_id);
         if ( !($timesheet->contract->user_id == User::findCurrent()->user_id)) {
             throw new AccessDeniedException(_("Sie haben keine Zugriffsberechtigung"));
         }
         
-        $timesheet = StundenzettelTimesheet::find($timesheet_id);
         if($timesheet){
             $timesheet->build_pdf();
         } else {
