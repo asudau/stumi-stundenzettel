@@ -48,7 +48,7 @@ class TimesheetController extends StudipController {
         }
         $this->contract = StundenzettelContract::find($contract_id);
         $this->timesheets = StundenzettelTimesheet::findByContract_id($contract_id, 'ORDER by `year` ASC, `month` ASC'); 
-        $this->stumi = User::find($this->contract->stumi_id);
+        $this->stumi = User::find($this->contract->user_id);
         
         $this->records = StundenzettelRecord::findByTimesheet_Id($timesheet_id, 'ORDER BY day ASC');
         
@@ -156,7 +156,7 @@ class TimesheetController extends StudipController {
         $this->timesheet = StundenzettelTimesheet::find($timesheet_id);  
         $this->days_per_month = cal_days_in_month(CAL_GREGORIAN, $this->timesheet->month, $this->timesheet->year); 
         $this->inst_id = $this->timesheet->contract->inst_id;
-        $this->stumi_id = $this->timesheet->contract->stumi_id;
+        $this->user_id = $this->timesheet->contract->user_id;
         $this->records = StundenzettelRecord::findByTimesheet_Id($timesheet_id, 'ORDER BY day ASC');
         
         if($this->timesheet->locked || $this->adminrole) {
@@ -211,7 +211,7 @@ class TimesheetController extends StudipController {
     {
         
         $timesheet = StundenzettelTimesheet::find($timesheet_id);
-        if ( !($timesheet->contract->stumi_id == User::findCurrent()->user_id)) {
+        if ( !($timesheet->contract->user_id == User::findCurrent()->user_id)) {
             throw new AccessDeniedException(_("Sie haben keine Zugriffsberechtigung"));
         }
         
@@ -269,7 +269,7 @@ class TimesheetController extends StudipController {
     
     public function pdf_action($timesheet_id)
     {
-        if ( !($timesheet->contract->stumi_id == User::findCurrent()->user_id)) {
+        if ( !($timesheet->contract->user_id == User::findCurrent()->user_id)) {
             throw new AccessDeniedException(_("Sie haben keine Zugriffsberechtigung"));
         }
         
@@ -285,7 +285,7 @@ class TimesheetController extends StudipController {
     public function send_action($timesheet_id)
     {
         $timesheet = StundenzettelTimesheet::find($timesheet_id);
-        if ( !($timesheet->contract->stumi_id == User::findCurrent()->user_id)) {
+        if ( !($timesheet->contract->user_id == User::findCurrent()->user_id)) {
             throw new AccessDeniedException(_("Sie haben keine Zugriffsberechtigung"));
         }
         

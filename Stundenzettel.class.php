@@ -106,7 +106,7 @@ class Stundenzettel extends StudipPlugin implements SystemPlugin
     
     public function hasStumiContract ()
     {
-        return StundenzettelContract::findByStumi_id($GLOBALS['user']->user_id);
+        return StundenzettelContract::findByUser_id($GLOBALS['user']->user_id);
     }
     
     public function isStumiSupervisor ()
@@ -117,7 +117,7 @@ class Stundenzettel extends StudipPlugin implements SystemPlugin
     public function can_access_contract_timesheets($contract_id)
     {
         $contract = StundenzettelContract::find($contract_id);
-        if ($contract->supervisor == User::findCurrent()->user_id || $contract->stumi_id == User::findCurrent()->user_id ){
+        if ($contract->supervisor == User::findCurrent()->user_id || $contract->user_id == User::findCurrent()->user_id ){
             return true;
         } else {
             return false;

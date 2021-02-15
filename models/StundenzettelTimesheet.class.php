@@ -155,7 +155,7 @@ class StundenzettelTimesheet extends \SimpleORMap
         //$this->SetTextColor(0,127,75);
         // Page number
         $pdf->SetX(90);
-        $pdf->Write(5, User::find($this->contract->stumi_id)->nachname . ', ' .  User::find($this->contract->stumi_id)->vorname);
+        $pdf->Write(5, User::find($this->contract->user_id)->nachname . ', ' .  User::find($this->contract->user_id)->vorname);
         $pdf->Ln();
         $pdf->SetX(90);
         $pdf->Write(5, my_substr(Institute::find($this->contract->inst_id)->name ,0,50));
@@ -195,7 +195,7 @@ class StundenzettelTimesheet extends \SimpleORMap
         $pdf->Write($line_height, self::stundenzettel_strftimespan($record->timesheet->sum));
   
         $fileid = time();   
-        $pdf->Output( 'Stundenzettel_' . $this->month . '-' . $this->year . '_' . User::find($this->contract->stumi_id)->nachname . '.pdf', 'D');
+        $pdf->Output( 'Stundenzettel_' . $this->month . '-' . $this->year . '_' . User::find($this->contract->user_id)->nachname . '.pdf', 'D');
       
     }
     

@@ -4,7 +4,7 @@
  * @author  <asudau@uos.de>
  *
  * @property varchar       $id
- * @property varchar       $stumi_id
+ * @property varchar       $user_id
  * @property varchar       $inst_id
  * @property int           $contract_hours
  * @property varchar       $supervisor
@@ -115,7 +115,7 @@ class StundenzettelContract extends \SimpleORMap
         
         $config['belongs_to']['stumi'] = [
             'class_name'  => 'User',
-            'foreign_key' => 'stumi_id',];
+            'foreign_key' => 'user_id',];
         
         $config['additional_fields']['default_workday_time']['get'] = function ($item) {
             $workday_hours = floor($item->default_workday_time_in_minutes / 60);
@@ -142,7 +142,7 @@ class StundenzettelContract extends \SimpleORMap
     //Laufzeitüberschneidungen mit bestehenden Verträgen der Einrichtung prüfen
     protected function before_store()
     {
-        $contracts = self::findBySQL('stumi_id = ? AND inst_id = ?', [$this->stumi_id, $this->inst_id]);
+        $contracts = self::findBySQL('user_id = ? AND inst_id = ?', [$this->user_id, $this->inst_id]);
         foreach ($contracts as $contract){
             if ($contract->id != $this->id){
                 if ( (($this->contract_begin < $contract->contract_begin) && ($contract->contract_begin < $this->contract_end)) ||  
@@ -156,7 +156,7 @@ class StundenzettelContract extends \SimpleORMap
     
     static function getCurrentContractId($user_id)
     {
-        $contracts = self::findByStumi_id($user_id);
+        $contracts = self::findByUser_id($user_id);
         $contract_id = '';
         foreach ($contracts as $contract) {
             if (intval($contract->contract_begin) < time() && intval($contract->contract_end) > time()) {
@@ -168,7 +168,7 @@ class StundenzettelContract extends \SimpleORMap
     
     static function getSomeContractId($user_id)
     {
-        $contracts = self::findByStumi_id($user_id);
+        $contracts = self::findByUser_id($user_id);
         return $contracts[0]->id;
     }
     
@@ -185,7 +185,7 @@ class StundenzettelContract extends \SimpleORMap
             return $all_contracts;
         } else {
             foreach ($all_contracts as $contract){
-                if ($contract->stumi_id == User::findCurrent()->user_id || $contract->supervisor == User::findCurrent()->user_id){
+                if ($contract->user_id == User::findCurrent()->user_id || $contract->supervisor == User::findCurrent()->user_id){
                     $contracts[] = $contract;
                 }
             }
@@ -202,7 +202,7 @@ class StundenzettelContract extends \SimpleORMap
         $month_begin = strtotime($year . '-' . $month  . '-01' );
         $month_end = strtotime($year . '-' . $month  . '-28' );
         //$contracts = self::findBySQL('contract_begin < ? AND contract_end > ?', [$end_nextmonth, $begin_lastmonth]);
-        $contract = self::findOneBySQL('stumi_id = ? AND contract_begin < ? AND contract_end > ?', [$user_id, $month_end, $month_begin]);
+        $contract = self::findOneBySQL('user_id = ? AND contract_begin < ? AND contract_end > ?', [$user_id, $month_end, $month_begin]);
         return $contract;
     }
     
@@ -317,8 +317,8 @@ class StundenzettelContract extends \SimpleORMap
             //noch kein Stundenzettel zugeordnet 
             if (!StundenzettelTimesheet::getContractTimesheet($this->id, $month->format('m'), $month->format('Y')) ){
                 //falls einer existiert, ordne ihn diesem Vertrag zu
-                if (StundenzettelTimesheet::findBySQL('`stumi_id` LIKE ? AND `month` LIKE ? AND `year` LIKE ? AND inst_id LIKE ?', [$this->stumi_id, $month->format('n'), $month->format('Y'), $this->inst_id]) ) {
-                    $timesheet = StundenzettelTimesheet::findOneBySQL('`stumi_id` LIKE ? AND `month` LIKE ? AND `year` LIKE ? AND inst_id LIKE ?', [$this->stumi_id, $month->format('n'), $month->format('Y'), $this->inst_id]);
+                if (StundenzettelTimesheet::findBySQL('`user_id` LIKE ? AND `month` LIKE ? AND `year` LIKE ? AND inst_id LIKE ?', [$this->user_id, $month->format('n'), $month->format('Y'), $this->inst_id]) ) {
+                    $timesheet = StundenzettelTimesheet::findOneBySQL('`user_id` LIKE ? AND `month` LIKE ? AND `year` LIKE ? AND inst_id LIKE ?', [$this->user_id, $month->format('n'), $month->format('Y'), $this->inst_id]);
                     $timesheet->contract_id = $this->id;
                     $timesheet->store();
                 //falls die Vergangenheit betroffen ist, lege nachträglich an
@@ -335,7 +335,7 @@ class StundenzettelContract extends \SimpleORMap
 //        $timesheets = StundenzettelTimesheet::findByContract_Id($this->id);
 //        foreach ($timesheets as $timesheet){
 //            if (!$this->monthPartOfContract($timesheet->month, $timesheet->year)){
-//                $matching_contract = $this->getUserContractsByMonth($this->stumi_id, $timesheet->month, $timesheet->year);
+//                $matching_contract = $this->getUserContractsByMonth($this->user_id, $timesheet->month, $timesheet->year);
 //                if($matching_contract){
 //                    $timesheet->contract_id = $matching_contract->id;
 //                    $timesheet->store();

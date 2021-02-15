@@ -21,7 +21,7 @@ class StumiStundenzettelTables extends Migration
         //add db-table for stumis
         $db->exec("CREATE TABLE IF NOT EXISTS `stundenzettel_contracts` (
             `id` int(11) NOT NULL AUTO_INCREMENT,
-            `stumi_id` varchar(32) COLLATE latin1_bin NOT NULL,
+            `user_id` varchar(32) COLLATE latin1_bin NOT NULL,
             `inst_id` varchar(32) COLLATE latin1_bin NOT NULL,
             `contract_hours` int(11) NOT NULL,
             `supervisor` varchar(32) COLLATE latin1_bin NULL,

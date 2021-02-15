@@ -68,7 +68,7 @@ class IndexController extends StudipController {
                     $stumi = User::find($member->user_id);
                     if (!$this->search || strpos(strtolower($stumi->username . ' ' . $stumi->vorname . ' ' . $stumi->nachname), strtolower($this->search))) {
                         $this->stumis[] = $stumi;
-                        $this->stumi_contracts[$member->user_id] = StundenzettelContract::findBySQL('`stumi_id` LIKE ? AND `inst_id` LIKE ?', [$member->user_id, $this->inst_id[0]]);
+                        $this->stumi_contracts[$member->user_id] = StundenzettelContract::findBySQL('`user_id` LIKE ? AND `inst_id` LIKE ?', [$member->user_id, $this->inst_id[0]]);
                     }
                 }
             }
@@ -79,10 +79,10 @@ class IndexController extends StudipController {
             //get stumis for this user
             $stumi_contracts = StundenzettelContract::findBySupervisor(User::findCurrent()->user_id);
             foreach($stumi_contracts as $contract){
-                if(!in_array($contract->stumi_id, $this->stumi_ids)){
-                    $this->stumi_ids[] = $contract->stumi_id;
-                    $this->stumis[] = User::find($contract->stumi_id);
-                    $this->stumi_contracts[$contract->stumi_id] = StundenzettelContract::findBySQL('`stumi_id` LIKE ? AND `supervisor` LIKE ?', [$contract->stumi_id, User::findCurrent()->user_id]);
+                if(!in_array($contract->user_id, $this->user_ids)){
+                    $this->user_ids[] = $contract->user_id;
+                    $this->stumis[] = User::find($contract->user_id);
+                    $this->stumi_contracts[$contract->user_id] = StundenzettelContract::findBySQL('`user_id` LIKE ? AND `supervisor` LIKE ?', [$contract->user_id, User::findCurrent()->user_id]);
                 }
             }   
             //setup navigation
@@ -107,14 +107,14 @@ class IndexController extends StudipController {
         } 
     }
     
-    public function new_action($inst_id, $stumi_id)
+    public function new_action($inst_id, $user_id)
     {   
         if ( !$this->adminrole ) {
             throw new AccessDeniedException(_("Sie haben keine Zugriffsberechtigung"));
         }
         
         $this->inst_id = $inst_id;
-        $this->stumi = User::find($stumi_id);
+        $this->stumi = User::find($user_id);
         
         $this->search = QuickSearch::get('user_id', new StandardSearch('user_id'))
             ->withButton(array('search_button_name' => 'search_user', 'reset_button_name' => 'reset_search'))
@@ -149,10 +149,10 @@ class IndexController extends StudipController {
         }
         
         $this->contract = StundenzettelContract::find($contract_id);
-        $this->stumi = User::find($this->contract->stumi_id);
+        $this->stumi = User::find($this->contract->user_id);
     }
     
-    public function save_action($inst_id, $stumi_id, $contract_id = NULL)
+    public function save_action($inst_id, $user_id, $contract_id = NULL)
     {   
         if ( !$this->adminrole ) {
             throw new AccessDeniedException(_("Sie haben keine Zugriffsberechtigung"));
@@ -168,7 +168,7 @@ class IndexController extends StudipController {
 
         //get all stumis an contracts
         $contract->inst_id = $inst_id;
-        $contract->stumi_id = $stumi_id;
+        $contract->user_id = $user_id;
         $contract->contract_begin = strtotime(Request::get('begin'));
         $contract->contract_end = strtotime(Request::get('end'));
         $contract->contract_hours = Request::get('hours');
