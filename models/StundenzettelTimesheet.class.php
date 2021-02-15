@@ -4,9 +4,7 @@
  * @author  <asudau@uos.de>
  *
  * @property varchar       $id
- * @property varchar       $stumi_id
  * @property varchar       $contract_id
- * @property varchar       $inst_id
  * @property int           $month
  * @property int           $year
  * @property tinyint       $finished
@@ -157,10 +155,10 @@ class StundenzettelTimesheet extends \SimpleORMap
         //$this->SetTextColor(0,127,75);
         // Page number
         $pdf->SetX(90);
-        $pdf->Write(5, User::find($this->stumi_id)->nachname . ', ' .  User::find($this->stumi_id)->vorname);
+        $pdf->Write(5, User::find($this->contract->stumi_id)->nachname . ', ' .  User::find($this->contract->stumi_id)->vorname);
         $pdf->Ln();
         $pdf->SetX(90);
-        $pdf->Write(5, my_substr(Institute::find($this->inst_id)->name ,0,50));
+        $pdf->Write(5, my_substr(Institute::find($this->contract->inst_id)->name ,0,50));
         $pdf->Ln();
         $pdf->SetX(90);
         $pdf->Write(6, $this->month . '/' . $this->year);
@@ -197,7 +195,7 @@ class StundenzettelTimesheet extends \SimpleORMap
         $pdf->Write($line_height, self::stundenzettel_strftimespan($record->timesheet->sum));
   
         $fileid = time();   
-        $pdf->Output( 'Stundenzettel_' . $this->month . '-' . $this->year . '_' . User::find($this->stumi_id)->nachname . '.pdf', 'D');
+        $pdf->Output( 'Stundenzettel_' . $this->month . '-' . $this->year . '_' . User::find($this->contract->stumi_id)->nachname . '.pdf', 'D');
       
     }
     
