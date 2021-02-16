@@ -277,6 +277,7 @@ class TimesheetController extends StudipController {
         
         if($timesheet){
             $timesheet->build_pdf();
+            $this->render_nothing();
         } else {
             PageLayout::postMessage(MessageBox::success(_("Stundenzettel konnte nicht generiert werden.")));
             $this->redirect('timesheet/index');
