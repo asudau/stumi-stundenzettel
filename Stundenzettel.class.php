@@ -21,11 +21,11 @@ class Stundenzettel extends StudipPlugin implements SystemPlugin
         global $perm;
 
         //Personen mit Verwaltungsrolle für Stumis oder Stumis mit in StudIP hinterlegtem Arbeitsvertrag
-        if( $this->hasStumiContract () ){
+        if( $GLOBALS['perm']->have_perm('tutor') && $this->hasStumiContract () ){
             $this->setupStundenzettelNavigation();
-        } else if( $this->hasStumiAdminrole() ) {
+        } else if( $GLOBALS['perm']->have_perm('dozent') && $this->hasStumiAdminrole() ) {
             $this->setupAdminNavigation();
-        } else if ($this->isStumiSupervisor()) {
+        } else if ($GLOBALS['perm']->have_perm('dozent') && $this->isStumiSupervisor()) {
             $this->setupSupervisorNavigation();
         }
     }
