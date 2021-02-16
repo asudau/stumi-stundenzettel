@@ -73,7 +73,13 @@ class StumiStundenzettelTables extends Migration
         $db->exec("DROP TABLE stundenzettel_contracts");
         $db->exec("DROP TABLE stundenzettel_timesheets");
         $db->exec("DROP TABLE stundenzettel_records");
-
+        
+       $roles = RolePersistence::getAllRoles();
+       foreach($roles as $role) {
+            if($role->getRolename() == \Stundenzettelverwaltung\STUNDENVERWALTUNG_ROLE) {
+                RolePersistence::deleteRole($role);
+            }
+        }
         SimpleORMap::expireTableScheme();
     }
 }
