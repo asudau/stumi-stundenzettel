@@ -324,9 +324,9 @@ class StundenzettelContract extends \SimpleORMap
 //                    $timesheet->contract_id = $this->id;
 //                    $timesheet->store();
                 //falls die Vergangenheit betroffen ist, lege nachträglich an
-                } else if ($month->getTimestamp() < time()){
-                    $this->add_timesheet($month->format('n'), $month->format('Y'));
-                }
+//                } else if ($month->getTimestamp() < time()){
+//                    $this->add_timesheet($month->format('n'), $month->format('Y'));
+//                }
             }
             $month->modify('+1 month');
         }
