@@ -317,10 +317,12 @@ class StundenzettelContract extends \SimpleORMap
             //noch kein Stundenzettel zugeordnet 
             if (!StundenzettelTimesheet::getContractTimesheet($this->id, $month->format('m'), $month->format('Y')) ){
                 //falls einer existiert, ordne ihn diesem Vertrag zu
-                if (StundenzettelTimesheet::findBySQL('`user_id` LIKE ? AND `month` LIKE ? AND `year` LIKE ? AND inst_id LIKE ?', [$this->user_id, $month->format('n'), $month->format('Y'), $this->inst_id]) ) {
-                    $timesheet = StundenzettelTimesheet::findOneBySQL('`user_id` LIKE ? AND `month` LIKE ? AND `year` LIKE ? AND inst_id LIKE ?', [$this->user_id, $month->format('n'), $month->format('Y'), $this->inst_id]);
-                    $timesheet->contract_id = $this->id;
-                    $timesheet->store();
+                
+                //TODO: bestehende Timesheets über Verträge finden
+//                if (StundenzettelTimesheet::findBySQL('`user_id` LIKE ? AND `month` LIKE ? AND `year` LIKE ? AND inst_id LIKE ?', [$this->user_id, $month->format('n'), $month->format('Y'), $this->inst_id]) ) {
+//                    $timesheet = StundenzettelTimesheet::findOneBySQL('`user_id` LIKE ? AND `month` LIKE ? AND `year` LIKE ? AND inst_id LIKE ?', [$this->user_id, $month->format('n'), $month->format('Y'), $this->inst_id]);
+//                    $timesheet->contract_id = $this->id;
+//                    $timesheet->store();
                 //falls die Vergangenheit betroffen ist, lege nachträglich an
                 } else if ($month->getTimestamp() < time()){
                     $this->add_timesheet($month->format('n'), $month->format('Y'));
