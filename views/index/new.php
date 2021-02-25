@@ -11,40 +11,35 @@ use Studip\Button, Studip\LinkButton;
         <input type='hidden' name ='following_contract' value='true' >
     <? endif ?>
     
-
-    <label>
-        <h2><?= _('Name: ') ?> <?=htmlready($stumi->vorname)?> <?=htmlready($stumi->nachname)?></h2>
-    </label>
-
-
+    <h2><?= _('Name: ') ?> <?=htmlready($stumi->vorname)?> <?=htmlready($stumi->nachname)?></h2>
 
     <label>
         <?= _('Vertragsbeginn') ?>
-    </label>
-    <input type='date' class='size-l' 
+    
+        <input type='date' class='size-l' 
            <? if ($following_contract) : ?>
             min="<?= date('Y-m-d', strtotime('+1 day', $contract->contract_end)) ?>" 
             name="begin" value='<?= ($contract) ? date('Y-m-d', strtotime('+1 day', $contract->contract_end)) : ''?>' >
            <? else : ?>
             name="begin" value='<?= ($contract) ? date('Y-m-d', $contract->contract_begin) : ''?>' >
            <? endif ?>
-           </input>
+    </label>
 
     <label>
         <?= _('Vertragsende') ?>
-    </label>
-    <input type='date' class='size-l'
+        <input type='date' class='size-l'
            name="end" value='<?= ($contract && !$following_contract) ? date('Y-m-d', $contract->contract_end) : ''?>' >
+    </label>
 
     <label>
         <?= _('Stundenumfang') ?>
+        <input type='text' name="hours" placeholder='00:00' value='<?= ($contract) ? htmlready($contract->contract_hours) : ''?>'>
     </label>
-    <input type='text' name="hours" placeholder='00:00' value='<?= ($contract) ? htmlready($contract->contract_hours) : ''?>'>
 
     <label>
         <?= _('Verantwortliche/r Mitarbeiter/in') ?>
+        <?= $search ?>
     </label>
-    <?= $search ?>
               
     
     <footer data-dialog-button>
