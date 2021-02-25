@@ -43,12 +43,12 @@ class IndexController extends StudipController {
 
         if ($this->adminrole) {
             
-            $this->search = isset($_GET['search_user'])? studip_utf8encode($_GET['search_user']) : '';
+            $this->search = isset($_GET['search_user'])? $_GET['search_user'] : '';
         
             $search_user = new SearchWidget($this->url_for('index/'));
             $search_user->setTitle('Nutzer suchen');
             
-            $search_user->addNeedle(_('Name'), 'search_user', true, null, null, studip_utf8decode($this->search));
+            $search_user->addNeedle(_('Name'), 'search_user', true, null, null, $this->search);
             Sidebar::get()->addWidget($search_user);
             
             //get institutes for the user
