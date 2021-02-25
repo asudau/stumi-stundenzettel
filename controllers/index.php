@@ -43,7 +43,7 @@ class IndexController extends StudipController {
 
         if ($this->adminrole) {
             
-            $this->search = isset($_GET['search_user'])? $_GET['search_user'] : '';
+            $this->search = isset(Request::get('search_user'))? Request::get('search_user') : '';
         
             $search_user = new SearchWidget($this->url_for('index/'));
             $search_user->setTitle('Nutzer suchen');
