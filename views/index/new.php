@@ -21,7 +21,7 @@ use Studip\Button, Studip\LinkButton;
         <label>
             <?= _('Vertragsbeginn') ?>
         </label>
-        <input type='date' style='max-width: 9em;' 
+        <input type='date' class='size-l' 
                <? if ($following_contract) : ?>
                 min="<?= date('Y-m-d', strtotime('+1 day', $contract->contract_end)) ?>" 
                 name="begin" value='<?= ($contract) ? date('Y-m-d', strtotime('+1 day', $contract->contract_end)) : ''?>' >
@@ -35,7 +35,7 @@ use Studip\Button, Studip\LinkButton;
         <label>
             <?= _('Vertragsende') ?>
         </label>
-        <input type='date' style='max-width: 9em;' 
+        <input type='date' class='size-l'
                name="end" value='<?= ($contract && !$following_contract) ? date('Y-m-d', $contract->contract_end) : ''?>' >
     </section>
     
