@@ -1,11 +1,8 @@
-<html>
-
-<body>
 <div>
-<?php if (!$contract->id) : ?>   
+<? if (!$contract->id) : ?>   
     <h1> Diese Ansicht fehlt noch, Für die Übersicht über Stundenzettel einer Person, einfach die Person anklicken. </h1>
     
-<?php elseif ($adminrole || $supervisorrole) : ?>    
+<? elseif ($adminrole || $supervisorrole) : ?>    
     <? $role = ($adminrole) ? 'admin' : 'supervisor' ?>
     <h1> <?= htmlready($stumi->nachname) ?>, <?= htmlready($stumi->vorname) ?> </h1>
     Vertragslaufzeit: <?= date('d.m.Y', $contract->contract_begin) ?> bis <?= date('d.m.Y', $contract->contract_end) ?>
@@ -20,8 +17,8 @@
             </tr>
         </thead>
         <tbody>
-            <?php if ($timesheets) : ?>
-                <?php foreach ($timesheets as $timesheet): ?>
+            <? if ($timesheets) : ?>
+                <? foreach ($timesheets as $timesheet): ?>
                 <tr>  
                     <td><a href='<?=$this->controller->url_for('timesheet/timesheet/' . htmlready($timesheet->id)) ?>' title='Stundenzettel editieren'><?= htmlready($timesheet->month) ?>/<?= htmlready($timesheet->year) ?></a>
                     </td>
@@ -34,12 +31,12 @@
                         <?= Icon::create($status_infos['complete']['icon'], $status_infos[$timesheet->getCurrentState('complete', $role) . '_icon_role'], ['title' =>  $status_infos['complete'][$timesheet->getCurrentState('complete', $role) . '_tooltip']] )?>
                     </td>
                 </tr>
-                <?php endforeach ?>
+                <? endforeach ?>
             <? endif ?>
         </tbody>
     </table>
     
-<?php elseif ($stumirole) : ?>
+<? elseif ($stumirole) : ?>
     <h1> Vertragslaufzeit: <?= date('d.m.Y', $contract->contract_begin) ?> bis <?= date('d.m.Y', $contract->contract_end) ?> </h1>
 
     <table id='stumi-timesheet-entries' class="sortable-table default">
@@ -52,8 +49,8 @@
             </tr>
         </thead>
         <tbody>
-            <?php if ($timesheets) : ?>
-                <?php foreach ($timesheets as $timesheet): ?>
+            <? if ($timesheets) : ?>
+                <? foreach ($timesheets as $timesheet): ?>
                 <tr>  
                     <td><a href='<?=$this->controller->url_for('timesheet/timesheet/' . htmlready($timesheet->id)) ?>' title='Stundenzettel editieren'><?= htmlready($timesheet->month) ?>/<?= htmlready($timesheet->year) ?></a>
                     </td>
@@ -66,12 +63,12 @@
                         <?= Icon::create($status_infos['complete']['icon'], $status_infos[$timesheet->getCurrentState('complete', 'stumi') . '_icon_role'], ['title' =>  $status_infos['complete'][$timesheet->getCurrentState('complete', 'stumi') . '_tooltip']] )?>
                     </td>
                 </tr>
-                <?php endforeach ?>
+                <? endforeach ?>
             <? endif ?>
         </tbody>
     </table>
 
-<?php endif ?>    
+<? endif ?>    
     
 </div>
 

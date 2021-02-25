@@ -36,14 +36,14 @@ use Studip\Button, Studip\LinkButton;
             <?= _('Vertragsende') ?>
         </label>
         <input type='date' style='max-width: 9em;' 
-               name="end" value='<?= ($contract && !$following_contract) ? date('Y-m-d', $contract->contract_end) : ''?>' ></input>
+               name="end" value='<?= ($contract && !$following_contract) ? date('Y-m-d', $contract->contract_end) : ''?>' >
     </section>
     
     <section>
         <label>
             <?= _('Stundenumfang') ?>
         </label>
-        <input type='text' name="hours" placeholder='00:00' value='<?= ($contract) ? htmlready($contract->contract_hours) : ''?>'></input>
+        <input type='text' name="hours" placeholder='00:00' value='<?= ($contract) ? htmlready($contract->contract_hours) : ''?>'>
     </section>
     
     <section>

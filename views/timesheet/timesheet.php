@@ -6,26 +6,26 @@ use Studip\Button, Studip\LinkButton;
     Speichern wegen fehlerhafter Werte nicht möglich. Bitte überprüfe deine Eingaben.
 </div>
 
-<?php if ($no_timesheet) : ?>
+<? if ($no_timesheet) : ?>
     <p>Name, Vorname: <b><?= htmlready(User::find($contract->user_id)->nachname) ?>, <?= htmlready(User::find($contract->user_id)->vorname) ?></b></p>
     <p>Fachbereich/Organisationseinheit: <b><?= htmlready(Institute::find($contract->inst_id)->name) ?></b></p>
 
     <p>Monat/Jahr: 
         <form name="month_select" method="post"  action="<?= $controller->url_for('timesheet/select/' . htmlready($contract->id)) ?>">
             <select name ='month' onchange="this.form.submit()">
-                <?php foreach ($plugin->getMonths() as $entry_value): ?>
+                <? foreach ($plugin->getMonths() as $entry_value): ?>
                     <option <?= ($month == $entry_value) ? 'selected' : '' ?> value="<?=htmlready($entry_value)?>"><?= htmlready($entry_value) ?></option>
-                <?php endforeach ?>
+                <? endforeach ?>
             </select>
             <select  name ='year' onchange="this.form.submit()">
-                <?php foreach ($plugin->getYears() as $entry_value): ?>
+                <? foreach ($plugin->getYears() as $entry_value): ?>
                     <option <?= ($year == $entry_value) ? 'selected' : '' ?> value="<?=htmlready($entry_value)?>"><?= htmlready($entry_value) ?></option>
-                <?php endforeach ?>
+                <? endforeach ?>
             </select>
         </form>
     </p>
     
-<?php elseif ($stumirole || $timesheet->finished): ?>
+<? elseif ($stumirole || $timesheet->finished): ?>
     
     <p>Name, Vorname: <b><?= htmlready(User::find($timesheet->contract->user_id)->nachname) ?>, <?= htmlready(User::find($timesheet->contract->user_id)->vorname) ?></b></p>
     <p>Fachbereich/Organisationseinheit: <b><?= htmlready(Institute::find($inst_id)->name) ?></b></p>
@@ -34,14 +34,14 @@ use Studip\Button, Studip\LinkButton;
     <p>Monat/Jahr: 
         <form name="month_select" method="post"  action="<?= $controller->url_for('timesheet/select/' . htmlready($timesheet->contract_id)) ?>">
             <select name ='month' onchange="this.form.submit()">
-                <?php foreach ($plugin->getMonths() as $entry_value): ?>
+                <? foreach ($plugin->getMonths() as $entry_value): ?>
                     <option <?= ($timesheet->month == $entry_value) ? 'selected' : '' ?> value="<?=htmlready($entry_value)?>"><?= htmlready($entry_value) ?></option>
-                <?php endforeach ?>
+                <? endforeach ?>
             </select>
             <select  name ='year' onchange="this.form.submit()">
-                <?php foreach ($plugin->getYears() as $entry_value): ?>
+                <? foreach ($plugin->getYears() as $entry_value): ?>
                     <option <?= ($timesheet->year == $entry_value) ? 'selected' : '' ?> value="<?=htmlready($entry_value)?>"><?= htmlready($entry_value) ?></option>
-                <?php endforeach ?>
+                <? endforeach ?>
             </select>
         </form>
     </p> 
@@ -65,12 +65,12 @@ use Studip\Button, Studip\LinkButton;
                 
             </tr>
 
-            <?php $j = 0; ?>
+            <? $j = 0; ?>
          
-            <?php for ($i = 1; $i <= $days_per_month; $i++) : ?>
+            <? for ($i = 1; $i <= $days_per_month; $i++) : ?>
             
 <!--                für diesen Tag liegt bereits ein Eintrag vor       -->
-                <?php if ($records[$j]['day'] == $i ) : ?>
+                <? if ($records[$j]['day'] == $i ) : ?>
                     <? $holiday = $records[$j]->isHoliday(); ?>
                     <? $weekend = $records[$j]->isWeekend(); ?>
                     <? $date = $records[$j]->getDate(); ?>
@@ -107,22 +107,22 @@ use Studip\Button, Studip\LinkButton;
                            <? if (!$uni_closed || $holiday || $weekend) : ?>
                            <select <?= ($holiday || $weekend)? 'disabled' : ''?> class='defined_comment' name ='defined_comment[<?= $i ?>]'>
                                 <option value=""> -- </option>
-                                <?php foreach ($plugin->getCommentOptions() as $entry_value): ?>
+                                <? foreach ($plugin->getCommentOptions() as $entry_value): ?>
                                     <option 
                                     <?= ($records[$j]['defined_comment'] == $entry_value) ? 'selected' : ''?> 
                                     <?= ($entry_value == 'Feiertag') ? 'disabled' : '' ?> 
                                     <?= (!$is_editable && $entry_value == 'Krank') ? 'disabled' : '' ?>  
                                         value="<?=htmlready($entry_value)?>"><?= htmlready($entry_value) ?></option>
-                                <?php endforeach ?>
+                                <? endforeach ?>
                             </select>
                            <? else : ?>
                             <select class='defined_comment' name ='defined_comment[<?= $i ?>]'>
                                 <option value=""> -- </option>
-                                <?php foreach ($plugin->getCommentOptions() as $entry_value): ?>
+                                <? foreach ($plugin->getCommentOptions() as $entry_value): ?>
                                     <option 
                                         <?= ($records[$j]['defined_comment'] == $entry_value) ? 'selected' : ''?> 
                                         <?= ($entry_value == 'Urlaub' || $entry_value == 'Krank') ? '' : 'disabled' ?> value="<?=htmlready($entry_value)?>"><?= htmlready($entry_value) ?></option>
-                                <?php endforeach ?>
+                                <? endforeach ?>
                             </select>
                             <? endif ?>
                         </td>
@@ -135,10 +135,10 @@ use Studip\Button, Studip\LinkButton;
                             <? endif ?>
                         </td>
                     </tr>
-                    <?php $j++; ?>
+                    <? $j++; ?>
                     
 <!--                für diesen Tag liegt noch kein Eintrag vor       -->
-                <?php else: ?>
+                <? else: ?>
                     <? $date = $i . '.' . $timesheet->month . '.'  . $timesheet->year; ?>
                     <? $weekend = StundenzettelRecord::isDateWeekend($date); ?>
                     <? $holiday = StundenzettelRecord::isDateHoliday($date); ?>
@@ -178,23 +178,23 @@ use Studip\Button, Studip\LinkButton;
                             <? if (!$uni_closed || $holiday || $weekend) : ?>
                            <select <?= ($holiday || $weekend)? 'disabled' : ''?> class='defined_comment' name ='defined_comment[<?= $i ?>]'>
                                 <option <?= ($holiday) ? '' : 'selected' ?> value=""> -- </option>
-                                <?php foreach ($plugin->getCommentOptions() as $entry_value): ?>
+                                <? foreach ($plugin->getCommentOptions() as $entry_value): ?>
                                     <option 
                                         <?= ($holiday && ($entry_value == 'Feiertag')) ? 'selected' : ''?> 
                                         <?= ($entry_value == 'Feiertag') ? 'disabled' : '' ?> 
                                         <?= (!$is_editable && $entry_value == 'Krank') ? 'disabled' : '' ?> 
                                         value="<?= htmlready($entry_value)?>"><?= htmlready($entry_value) ?>
                                     </option>
-                                <?php endforeach ?>
+                                <? endforeach ?>
                             </select>
 <!--                        falls die Uni geschlossen ist          -->
                             <? else : ?>
                             <select class='defined_comment' name ='defined_comment[<?= $i ?>]'>
                                 <option selected value=""> -- </option>
-                                <?php foreach ($plugin->getCommentOptions() as $entry_value): ?>
+                                <? foreach ($plugin->getCommentOptions() as $entry_value): ?>
                                     <option 
                                         <?= ($entry_value == 'Urlaub') ? '' : 'disabled' ?> value="<?= htmlready($entry_value) ?>"><?= htmlready($entry_value) ?></option>
-                                <?php endforeach ?>
+                                <? endforeach ?>
                             </select>
                             <? endif ?>
                         </td>
@@ -204,8 +204,8 @@ use Studip\Button, Studip\LinkButton;
                          <td>
                         </td>
                     </tr>
-                <?php endif ?>
-            <?php endfor ?>
+                <? endif ?>
+            <? endfor ?>
                 <tr>
                     <td></td>
                     <td>Summe:</td>

@@ -1,9 +1,6 @@
-<html>
-
-<body>
 <div>
     
-<?php if ($adminrole || $supervisorrole) : ?>    
+<? if ($adminrole || $supervisorrole) : ?>    
     <h> <?= htmlready(Institute::find($inst_id[0])->name) ?>: <?= sizeof($stumis) ?> Studentische MitarbeiterInnen </h1>
 
     <table id='stumi-contract-entries' class="sortable-table default">
@@ -23,9 +20,9 @@
             </tr>
         </thead>
         <tbody>
-        <?php foreach ($stumis as $stumi): ?>
-            <?php if ($stumi_contracts[$stumi->user_id]) : ?>
-                <?php foreach ($stumi_contracts[$stumi->user_id] as $contract): ?>
+        <? foreach ($stumis as $stumi): ?>
+            <? if ($stumi_contracts[$stumi->user_id]) : ?>
+                <? foreach ($stumi_contracts[$stumi->user_id] as $contract): ?>
                 <tr>  
                     <td><a href='<?=$this->controller->url_for('timesheet/index/' . htmlready($contract->id)) ?>' title='Stundenzettel einsehen'><?= htmlready($stumi->nachname) ?>, <?= htmlready($stumi->vorname) ?></a>
                     </td>
@@ -53,9 +50,9 @@
                     </td>
 
                 </tr>
-                <?php endforeach ?>
+                <? endforeach ?>
 
-           <?php else : ?>
+           <? else : ?>
                 <tr> 
                     <td><?= htmlready($stumi->nachname) ?>, <?= htmlready($stumi->vorname) ?>
                     </td>
@@ -73,13 +70,13 @@
                     </td>
                     </tr>
 
-            <?php endif ?>
-        <?php endforeach ?>
+            <? endif ?>
+        <? endforeach ?>
 
         </tbody>
     </table>
     
-<?php elseif ($stumirole) : ?>
+<? elseif ($stumirole) : ?>
     <h> Meine Verträge </h1>
     <table id='stumi-contract-entries' class="sortable-table default">
         <thead>
@@ -94,7 +91,7 @@
             </tr>
         </thead>
         <tbody>
-            <?php foreach ($stumi_contracts as $contract): ?>
+            <? foreach ($stumi_contracts as $contract): ?>
                 <tr>
                     <td><?= htmlready(Institute::find($contract->inst_id)->name) ?></td>
                     <td><?= date('d.m.Y', $contract->contract_begin) ?></td>
@@ -104,11 +101,11 @@
                     <td><?= htmlready(StundenzettelTimesheet::stundenzettel_strftimespan($contract->getRemainingVacation(date('Y', time())))) ?>/<?= htmlready($contract->getVacationEntitlement(date('Y', time()))) ?></td>
                     <td><?= htmlready(User::findOneByUser_Id($contract->supervisor)->username) ?></td>
                 </tr>
-            <?php endforeach ?>
+            <? endforeach ?>
         </tbody>
     </table>
 
-<?php endif ?>    
+<? endif ?>    
     
 </div>
 

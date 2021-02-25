@@ -19,14 +19,14 @@ use Studip\Button, Studip\LinkButton;
             <?= _('Beginn der digitalen Stundenerfassung ab: Monat und Jahr') ?>
         </label>
         <select name ='begin_month' required>
-            <?php foreach ($plugin->getMonths() as $entry_value): ?>
+            <? foreach ($plugin->getMonths() as $entry_value): ?>
                 <option <?= ($contract->begin_digital_recording_month == $entry_value) ? 'selected' : '' ?> value="<?= htmlready($entry_value)?>"><?= htmlready($entry_value) ?></option>
-            <?php endforeach ?>
+            <? endforeach ?>
         </select>
         <select  name ='begin_year' required>
-            <?php foreach ($plugin->getYears() as $entry_value): ?>
+            <? foreach ($plugin->getYears() as $entry_value): ?>
                 <option <?= ($contract->begin_digital_recording_year == $entry_value) ? 'selected' : '' ?> value="<?=htmlready($entry_value)?>"><?= htmlready($entry_value) ?></option>
-            <?php endforeach ?>
+            <? endforeach ?>
         </select>
     </section>
     
@@ -34,14 +34,14 @@ use Studip\Button, Studip\LinkButton;
         <label>
             <?= _('Bereits beanspruchter Urlaub im laufenden Jahr:') ?>
         </label>
-        <input type='text' pattern="<?= $balance_pattern ?>" required name="vacation_claimed" placeholder='hh:mm' value='<?= ($contract->begin_vacation_claimed) ? htmlready(StundenzettelTimesheet::stundenzettel_strftimespan($contract->begin_vacation_claimed)) : ''?>' ></input>
+        <input type='text' pattern="<?= $balance_pattern ?>" required name="vacation_claimed" placeholder='hh:mm' value='<?= ($contract->begin_vacation_claimed) ? htmlready(StundenzettelTimesheet::stundenzettel_strftimespan($contract->begin_vacation_claimed)) : ''?>'>
     </section>
     
     <section>
         <label>
             <?= _('Stundenkonto zu Beginn der digitalen Aufzeichnung:') ?>
         </label>
-        <input type='text' pattern="<?= $balance_pattern ?>" required name="balance" placeholder='(-)hh:mm' value='<?= ($contract->begin_balance) ? htmlready(StundenzettelTimesheet::stundenzettel_strftimespan($contract->begin_balance)) : ''?>'></input>
+        <input type='text' pattern="<?= $balance_pattern ?>" required name="balance" placeholder='(-)hh:mm' value='<?= ($contract->begin_balance) ? htmlready(StundenzettelTimesheet::stundenzettel_strftimespan($contract->begin_balance)) : ''?>'>
     </section>
 
     <footer data-dialog-button>

@@ -1,9 +1,6 @@
-<html>
-
-<body>
 <div>
 
-<?php if ($adminrole || $supervisorrole) : ?>    
+<? if ($adminrole || $supervisorrole) : ?>    
     <h1>Status aktuelle Stundenzettel  </h1>
 
 
@@ -18,8 +15,8 @@
             </tr>
         </thead>
         <tbody>
-            <?php if ($contracts) : ?>
-                <?php foreach ($contracts as $contract): ?>
+            <? if ($contracts) : ?>
+                <? foreach ($contracts as $contract): ?>
                 <tr>  
                     <? $timesheet_last_month = $timesheets[$contract->id]['last_month']; ?>
                     <? $timesheet_next_month = $timesheets[$contract->id]['next_month']; ?>
@@ -56,12 +53,12 @@
                         <? endif ?>
                     </td>
                 </tr>
-                <?php endforeach ?>
+                <? endforeach ?>
             <? endif ?>
         </tbody>
     </table>
     
-<?php endif ?>    
+<? endif ?>    
     
 </div>
 
