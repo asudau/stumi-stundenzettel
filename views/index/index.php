@@ -1,7 +1,7 @@
 <div>
     
 <? if ($adminrole || $supervisorrole) : ?>    
-    <h> <?= htmlready(Institute::find($inst_id[0])->name) ?>: <?= sizeof($stumis) ?> Studentische MitarbeiterInnen </h1>
+    <h2> <?= htmlready(Institute::find($inst_id[0])->name) ?>: <?= sizeof($stumis) ?> Studentische MitarbeiterInnen </h2>
 
     <table id='stumi-contract-entries' class="sortable-table default">
         <thead>
@@ -77,7 +77,7 @@
     </table>
     
 <? elseif ($stumirole) : ?>
-    <h> Meine Verträge </h1>
+    <h2> Meine Verträge </h2>
     <table id='stumi-contract-entries' class="sortable-table default">
         <thead>
             <tr>

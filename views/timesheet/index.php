@@ -1,10 +1,10 @@
 <div>
 <? if (!$contract->id) : ?>   
-    <h1> Diese Ansicht fehlt noch, Für die Übersicht über Stundenzettel einer Person, einfach die Person anklicken. </h1>
+    <h2> Diese Ansicht fehlt noch, Für die Übersicht über Stundenzettel einer Person, einfach die Person anklicken. </h2>
     
 <? elseif ($adminrole || $supervisorrole) : ?>    
     <? $role = ($adminrole) ? 'admin' : 'supervisor' ?>
-    <h1> <?= htmlready($stumi->nachname) ?>, <?= htmlready($stumi->vorname) ?> </h1>
+    <h2> <?= htmlready($stumi->nachname) ?>, <?= htmlready($stumi->vorname) ?> </h2>
     Vertragslaufzeit: <?= date('d.m.Y', $contract->contract_begin) ?> bis <?= date('d.m.Y', $contract->contract_end) ?>
 
     <table id='stumi-timesheet-entries' class="sortable-table default">
@@ -37,7 +37,7 @@
     </table>
     
 <? elseif ($stumirole) : ?>
-    <h1> Vertragslaufzeit: <?= date('d.m.Y', $contract->contract_begin) ?> bis <?= date('d.m.Y', $contract->contract_end) ?> </h1>
+    <h2> Vertragslaufzeit: <?= date('d.m.Y', $contract->contract_begin) ?> bis <?= date('d.m.Y', $contract->contract_end) ?> </h2>
 
     <table id='stumi-timesheet-entries' class="sortable-table default">
         <thead>

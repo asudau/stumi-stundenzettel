@@ -1,7 +1,7 @@
 <div>
 
 <? if ($adminrole || $supervisorrole) : ?>    
-    <h1>Status aktuelle Stundenzettel  </h1>
+    <h2>Status aktuelle Stundenzettel  </h2>
 
 
     <table id='stumi-timesheet-entries' class="sortable-table default">
