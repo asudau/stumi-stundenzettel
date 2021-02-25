@@ -11,47 +11,41 @@ use Studip\Button, Studip\LinkButton;
         <input type='hidden' name ='following_contract' value='true' >
     <? endif ?>
     
-    <section>
-        <label>
-            <h2><?= _('Name: ') ?> <?=htmlready($stumi->vorname)?> <?=htmlready($stumi->nachname)?></h2>
-        </label>
-    </section>
-    
-    <section>
-        <label>
-            <?= _('Vertragsbeginn') ?>
-        </label>
-        <input type='date' class='size-l' 
-               <? if ($following_contract) : ?>
-                min="<?= date('Y-m-d', strtotime('+1 day', $contract->contract_end)) ?>" 
-                name="begin" value='<?= ($contract) ? date('Y-m-d', strtotime('+1 day', $contract->contract_end)) : ''?>' >
-               <? else : ?>
-                name="begin" value='<?= ($contract) ? date('Y-m-d', $contract->contract_begin) : ''?>' >
-               <? endif ?>
-               </input>
-    </section>
-    
-    <section>
-        <label>
-            <?= _('Vertragsende') ?>
-        </label>
-        <input type='date' class='size-l'
-               name="end" value='<?= ($contract && !$following_contract) ? date('Y-m-d', $contract->contract_end) : ''?>' >
-    </section>
-    
-    <section>
-        <label>
-            <?= _('Stundenumfang') ?>
-        </label>
-        <input type='text' name="hours" placeholder='00:00' value='<?= ($contract) ? htmlready($contract->contract_hours) : ''?>'>
-    </section>
-    
-    <section>
-        <label>
-            <?= _('Verantwortliche/r Mitarbeiter/in') ?>
-        </label>
-        <?= $search ?>
-    </section>                
+
+    <label>
+        <h2><?= _('Name: ') ?> <?=htmlready($stumi->vorname)?> <?=htmlready($stumi->nachname)?></h2>
+    </label>
+
+
+
+    <label>
+        <?= _('Vertragsbeginn') ?>
+    </label>
+    <input type='date' class='size-l' 
+           <? if ($following_contract) : ?>
+            min="<?= date('Y-m-d', strtotime('+1 day', $contract->contract_end)) ?>" 
+            name="begin" value='<?= ($contract) ? date('Y-m-d', strtotime('+1 day', $contract->contract_end)) : ''?>' >
+           <? else : ?>
+            name="begin" value='<?= ($contract) ? date('Y-m-d', $contract->contract_begin) : ''?>' >
+           <? endif ?>
+           </input>
+
+    <label>
+        <?= _('Vertragsende') ?>
+    </label>
+    <input type='date' class='size-l'
+           name="end" value='<?= ($contract && !$following_contract) ? date('Y-m-d', $contract->contract_end) : ''?>' >
+
+    <label>
+        <?= _('Stundenumfang') ?>
+    </label>
+    <input type='text' name="hours" placeholder='00:00' value='<?= ($contract) ? htmlready($contract->contract_hours) : ''?>'>
+
+    <label>
+        <?= _('Verantwortliche/r Mitarbeiter/in') ?>
+    </label>
+    <?= $search ?>
+              
     
     <footer data-dialog-button>
         <?= Button::create(_('Übernehmen')) ?>
