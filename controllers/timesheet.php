@@ -252,7 +252,12 @@ class TimesheetController extends StudipController {
                     } else {
                         $record->calculate_sum();
                     }
-                    $record->store();
+                    if ($record->sum < 0) {
+                        PageLayout::postMessage(MessageBox::error(sprintf(_("Gesamtsumme der Arbeitszeit pro Tag muss positiv sein: %s.%s"), $record->day, $timesheet->month ))); 
+                    } else {
+                        $record->store();
+                    }
+                    
             }
 
             $timesheet = $record->timesheet;

@@ -51,14 +51,28 @@ class StundenzettelRecord extends \SimpleORMap
         parent::configure($config);
     }
     
+    public function __construct($id = null)
+    {
+        parent::__construct($id);
+
+        $this->registerCallback('before_store', 'before_store');
+    }
+    
+    protected function before_store()
+    {
+        if ($this->sum < 0){
+            throw new Exception(sprintf(_('Gesamtsumme der Arbeitszeit pro Tag muss positiv sein!')));
+        }
+    }
+    
     function calculate_sum(){
         if(in_array($this->defined_comment, ['Urlaub', 'Krank', 'Feiertag']) && !$this->isWeekend() ) {
             $this->sum = StundenzettelTimesheet::stundenzettel_strtotimespan($this->timesheet->contract->default_workday_time);
-        } else if( $this->begin > 0 && $this->end > $this->begin ) {
+        } else {//if( $this->begin > 0 && $this->end > $this->begin ) {
             $this->sum = $this->end - $this->begin - $this->break;
-        } else {
-            $this->sum = '';
-        }
+        } //else {
+//            $this->sum = '';
+//        }
     }
     
     function getWeekday() 

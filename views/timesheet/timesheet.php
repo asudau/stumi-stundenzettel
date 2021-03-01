@@ -94,7 +94,7 @@ use Studip\Button, Studip\LinkButton;
                             <input style='width: 80px;' type='text' pattern="<?= $time_pattern ?>" <?= (!$is_editable)? 'readonly' : ''?> class='end size-s studip-timepicker' id ='' name ='end[<?= $i ?>]' value='<?= ($records[$j]['end']) ? htmlready(StundenzettelTimesheet::stundenzettel_strftime('%H:%M', $records[$j]['end'])) : '' ?>' placeholder="hh:mm" >
                         </td>
                         <td>
-                            <input style='width: 80px;' type='text' pattern="<?= $break_pattern ?>" <?= ($records[$j]['defined_comment'] == 'Urlaub')? '' : 'readonly' ?> class='sum' name ='sum[<?= $i ?>]' value ='<?= ($records[$j]['sum']) ? htmlready(StundenzettelTimesheet::stundenzettel_strftimespan($records[$j]['sum'])) : '' ?>' >
+                            <input style='width: 80px;' type='text' <?= ($records[$j]['defined_comment'] == 'Urlaub')? '' : 'readonly' ?> class='sum' name ='sum[<?= $i ?>]' value ='<?= ($records[$j]['sum']) ? htmlready(StundenzettelTimesheet::stundenzettel_strftimespan($records[$j]['sum'])) : '' ?>' >
                         </td>
                         <td>
                            <input type='date'
@@ -378,7 +378,11 @@ use Studip\Button, Studip\LinkButton;
               document.getElementsByName('break' + row_index)[0].value = '00:00';
             }
         var res = calculate_sum(begin, end, brk);
-        document.getElementsByName('sum' + row_index)[0].value = res;
+        if (res.startsWith("-")) {
+            alert("Gesamtsumme der Arbeitszeit pro Tag muss positiv sein.");
+        } else {
+            document.getElementsByName('sum' + row_index)[0].value = res;
+        }
     }
     
     function set_mktime(row_index){
