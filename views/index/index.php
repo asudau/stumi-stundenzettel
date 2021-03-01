@@ -7,11 +7,11 @@
         <thead>
             <tr>
                 <th data-sort="text" style='width:10%'>Nachname, Vorname</th>
-                <th data-sort="false" style='width:10%'>Vertragsbeginn</th>
-                <th data-sort="false" style='width:10%'>Vertragsende</th>
-                <th data-sort="digit" style='width:10%'>Laufzeit</br>in Monaten</th>
-                <th data-sort="digit" style='width:10%'>Monatsstunden</br>lt. Vertrag</th>
-                <th data-sort="digit" style='width:10%'>Tagessatz</th>
+                <th data-sort="htmldata" style='width:10%'>Vertrags- <br>beginn</th>
+                <th data-sort="htmldata" style='width:10%'>Vertrags- <br>ende</th>
+                <th data-sort="digit" style='width:10%'>Laufzeit</br>(Monate)</th>
+                <th data-sort="digit" style='width:10%'>Monats- </br>stunden</th>
+                <th data-sort="digit" style='width:5%'>Tagessatz</th>
                 <th data-sort="digit" style='width:10%'>Stundenkonto</br>(exkl. <?= strftime('%B', time()) ?>)</th>
                 <th data-sort="false" style='width:10%'>Urlaub in Anspruch genommen <?= date('Y', time()) ?></th>
                 <th data-sort="digit" style='width:10%'>Resturlaub</br><?= date('Y', time()) ?></th>
@@ -26,13 +26,13 @@
                 <tr>  
                     <td><a href='<?=$this->controller->url_for('timesheet/index/' . htmlready($contract->id)) ?>' title='Stundenzettel einsehen'><?= htmlready($stumi->nachname) ?>, <?= htmlready($stumi->vorname) ?></a>
                     </td>
-                    <td><?= date('d.m.Y', $contract->contract_begin) ?>
+                    <td data-sort-value="<?= $contract->contract_begin ?>"><?= date('d.m.Y', $contract->contract_begin) ?>
                         <? if ($contract->begin_digital_recording_month && $contract->begin_digital_recording_year) : ?>
                             <?= Icon::create('info-circle', Icon::ROLE_CLICKABLE,  
                                     ['title' => 'Beginn der elektronischen Erfassung: ' . htmlready($contract->begin_digital_recording_month) . '/' . htmlready($contract->begin_digital_recording_year) ]);?>
                         <? endif ?>
                     </td>
-                    <td><?= date('d.m.Y', $contract->contract_end) ?></td>
+                    <td data-sort-value="<?= $contract->contract_end ?>"><?= date('d.m.Y', $contract->contract_end) ?></td>
                     <td><?= htmlready($contract->getContractDuration()) ?></td>
                     <td><?= htmlready($contract->contract_hours) ?></td>
                     <td><?= htmlready($contract->default_workday_time) ?></td>
@@ -108,5 +108,3 @@
 <? endif ?>    
     
 </div>
-
-</body>
