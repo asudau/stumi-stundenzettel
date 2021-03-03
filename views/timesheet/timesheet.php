@@ -426,70 +426,55 @@ use Studip\Button, Studip\LinkButton;
         var default_workday_time = '<?= htmlready($timesheet->contract->default_workday_time) ?>';
         document.getElementsByName('sum' + row_index)[0].value = default_workday_time;
     }
-    
-    
-    var inputs, index;
    
-    inputs = document.getElementsByClassName('begin');
-    for (index = 0; index < inputs.length; ++index) {
-        inputs[index].onchange = function () {
-            var name = this.getAttribute("name");
-            var rec_index = name.substring(5, 9);
-            autofill_row(rec_index);
-            set_mktime(rec_index);
-            set_time_inputs_in_row_required(rec_index);
-        };
-    }
+    $('.begin').change(function() {
+        var name = this.getAttribute("name");
+        var rec_index = name.substring(5, 9);
+        autofill_row(rec_index);
+        set_mktime(rec_index);
+        set_time_inputs_in_row_required(rec_index);
+    });
     
-    inputs = document.getElementsByClassName('end');
-    for (index = 0; index < inputs.length; ++index) {
-        inputs[index].onchange = function () {
-            var name = this.getAttribute("name");
-            var rec_index = name.substring(3, 7);
-            autofill_row(rec_index);
-            set_mktime(rec_index);
-            set_time_inputs_in_row_required(rec_index);
-        };
-    }
+    $('.end').change(function() {
+        var name = this.getAttribute("name");
+        var rec_index = name.substring(3, 7);
+        autofill_row(rec_index);
+        set_mktime(rec_index);
+        set_time_inputs_in_row_required(rec_index);
+    });
     
-    inputs = document.getElementsByClassName('break');
-    for (index = 0; index < inputs.length; ++index) {
-        inputs[index].onchange = function () {
-            var name = this.getAttribute("name");
-            var rec_index = name.substring(5, 9);
-            autofill_row(rec_index);
-            set_mktime(rec_index);
-            set_time_inputs_in_row_required(rec_index);
-        };
-    }
+    $('.break').change(function() {
+        var name = this.getAttribute("name");
+        var rec_index = name.substring(5, 9);
+        autofill_row(rec_index);
+        set_mktime(rec_index);
+        set_time_inputs_in_row_required(rec_index);
+    });
      
     //handling of Urlaub and Krank
-    inputs = document.getElementsByClassName('defined_comment');
-    for (index = 0; index < inputs.length; ++index) {
-        inputs[index].onchange = function () {
-            var name = this.getAttribute("name");
-            var rec_index = name.substring(15, 19);
-            if(this.value == '')  { //keine Auswahl
-                enable_timetracking(rec_index);
-                document.getElementsByName('sum' + rec_index)[0].readOnly = true;
-                document.getElementsByName('sum' + rec_index)[0].value = '';
-                document.getElementsByName('entry_mktime' + rec_index)[0].value = '';
-                document.getElementsByName('sum' + rec_index)[0].removeAttribute("required");
-            } else if(this.value == 'Urlaub') {
-                disable_timetracking(rec_index);
-                document.getElementsByName('sum' + rec_index)[0].readOnly = false;
-                document.getElementsByName('sum' + rec_index)[0].value = '';
-                document.getElementsByName('sum' + rec_index)[0].setAttribute("required", "");
-            } else { //Feiertag und Krankheit
-                document.getElementsByName('sum' + rec_index)[0].readOnly = true;
-                disable_timetracking(rec_index);
-                autocalc_sum(rec_index);
-            }
-            document.getElementById('entry' + rec_index).removeAttribute("class");
-            document.getElementById('entry' + rec_index).classList.add(this.value);
-            set_mktime(rec_index);
-        };
-    }
+    $('.defined_comment').change(function() {
+        var name = this.getAttribute("name");
+        var rec_index = name.substring(15, 19);
+        if(this.value == '')  { //keine Auswahl
+            enable_timetracking(rec_index);
+            document.getElementsByName('sum' + rec_index)[0].readOnly = true;
+            document.getElementsByName('sum' + rec_index)[0].value = '';
+            document.getElementsByName('entry_mktime' + rec_index)[0].value = '';
+            document.getElementsByName('sum' + rec_index)[0].removeAttribute("required");
+        } else if(this.value == 'Urlaub') {
+            disable_timetracking(rec_index);
+            document.getElementsByName('sum' + rec_index)[0].readOnly = false;
+            document.getElementsByName('sum' + rec_index)[0].value = '';
+            document.getElementsByName('sum' + rec_index)[0].setAttribute("required", "");
+        } else { //Feiertag und Krankheit
+            document.getElementsByName('sum' + rec_index)[0].readOnly = true;
+            disable_timetracking(rec_index);
+            autocalc_sum(rec_index);
+        }
+        document.getElementById('entry' + rec_index).removeAttribute("class");
+        document.getElementById('entry' + rec_index).classList.add(this.value);
+        set_mktime(rec_index);
+    });
 
 </script>
         
