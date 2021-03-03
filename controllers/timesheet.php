@@ -183,7 +183,7 @@ class TimesheetController extends StudipController {
                         PluginEngine::getLink($this->plugin, [], 'timesheet/send/' . $timesheet_id ),
                         Icon::create('share', 'new'),
                         ['title' => 'Achtung, anschließend keine Bearbeitung mehr möglich!',
-                            'onclick' => "return confirm('Bearbeitung abschließen und Stundenzettel offiziell einreichen?')"]
+                            'data-confirm' => 'Bearbeitung abschließen und Stundenzettel offiziell einreichen?']
                     );
             } else {
                 $actions->addLink(
