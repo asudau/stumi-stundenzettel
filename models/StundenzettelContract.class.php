@@ -283,7 +283,7 @@ class StundenzettelContract extends \SimpleORMap
             }
         }
 
-        if ($this->begin_vacation_claimed && $contract_data->begin_digital_recording_year == $year) {    
+        if ($this->begin_vacation_claimed && $this->begin_digital_recording_year == $year) {    
             $claimed_vacation = $claimed_vacation + $this->begin_vacation_claimed;
         }
         
