@@ -31,8 +31,7 @@ class IndexController extends StudipController {
             $this->supervisorrole = true;
         }
         
-        $this->balance_pattern = '^(00:00)|(0)|((0[1-9]|1\d|2[0-3]):([0-5]\d))|(([1-9]|1\d|2[0-3]):([0-5]\d))|(00:(0[1-5]|[1-9]0|[1-5][1-9]))$';
-        $this->balance_pattern = '^(-{0,1})([0-9]{0,3}):[0-5][0-9]$';
+        $this->balance_pattern = '^(-{0,1})([0-9]{1,3}):[0-5][0-9]$';
 
     }
 
