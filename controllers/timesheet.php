@@ -243,6 +243,8 @@ class TimesheetController extends StudipController {
                             PageLayout::postMessage(MessageBox::error(sprintf(_("Arbeitszeit kann frühestens ab 6 Uhr erfasst werden: %s.%s"), $record->day, $timesheet->month ))); 
                             $errors = true;
                         }
+                    } else if ($record->begin){
+                        $record->begin = NULL;
                     }
                     if ($end_array[$i]) {
                         $record->end = strtotime($record->getDate() . ' ' . $end_array[$i]);
@@ -250,9 +252,13 @@ class TimesheetController extends StudipController {
                             PageLayout::postMessage(MessageBox::error(sprintf(_("Arbeitszeit kann bis maximal 23 Uhr erfasst werden: %s.%s"), $record->day, $timesheet->month ))); 
                             $errors = true;
                         }
+                    } else if ($record->end){
+                        $record->end = NULL;
                     }
                     if ($break_array[$i]) {
                         $record->break = StundenzettelTimesheet::stundenzettel_strtotimespan($break_array[$i]);
+                    } else if ($record->break){
+                        $record->break = NULL;
                     }
                     $record->entry_mktime = $mktime_array[$i];
                     $record->defined_comment = ($record->isHoliday()) ? 'Feiertag' : $defined_comment_array[$i];
