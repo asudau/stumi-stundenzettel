@@ -363,7 +363,7 @@ class TimesheetController extends StudipController {
         if($timesheet && $this->adminrole){
             $timesheet->received = true;
             $timesheet->store();
-            PageLayout::postMessage(MessageBox::success(_("Vorliegen in Papierform bestätigt: ") . $timesheet->contract->stumi->nachname . '/' . strftime('%B', strtotime("2020-" . $timesheet->month . "-01") )) );
+            PageLayout::postMessage(MessageBox::success(_("Vorliegen in Papierform bestätigt: ") . htmlready($timesheet->contract->stumi->nachname) . '/' . strftime('%B', strtotime("2020-" . $timesheet->month . "-01") )) );
             $this->redirect('timesheet/admin_index/'. $timesheet->contract->id);
         } else {
             PageLayout::postMessage(MessageBox::error(_("Fehler: Sie sind zu dieser aktion nicht berechtigt.")));
