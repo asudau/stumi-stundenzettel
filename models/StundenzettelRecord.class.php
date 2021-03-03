@@ -58,6 +58,7 @@ class StundenzettelRecord extends \SimpleORMap
         $this->registerCallback('before_store', 'before_store');
     }
     
+    //formale Vorgaben zum Ausfüllen der Stundenzettel prüfen
     protected function before_store()
     {
         if ($this->sum < 0){
@@ -65,6 +66,10 @@ class StundenzettelRecord extends \SimpleORMap
         }
         if ($this->sum && ($this->sum > (10*3600))){
             throw new Exception(sprintf(_('Die tägliche Arbeitszeit darf 10 Stunden nicht überschreiten.')));
+        } else if ($this->sum && ($this->sum > (9*3600)) && ($this->break < 2700)){
+            throw new Exception(sprintf(_('Bei einer Arbeitszeit von mehr als neun Stunden ist eine Pause von mindestens 45 Minuten gesetzlich vorgeschrieben.')));
+        } else if ($this->sum && ($this->sum > (6*3600)) && ($this->break < 1800)){
+            throw new Exception(sprintf(_('Bei einer Arbeitszeit von mehr als sechs Stunden ist eine Pause von mindestens 30 Minuten gesetzlich vorgeschrieben.')));
         }
         if ($this->begin && ($this->begin < strtotime($this->getDate() . ' 06:00'))){
             throw new Exception(sprintf(_('Arbeitszeit kann frühestens ab 6 Uhr erfasst werden.')));

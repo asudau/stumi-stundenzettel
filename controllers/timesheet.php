@@ -268,6 +268,12 @@ class TimesheetController extends StudipController {
                     } else if ($record->sum > (10*3600)) {
                         PageLayout::postMessage(MessageBox::error(sprintf(_("Die tägliche Arbeitszeit darf 10 Stunden nicht überschreiten: %s.%s"), $record->day, $timesheet->month ))); 
                         $errors = true;  
+                    } else if ($record->sum && ($record->sum > (9*3600)) && ($record->break < 2700)){
+                        PageLayout::postMessage(MessageBox::error(sprintf(_("Bei einer Arbeitszeit von mehr als neun Stunden ist eine Pause von mindestens 45 Minuten gesetzlich vorgeschrieben: %s.%s"), $record->day, $timesheet->month )));
+                        $errors = true;  
+                    } else if ($record->sum && ($record->sum > (6*3600)) && ($record->break < 1800)){
+                        PageLayout::postMessage(MessageBox::error(sprintf(_("Bei einer Arbeitszeit von mehr als sechs Stunden ist eine Pause von mindestens 30 Minuten gesetzlich vorgeschrieben: %s.%s"), $record->day, $timesheet->month )));
+                        $errors = true;  
                     } 
                     if (!$errors){
                         $record->store();
