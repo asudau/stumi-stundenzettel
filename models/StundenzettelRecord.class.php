@@ -61,12 +61,15 @@ class StundenzettelRecord extends \SimpleORMap
     protected function before_store()
     {
         if ($this->sum < 0){
-            throw new Exception(sprintf(_('Gesamtsumme der Arbeitszeit pro Tag muss positiv sein!')));
+            throw new Exception(sprintf(_('Gesamtsumme der Arbeitszeit pro Tag muss positiv sein.')));
         }
-        if ($this->begin < strtotime($this->getDate() . ' 06:00')){
+        if ($this->sum && ($this->sum > (10*3600))){
+            throw new Exception(sprintf(_('Die tägliche Arbeitszeit darf 10 Stunden nicht überschreiten.')));
+        }
+        if ($this->begin && ($this->begin < strtotime($this->getDate() . ' 06:00'))){
             throw new Exception(sprintf(_('Arbeitszeit kann frühestens ab 6 Uhr erfasst werden.')));
         }
-        if ($this->end > strtotime($this->getDate() . ' 23:00')){
+        if ($this->end && ($this->end > strtotime($this->getDate() . ' 23:00'))){
             throw new Exception(sprintf(_('Arbeitszeit kann bis maximal 23 Uhr erfasst werden')));
         }
     }

@@ -228,9 +228,9 @@ class TimesheetController extends StudipController {
             $comment_array = Request::getArray('comment');
 
             $limit = count($begin_array);
-            $errors = false;
             for ($i = 1; $i <= $limit; $i++) {
 
+                $errors = false;
                 $record = StundenzettelRecord::find([$timesheet_id, $i]);
                 if (!$record) {
                     $record = new StundenzettelRecord();
@@ -265,8 +265,11 @@ class TimesheetController extends StudipController {
                     if ($record->sum < 0) {
                         PageLayout::postMessage(MessageBox::error(sprintf(_("Gesamtsumme der Arbeitszeit pro Tag muss positiv sein: %s.%s"), $record->day, $timesheet->month ))); 
                         $errors = true;  
+                    } else if ($record->sum > (10*3600)) {
+                        PageLayout::postMessage(MessageBox::error(sprintf(_("Die tägliche Arbeitszeit darf 10 Stunden nicht überschreiten: %s.%s"), $record->day, $timesheet->month ))); 
+                        $errors = true;  
                     } 
-                    if (!errors){
+                    if (!$errors){
                         $record->store();
                     }
                     
