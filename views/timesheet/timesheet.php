@@ -85,13 +85,13 @@ use Studip\Button, Studip\LinkButton;
                             <?= strftime("%A", strtotime($date)) ?>
                         </td>
                         <td >
-                            <input style='width: 80px;' type='text' pattern="<?= $time_pattern ?>" <?= (!$is_editable)? 'readonly' : ''?> class='begin size-s studip-timepicker' id ='' name ='begin[<?= $i ?>]' value='<?= ($records[$j]['begin']) ? htmlready(StundenzettelTimesheet::stundenzettel_strftime('%H:%M', $records[$j]['begin'])) : '' ?>' placeholder="hh:mm" >
+                            <input style='width: 80px;' type='text' pattern="<?= $time_begin_pattern ?>" <?= (!$is_editable)? 'readonly' : ''?> class='begin size-s studip-timepicker' id ='' name ='begin[<?= $i ?>]' value='<?= ($records[$j]['begin']) ? htmlready(StundenzettelTimesheet::stundenzettel_strftime('%H:%M', $records[$j]['begin'])) : '' ?>' placeholder="hh:mm" >
                         </td>
                         <td>
                             <input style='width: 80px;' type='text' pattern="<?= $break_pattern ?>" <?= (!$is_editable)? 'readonly' : ''?> class='break' name ='break[<?= $i ?>]' value ='<?= ($records[$j]['break']) ? htmlready(StundenzettelTimesheet::stundenzettel_strftimespan($records[$j]['break'])) : '' ?>' placeholder="hh:mm">
                         </td>
                         <td>
-                            <input style='width: 80px;' type='text' pattern="<?= $time_pattern ?>" <?= (!$is_editable)? 'readonly' : ''?> class='end size-s studip-timepicker' id ='' name ='end[<?= $i ?>]' value='<?= ($records[$j]['end']) ? htmlready(StundenzettelTimesheet::stundenzettel_strftime('%H:%M', $records[$j]['end'])) : '' ?>' placeholder="hh:mm" >
+                            <input style='width: 80px;' type='text' pattern="<?= $time_end_pattern ?>" <?= (!$is_editable)? 'readonly' : ''?> class='end size-s studip-timepicker' id ='' name ='end[<?= $i ?>]' value='<?= ($records[$j]['end']) ? htmlready(StundenzettelTimesheet::stundenzettel_strftime('%H:%M', $records[$j]['end'])) : '' ?>' placeholder="hh:mm" >
                         </td>
                         <td>
                             <input style='width: 80px;' type='text' <?= ($records[$j]['defined_comment'] == 'Urlaub')? '' : 'readonly' ?> class='sum' name ='sum[<?= $i ?>]' value ='<?= ($records[$j]['sum']) ? htmlready(StundenzettelTimesheet::stundenzettel_strftimespan($records[$j]['sum'])) : '' ?>' >
@@ -153,13 +153,13 @@ use Studip\Button, Studip\LinkButton;
                             <?= strftime("%A", strtotime($date)) ?>
                         </td>
                         <td >
-                            <input style='width: 80px;' type='text' pattern="<?= $time_pattern ?>" <?= (!$is_editable)? 'readonly' : ''?> class='begin' id ='' name ='begin[<?= $i ?>]' value='' placeholder="hh:mm" >
+                            <input style='width: 80px;' type='text' pattern="<?= $time_begin_pattern ?>" <?= (!$is_editable)? 'readonly' : ''?> class='begin' id ='' name ='begin[<?= $i ?>]' value='' placeholder="hh:mm" >
                         </td>
                         <td>
                             <input style='width: 80px;' type='text' pattern="<?= $break_pattern ?>" <?= (!$is_editable)? 'readonly' : ''?> class ='break' name ='break[<?= $i ?>]' value ='' placeholder="hh:mm">
                         </td>
                         <td>
-                            <input style='width: 80px;' type='text' pattern="<?= $time_pattern ?>" <?= (!$is_editable)? 'readonly' : ''?> class='end' name ='end[<?= $i ?>]' value='' placeholder="hh:mm" >
+                            <input style='width: 80px;' type='text' pattern="<?= $time_end_pattern ?>" <?= (!$is_editable)? 'readonly' : ''?> class='end' name ='end[<?= $i ?>]' value='' placeholder="hh:mm" >
                         </td>
                         <td>
                            <input style='width: 80px;' type='text' readonly class ='sum' name ='sum[<?= $i ?>]' value ='<?= (!$weekend && $holiday) ? htmlready($timesheet->contract->default_workday_time) : ''?>' >
@@ -380,6 +380,7 @@ use Studip\Button, Studip\LinkButton;
         var res = calculate_sum(begin, end, brk);
         if (res.startsWith("-")) {
             alert("Gesamtsumme der Arbeitszeit pro Tag muss positiv sein.");
+            document.getElementsByName('sum' + row_index)[0].value = '';
         } else {
             document.getElementsByName('sum' + row_index)[0].value = res;
         }

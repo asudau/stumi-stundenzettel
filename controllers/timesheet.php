@@ -31,8 +31,9 @@ class TimesheetController extends StudipController {
             $this->supervisorrole = true;
         }
         
-        $this->time_pattern = '^(00:00)|((0[1-9]|1\d|2[0-3]):([0-5]\d))|(([1-9]|1\d|2[0-3]):([0-5]\d))|(00:(0[1-5]|[1-9]0|[1-5][1-9]))$';
-        $this->break_pattern = '^(00:00)|(0)|((0[1-9]|1\d|2[0-3]):([0-5]\d))|(([1-9]|1\d|2[0-3]):([0-5]\d))|(00:(0[1-5]|[1-9]0|[1-5][1-9]))$';
+        $this->time_end_pattern =   '^(23:00)|([01]{0,1}[6-9]|[1][0-9]|2[0-2]):[0-5][0-9]$';
+        $this->time_begin_pattern = '^([01]{0,1}[6-9]|[1][0-9]|2[0-2]):[0-5][0-9]$';
+        $this->break_pattern = '^([0-9]{1,2}):[0-5][0-9]$';
     }
 
     public function index_action($contract_id = NULL)
@@ -227,6 +228,7 @@ class TimesheetController extends StudipController {
             $comment_array = Request::getArray('comment');
 
             $limit = count($begin_array);
+            $errors = false;
             for ($i = 1; $i <= $limit; $i++) {
 
                 $record = StundenzettelRecord::find([$timesheet_id, $i]);
@@ -237,9 +239,17 @@ class TimesheetController extends StudipController {
                 }
                     if ($begin_array[$i]) {
                         $record->begin = strtotime($record->getDate() . ' ' . $begin_array[$i]);
+                        if ($record->begin < strtotime($record->getDate() . ' 06:00') ){
+                            PageLayout::postMessage(MessageBox::error(sprintf(_("Arbeitszeit kann frühestens ab 6 Uhr erfasst werden: %s.%s"), $record->day, $timesheet->month ))); 
+                            $errors = true;
+                        }
                     }
                     if ($end_array[$i]) {
                         $record->end = strtotime($record->getDate() . ' ' . $end_array[$i]);
+                        if ($record->end > strtotime($record->getDate() . ' 23:00') ){
+                            PageLayout::postMessage(MessageBox::error(sprintf(_("Arbeitszeit kann bis maximal 23 Uhr erfasst werden: %s.%s"), $record->day, $timesheet->month ))); 
+                            $errors = true;
+                        }
                     }
                     if ($break_array[$i]) {
                         $record->break = StundenzettelTimesheet::stundenzettel_strtotimespan($break_array[$i]);
@@ -254,7 +264,9 @@ class TimesheetController extends StudipController {
                     }
                     if ($record->sum < 0) {
                         PageLayout::postMessage(MessageBox::error(sprintf(_("Gesamtsumme der Arbeitszeit pro Tag muss positiv sein: %s.%s"), $record->day, $timesheet->month ))); 
-                    } else {
+                        $errors = true;  
+                    } 
+                    if (!errors){
                         $record->store();
                     }
                     
