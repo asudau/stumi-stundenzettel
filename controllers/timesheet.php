@@ -198,7 +198,7 @@ class TimesheetController extends StudipController {
                 $actions->addLink(
                     _('PDF-zum Ausdruck generieren'),
                     PluginEngine::getLink($this->plugin, [], 'timesheet/pdf/' . $timesheet_id ),
-                    Icon::create('file-pdf', 'clickable')
+                    Icon::create('file-pdf')
                     //,['onclick'=>"return validateFormSaved()"]
                 );
             }

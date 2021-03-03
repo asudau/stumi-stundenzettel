@@ -131,7 +131,7 @@ use Studip\Button, Studip\LinkButton;
                         </td>
                         <td>
                             <? if ($is_editable && !$timesheet->locked) : ?>
-                             <a href='' class='edit_action' onclick='return clearLine(event, "[<?= $i ?>]"); return false;'> <?= Icon::create('decline', Icon::ROLE_CLICKABLE) ?> </a>
+                             <a href='' class='edit_action' onclick='return clearLine(event, "[<?= $i ?>]"); return false;'> <?= Icon::create('decline') ?> </a>
                             <? endif ?>
                         </td>
                     </tr>
