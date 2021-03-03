@@ -97,7 +97,7 @@ class StundenzettelRecord extends \SimpleORMap
     function isHoliday()
     {
         $holiday = holiday(strtotime($this->getDate()));
-        if ($holiday && $holiday['col'] == 3){
+        if ($holiday && ($holiday['col'] == 3 || $holiday['name'] == 'Reformationstag')){
             return true ;
         } else return false;
     }
@@ -116,7 +116,7 @@ class StundenzettelRecord extends \SimpleORMap
     static function isDateHoliday($date)
     {
         $holiday = holiday(strtotime($date));
-        if ($holiday && $holiday['col'] == 3){
+        if ($holiday && ($holiday['col'] == 3 || $holiday['name'] == 'Reformationstag')){
             return true ;
         } else return false;
     }
