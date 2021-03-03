@@ -16,21 +16,10 @@
 
  */
 
+require_once 'lib/calendar_functions.inc.php';
+
 class StundenzettelRecord extends \SimpleORMap
 {
-    private static $holidays_nds = array(
-        '01.01.' => 'Neujahr',
-        '10.04.' => 'Karfreitag',
-        '01.05.' => 'Tag der Arbeit',
-        '21.05.' => 'Himmelfahrt',
-        '01.06.' => 'Pfingsten',
-        '03.10.' => 'Tag der Deutschen Einheit',
-        '31.10.' => 'Reformationstag',
-        '24.12.' => 'Heiligabend',
-        '25.12.' => '1. Weihnachstfeiertag',
-        '26.12.' => '2. Weihnachtsfeiertag',
-        '31.12.' => 'Silvester'
-        );
     
     private static $uni_closed = array(
         '27.12.' => 'Universitätsbetrieb geschlossen',
@@ -107,7 +96,10 @@ class StundenzettelRecord extends \SimpleORMap
     
     function isHoliday()
     {
-        return array_key_exists(substr($this->getDate(),0,6), self::$holidays_nds);
+        $holiday = holiday(strtotime($this->getDate()));
+        if ($holiday && $holiday['col'] == 3){
+            return true ;
+        } else return false;
     }
     
     function isUniClosed()
@@ -123,8 +115,10 @@ class StundenzettelRecord extends \SimpleORMap
     
     static function isDateHoliday($date)
     {
-        $day = date('d.m.', strtotime($date));
-        return array_key_exists($day, self::$holidays_nds);
+        $holiday = holiday(strtotime($date));
+        if ($holiday && $holiday['col'] == 3){
+            return true ;
+        } else return false;
     }
     
     static function isUniClosedOnDate($date)
