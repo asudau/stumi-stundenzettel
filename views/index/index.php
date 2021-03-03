@@ -29,7 +29,7 @@
                     <td data-sort-value="<?= $contract->contract_begin ?>"><?= date('d.m.Y', $contract->contract_begin) ?>
                         <? if ($contract->begin_digital_recording_month && $contract->begin_digital_recording_year) : ?>
                             <?= Icon::create('info-circle', Icon::ROLE_CLICKABLE,  
-                                    ['title' => 'Beginn der elektronischen Erfassung: ' . htmlready($contract->begin_digital_recording_month) . '/' . htmlready($contract->begin_digital_recording_year) ]);?>
+                                    ['title' => 'Beginn der elektronischen Erfassung: ' . $contract->begin_digital_recording_month . '/' . $contract->begin_digital_recording_year ]);?>
                         <? endif ?>
                     </td>
                     <td data-sort-value="<?= $contract->contract_end ?>"><?= date('d.m.Y', $contract->contract_end) ?></td>
