@@ -148,7 +148,7 @@ class StundenzettelContract extends \SimpleORMap
                 if ( (($this->contract_begin < $contract->contract_begin) && ($contract->contract_begin < $this->contract_end)) ||  
                      (($this->contract_begin < $contract->contract_end) && ($contract->contract_end < $this->contract_end)) ||
                      (($contract->contract_begin < $this->contract_begin) && ($contract->contract_end > $this->contract_end)) ) {
-                    throw new Exception(sprintf(_('Laufzeitüberschneidung mit bestehendem Vertrag')));
+                    throw new Exception(_('Laufzeitüberschneidung mit bestehendem Vertrag'));
                 }
             }
         }
