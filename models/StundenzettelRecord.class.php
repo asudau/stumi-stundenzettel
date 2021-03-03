@@ -96,10 +96,7 @@ class StundenzettelRecord extends \SimpleORMap
     
     function isHoliday()
     {
-        $holiday = holiday(strtotime($this->getDate()));
-        if ($holiday && ($holiday['col'] == 3 || $holiday['name'] == 'Reformationstag')){
-            return true ;
-        } else return false;
+        return self::isDateHoliday($this->getDate());
     }
     
     function isUniClosed()
