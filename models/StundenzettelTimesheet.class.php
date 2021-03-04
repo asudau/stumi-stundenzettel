@@ -34,6 +34,14 @@ class StundenzettelTimesheet extends \SimpleORMap
             }
         };
         
+         $config['additional_fields']['vacation']['get'] = function ($item) {
+            $records = StundenzettelRecord::findBySQL('`timesheet_id` = ? AND `defined_comment` = "Urlaub"', [$item->id]);
+            foreach ($records as $record) {
+                $vacation += $record['sum'];
+            }
+            return $vacation;
+        };
+        
         //gibt an, ob der Monat, für welchen der Stundenzettel angelegt wurde bereits abgelaufen ist
         $config['additional_fields']['month_completed']['get'] = function ($item) {
             $days_per_month = cal_days_in_month(CAL_GREGORIAN, $item->month, $item->year);

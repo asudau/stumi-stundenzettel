@@ -269,21 +269,57 @@ class StundenzettelContract extends \SimpleORMap
     
     function getRemainingVacation($year)
     {
-        return StundenzettelTimesheet::stundenzettel_strtotimespan($this->getVacationEntitlement($year)) - $this->getClaimedVacation($year);
+        $claimed_vacation = $this->getClaimedVacation($year);
+        //Urlaub der mit Resturlaub aus dem Vorjahr verrechnet werden kann wird in diesem Jahr nicht abgezogen
+        if ($year-1 >=  date('Y', $this->contract_begin) && $this->getRemainingVacation($year-1)) {
+            $remaining_claimed_vacation = $this->getRemainingVacation($year-1) - $this->getClaimedVacation($year, $month = 3);
+            //falls Resturlaub nicht reicht, übrigen Urlaub vom Anspruch in diesem Jahr abziehen
+            //positiver Rest verfällt ab April
+            if ($remaining_claimed_vacation < 0) {
+                $claimed_vacation -= abs($remaining_claimed_vacation);
+            }
+            //Urlaub bis März diesen Jahres wurde oben bereits verrechnet
+            $claimed_vacation = $claimed_vacation - $this->getClaimedVacation($year, $month = 3);
+        }
+        
+        $remaining_vacation = StundenzettelTimesheet::stundenzettel_strtotimespan($this->getVacationEntitlement($year)) - $claimed_vacation;
+        
+        //Urlaub aus den ersten drei Monaten des Folgejahrs kann bei Bedarf verrechnet werden
+        if ($remaining_vacation > 0) {
+            $remaining_vacation = $remaining_vacation - $this->getClaimedVacation($year+1, $month = 3);
+            //falls Resturlaub nicht für die drei ersten Monate des Folgejahres reicht, gilt er als aufgebraucht
+            if ($remaining_vacation < 0) {
+                return 0;
+            }
+        }
+
+        return $remaining_vacation;
     }
     
-    function getClaimedVacation($year)
+    function getClaimedVacation($year, $month = 12)
     {
-        $timesheets = StundenzettelTimesheet::findBySQL('`contract_id` LIKE ? AND `year` LIKE ?', [$this->id, $year]);
+        //$timesheets = StundenzettelTimesheet::findBySQL('`contract_id` LIKE ? AND `year` LIKE ?', [$this->id, $year]);
+        
+        //Urlaub der im Folgejahr bis einschließlich März genommen wurde einbeziehen (möglicherweise ist es übersichtlicher das separat zu bestimmen)
+        $timesheets = StundenzettelTimesheet::findBySQL('`contract_id` LIKE ? AND `year` LIKE ? AND `month` <= ?', [$this->id, $year, $month]);
+        
+        //$timesheets = array_merge($timesheets_thisyear, $timesheets_nextyear);
+        
         $claimed_vacation = 0;
+        
         foreach ($timesheets as $timesheet) {
             $records = StundenzettelRecord::findBySQL('`timesheet_id` = ? AND `defined_comment` = "Urlaub"', [$timesheet->id]);
             foreach ($records as $record) {
                 $claimed_vacation += $record['sum'];
             }
-        }
-
-        if ($this->begin_vacation_claimed && $this->begin_digital_recording_year == $year) {    
+        } 
+        //zu Aufzeichnungsbeginn in diesem Jahr bereits genutzter Urlaub
+        //falls Aufzeichnungsbeginn vor April diesen Jahres liegt und in diesem Zeitraum bereits Urlaub beansprucht wurde, 
+        //kann dieser im Zeitraum Januar-März ggf. mit Resturlaub verrechnet werden
+        if ($month <= 3 && $this->begin_vacation_claimed && $this->begin_digital_recording_year == $year && $this->begin_digital_recording_month <= 3) {    
+            $claimed_vacation = $claimed_vacation + $this->begin_vacation_claimed;
+        //falls Aufzeichnungsbeginn später im Jahr liegt kann Urlaub nur mit Gesamtjahresanspruch verrechnet werden
+        } else if ($month > 3 && $this->begin_vacation_claimed && $this->begin_digital_recording_year == $year) {    
             $claimed_vacation = $claimed_vacation + $this->begin_vacation_claimed;
         }
         

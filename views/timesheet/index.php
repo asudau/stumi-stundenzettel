@@ -12,6 +12,7 @@
             <tr>
                 <th data-sort="text" style='width:10%'>Monat/Jahr</th>
                 <th data-sort="false" style='width:10%'>Stunden</th>
+                <th data-sort="false" style='width:10%'>davon Urlaub</th>
                 <th data-sort="false" style='width:10%'>Überstunden</th>
                 <th data-sort="false" style='width:10%'>Status</th>
             </tr>
@@ -23,6 +24,7 @@
                     <td><a href='<?=$this->controller->url_for('timesheet/timesheet/' . htmlready($timesheet->id)) ?>' title='Stundenzettel editieren'><?= htmlready($timesheet->month) ?>/<?= htmlready($timesheet->year) ?></a>
                     </td>
                     <td><?= ($timesheet->sum) ? htmlready(StundenzettelTimesheet::stundenzettel_strftimespan($timesheet->sum)) : '0:00' ?> / <?= htmlready($timesheet->contract->contract_hours) ?></td>
+                    <td><?= ($timesheet->vacation) ? htmlready(StundenzettelTimesheet::stundenzettel_strftimespan($timesheet->vacation)) : '0:00' ?></td>
                     <td><?= ($timesheet->month_completed) ? htmlready(StundenzettelTimesheet::stundenzettel_strftimespan($timesheet->timesheet_balance)) : '(ausstehend)' ?></td>
                     <td>  
                         <?= Icon::create($status_infos['finished']['icon'], $status_infos[$timesheet->getCurrentState('finished', $role) . '_icon_role'], ['title' =>  $status_infos['finished'][$timesheet->getCurrentState('finished', $role) . '_tooltip']] )?>
@@ -44,6 +46,7 @@
             <tr>
                 <th data-sort="text" style='width:10%'>Monat/Jahr</th>
                 <th data-sort="false" style='width:10%'>Stunden</th>
+                <th data-sort="false" style='width:10%'>davon Urlaub</th>
                 <th data-sort="false" style='width:10%'>Überstunden</th>
                 <th data-sort="false" style='width:10%'>Status</th>
             </tr>
@@ -55,6 +58,7 @@
                     <td><a href='<?=$this->controller->url_for('timesheet/timesheet/' . htmlready($timesheet->id)) ?>' title='Stundenzettel editieren'><?= htmlready($timesheet->month) ?>/<?= htmlready($timesheet->year) ?></a>
                     </td>
                     <td><?= ($timesheet->sum) ? StundenzettelTimesheet::stundenzettel_strftimespan($timesheet->sum) : '0:00' ?> / <?= htmlready($timesheet->contract->contract_hours) ?></td>
+                    <td><?= ($timesheet->vacation) ? htmlready(StundenzettelTimesheet::stundenzettel_strftimespan($timesheet->vacation)) : '0:00' ?></td>
                     <td><?= ($timesheet->month_completed) ? htmlready(StundenzettelTimesheet::stundenzettel_strftimespan($timesheet->timesheet_balance)) : '(ausstehend)' ?></td>
                     <td>
                         <?= Icon::create($status_infos['finished']['icon'], $status_infos[$timesheet->getCurrentState('finished', 'stumi') . '_icon_role'], ['title' =>  $status_infos['finished'][$timesheet->getCurrentState('finished', 'stumi') . '_tooltip']] )?>

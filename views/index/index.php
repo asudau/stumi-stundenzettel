@@ -9,12 +9,13 @@
                 <th data-sort="text" style='width:10%'>Nachname, Vorname</th>
                 <th data-sort="htmldata" style='width:10%'>Vertrags- <br>beginn</th>
                 <th data-sort="htmldata" style='width:10%'>Vertrags- <br>ende</th>
-                <th data-sort="digit" style='width:10%'>Laufzeit</br>(Monate)</th>
                 <th data-sort="digit" style='width:10%'>Monats- </br>stunden</th>
                 <th data-sort="digit" style='width:5%'>Tagessatz</th>
-                <th data-sort="digit" style='width:10%'>Stundenkonto</br>(exkl. <?= strftime('%B', time()) ?>)</th>
-                <th data-sort="false" style='width:10%'>Urlaub in Anspruch genommen <?= date('Y', time()) ?></th>
-                <th data-sort="digit" style='width:10%'>Resturlaub</br><?= date('Y', time()) ?></th>
+                <th data-sort="digit" style='width:10%'>Stundenkonto</br>(exkl. <?= strftime('%B') ?>)</th>
+                <th data-sort="false" style='width:10%'>Urlaub in Anspruch genommen <?= date('Y') ?></th>
+                <th data-sort="digit" style='width:10%'>Resturlaub</br><?= date('Y') ?></th>
+                <th data-sort="false" style='width:10%'>Urlaubsanspruch</br><?= date('Y') ?></th>
+                <th data-sort="digit" style='width:10%'>aktueller</br>Resturlaub</br><?= date('Y')-1 ?></th>
                 <th data-sort="false" style='width:10%'>Verantwortliche/r MA</th>
                 <th>Aktionen</th>
             </tr>
@@ -33,12 +34,13 @@
                         <? endif ?>
                     </td>
                     <td data-sort-value="<?= $contract->contract_end ?>"><?= date('d.m.Y', $contract->contract_end) ?></td>
-                    <td><?= htmlready($contract->getContractDuration()) ?></td>
                     <td><?= htmlready($contract->contract_hours) ?></td>
                     <td><?= htmlready($contract->default_workday_time) ?></td>
                     <td><?= htmlready(StundenzettelTimesheet::stundenzettel_strftimespan($contract->getWorktimeBalance())) ?></td>
-                    <td><?= htmlready(StundenzettelTimesheet::stundenzettel_strftimespan($contract->getClaimedVacation(date('Y', time()))))?> von <?= htmlready($contract->getVacationEntitlement(date('Y', time())))?></td>
-                    <td><?= htmlready(StundenzettelTimesheet::stundenzettel_strftimespan($contract->getRemainingVacation(date('Y', time()))))?></td>
+                    <td><?= htmlready(StundenzettelTimesheet::stundenzettel_strftimespan($contract->getClaimedVacation(date('Y', time()))))?></td>
+                    <td><?= htmlready(StundenzettelTimesheet::stundenzettel_strftimespan($contract->getRemainingVacation(date('Y'))))?></td>
+                    <td><?= htmlready($contract->getVacationEntitlement(date('Y')))?></td>
+                    <td><?= htmlready(StundenzettelTimesheet::stundenzettel_strftimespan($contract->getRemainingVacation(date('Y')-1)))?></td>
                     <td><?= htmlready(User::findOneByUser_Id($contract->supervisor)->username) ?></td>
                     <td>
                         <? if ($adminrole) : ?>
