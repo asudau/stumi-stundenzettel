@@ -87,7 +87,7 @@
                 <th data-sort="false" style='width:10%'>Vertragsbeginn</th>
                 <th data-sort="false" style='width:10%'>Vertragsende</th>
                 <th data-sort="false" style='width:10%'>Stunden lt. Vertrag</th>
-                <th data-sort="false" style='width:10%'>Stundenkonto (exkl. <?= date('M', time()) ?>)</th>
+                <th data-sort="false" style='width:10%'>Stundenkonto (exkl. <?= strftime('%B') ?>)</th>
 <!--                <th data-sort="false" style='width:10%'>Resturlaub/Urlaubsanspruch <?= date('Y', time()) ?></th>                -->
                 <th data-sort="false" style='width:10%'>Verantwortliche/r MA</th>
             </tr>
