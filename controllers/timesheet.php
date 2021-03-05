@@ -281,6 +281,11 @@ class TimesheetController extends StudipController {
                         PageLayout::postMessage(MessageBox::error(sprintf(_("Bei einer Arbeitszeit von mehr als sechs Stunden ist eine Pause von mindestens 30 Minuten gesetzlich vorgeschrieben: %s.%s"), $record->day, $timesheet->month )));
                         $errors = true;  
                     } 
+                    if ($record->sum && !$record->entry_mktime) {
+                        PageLayout::postMessage(MessageBox::error(sprintf(_("fehlende Angabe -Aufgezeichnet am- für den %s.%s"), $record->day, $timesheet->month )));
+                        $errors = true; 
+                    }
+                    
                     if (!$errors){
                         $record->store();
                     }
