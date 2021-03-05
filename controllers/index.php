@@ -61,13 +61,13 @@ class IndexController extends StudipController {
             }
         
             //get all stumis and contracts
-            $groups = Statusgruppen::findBySQL('`name` LIKE ? AND `range_id` LIKE ?', ['%Studentische%', $this->inst_id[0]]);
+            $groups = Statusgruppen::findBySQL('`name` LIKE ? AND `range_id` = ?', ['%Studentische%', $this->inst_id[0]]);
             foreach ($groups as $group) {
                 foreach ($group->members as $member) {
                     $stumi = User::find($member->user_id);
                     if (!$this->search || strpos(strtolower($stumi->username . ' ' . $stumi->vorname . ' ' . $stumi->nachname), strtolower($this->search))) {
                         $this->stumis[] = $stumi;
-                        $this->stumi_contracts[$member->user_id] = StundenzettelContract::findBySQL('`user_id` LIKE ? AND `inst_id` LIKE ?', [$member->user_id, $this->inst_id[0]]);
+                        $this->stumi_contracts[$member->user_id] = StundenzettelContract::findBySQL('`user_id` = ? AND `inst_id` = ?', [$member->user_id, $this->inst_id[0]]);
                     }
                 }
             }
@@ -81,7 +81,7 @@ class IndexController extends StudipController {
                 if(!in_array($contract->user_id, $this->user_ids)){
                     $this->user_ids[] = $contract->user_id;
                     $this->stumis[] = User::find($contract->user_id);
-                    $this->stumi_contracts[$contract->user_id] = StundenzettelContract::findBySQL('`user_id` LIKE ? AND `supervisor` LIKE ?', [$contract->user_id, User::findCurrent()->user_id]);
+                    $this->stumi_contracts[$contract->user_id] = StundenzettelContract::findBySQL('`user_id` = ? AND `supervisor` = ?', [$contract->user_id, User::findCurrent()->user_id]);
                 }
             }   
             //setup navigation

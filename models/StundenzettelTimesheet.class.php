@@ -66,7 +66,7 @@ class StundenzettelTimesheet extends \SimpleORMap
     }
     
     static function getContractTimesheet($contract_id, $month, $year){
-        $timesheet = StundenzettelTimesheet::findOneBySQL('`contract_id` LIKE ? AND `month` = ? AND `year` = ?', [$contract_id, $month, $year]);
+        $timesheet = StundenzettelTimesheet::findOneBySQL('`contract_id` = ? AND `month` = ? AND `year` = ?', [$contract_id, $month, $year]);
         return $timesheet;
     }
     

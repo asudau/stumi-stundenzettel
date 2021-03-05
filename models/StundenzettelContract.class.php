@@ -298,10 +298,10 @@ class StundenzettelContract extends \SimpleORMap
     
     function getClaimedVacation($year, $month = 12)
     {
-        //$timesheets = StundenzettelTimesheet::findBySQL('`contract_id` LIKE ? AND `year` LIKE ?', [$this->id, $year]);
+        //$timesheets = StundenzettelTimesheet::findBySQL('`contract_id` = ? AND `year` = ?', [$this->id, $year]);
         
         //Urlaub der im Folgejahr bis einschließlich März genommen wurde einbeziehen (möglicherweise ist es übersichtlicher das separat zu bestimmen)
-        $timesheets = StundenzettelTimesheet::findBySQL('`contract_id` LIKE ? AND `year` LIKE ? AND `month` <= ?', [$this->id, $year, $month]);
+        $timesheets = StundenzettelTimesheet::findBySQL('`contract_id` = ? AND `year` = ? AND `month` <= ?', [$this->id, $year, $month]);
         
         //$timesheets = array_merge($timesheets_thisyear, $timesheets_nextyear);
         
@@ -328,7 +328,7 @@ class StundenzettelContract extends \SimpleORMap
     
     function getWorktimeBalance()
     {
-        $timesheets = StundenzettelTimesheet::findBySQL('`contract_id` LIKE ?', [$this->id]);
+        $timesheets = StundenzettelTimesheet::findBySQL('`contract_id` = ?', [$this->id]);
         $balance_time = 0;
         foreach ($timesheets as $timesheet) {
             if ($timesheet->month_completed && $this->monthWithinRecordingTime($timesheet->month, $timesheet->year)) {
@@ -355,8 +355,8 @@ class StundenzettelContract extends \SimpleORMap
                 //falls einer existiert, ordne ihn diesem Vertrag zu
                 
                 //TODO: bestehende Timesheets über Verträge finden
-//                if (StundenzettelTimesheet::findBySQL('`user_id` LIKE ? AND `month` LIKE ? AND `year` LIKE ? AND inst_id LIKE ?', [$this->user_id, $month->format('n'), $month->format('Y'), $this->inst_id]) ) {
-//                    $timesheet = StundenzettelTimesheet::findOneBySQL('`user_id` LIKE ? AND `month` LIKE ? AND `year` LIKE ? AND inst_id LIKE ?', [$this->user_id, $month->format('n'), $month->format('Y'), $this->inst_id]);
+//                if (StundenzettelTimesheet::findBySQL('`user_id` = ? AND `month` = ? AND `year` = ? AND inst_id = ?', [$this->user_id, $month->format('n'), $month->format('Y'), $this->inst_id]) ) {
+//                    $timesheet = StundenzettelTimesheet::findOneBySQL('`user_id` = ? AND `month` = ? AND `year` = ? AND inst_id = ?', [$this->user_id, $month->format('n'), $month->format('Y'), $this->inst_id]);
 //                    $timesheet->contract_id = $this->id;
 //                    $timesheet->store();
                 //falls die Vergangenheit betroffen ist, lege nachträglich an
