@@ -3,8 +3,6 @@
 use Studip\Button, Studip\LinkButton;
 ?>
 
-<html>
-
 <form class='default' method="post" action="<?= $controller->url_for('index/save_contract_begin_data/' . htmlready($contract->id)) ?>">
     <?= CSRFProtection::tokenTag() ?>
     
