@@ -64,20 +64,20 @@ class TimesheetController extends StudipController {
         Navigation::activateItem('tools/stundenzettelverwaltung/timesheets');
         
         //if its later than the 18.th of current month
-        if (strftime('%e', time()) > 18) {
-            $this->next_month = strftime('%B', strtotime("+1 month", time()));
-            $this->last_month = strftime('%B', time());
-            $this->next_month_num = strftime('%m', strtotime("+1 month", time()));
-            $this->next_month_year = strftime('%Y', strtotime("+1 month", time()));
-            $this->last_month_num = strftime('%m', time());
-            $this->last_month_year = strftime('%Y', time());
+        if (strftime('%e') > 18) {
+            $this->next_month = strftime('%B', strtotime("+1 month"));
+            $this->last_month = strftime('%B');
+            $this->next_month_num = strftime('%m', strtotime("+1 month"));
+            $this->next_month_year = strftime('%Y', strtotime("+1 month"));
+            $this->last_month_num = strftime('%m');
+            $this->last_month_year = strftime('%Y');
         } else {
-            $this->next_month = strftime('%B', time());
-            $this->last_month = strftime('%B', strtotime("-1 month", time()));
-            $this->next_month_num = strftime('%m', time());
-            $this->next_month_year = strftime('%Y', time());
-            $this->last_month_num = strftime('%m', strtotime("-1 month", time()));
-            $this->last_month_year = strftime('%Y', strtotime("-1 month", time()));
+            $this->next_month = strftime('%B');
+            $this->last_month = strftime('%B', strtotime("-1 month"));
+            $this->next_month_num = strftime('%m');
+            $this->next_month_year = strftime('%Y');
+            $this->last_month_num = strftime('%m', strtotime("-1 month"));
+            $this->last_month_year = strftime('%Y', strtotime("-1 month"));
         }
         $this->contracts = StundenzettelContract::getContractsByMonth($this->last_month_num, $this->last_month_year);
         
@@ -146,12 +146,12 @@ class TimesheetController extends StudipController {
         
         if(!$timesheet_id && $this->stumirole){
             $contract_id = StundenzettelContract::getCurrentContractId($GLOBALS['user']->user_id);
-            //$timesheet = StundenzettelTimesheet::getContractTimesheet($contract_id, date('m', time()), date('Y', time()));
+            //$timesheet = StundenzettelTimesheet::getContractTimesheet($contract_id, date('m'), date('Y'));
             //$timesheet_id = $timesheet->id;
             if (!$contract_id){
                 $contract_id = StundenzettelContract::getSomeContractId($GLOBALS['user']->user_id);
             }
-            $this->redirect('timesheet/select/' . $contract_id . '/' . date('m', time()) . '/' . date('Y', time()));
+            $this->redirect('timesheet/select/' . $contract_id . '/' . date('m') . '/' . date('Y'));
         }
 
         $this->timesheet = StundenzettelTimesheet::find($timesheet_id);  
