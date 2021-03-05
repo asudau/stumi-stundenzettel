@@ -97,7 +97,7 @@ class IndexController extends StudipController {
         if ($this->stumirole) {
 
             $this->stumi = User::find($GLOBALS['user']->user_id);
-            $this->stumi_contracts = StundenzettelContract::findByStumi_id($this->stumi->user_id);
+            $this->stumi_contracts = StundenzettelContract::findByUser_id($this->stumi->user_id);
             foreach($this->stumi_contracts as $contract){
                 if(!in_array($inst_id, $this->inst_id)){
                     $this->inst_id[] = $inst_id;
