@@ -57,8 +57,8 @@ class StundenzettelTimesheet extends \SimpleORMap
         };
         
         $config['additional_fields']['overdue']['get'] = function ($item) {
-            $offset_overdue = '04';
-            $due_time = strtotime("+1 month", strtotime($item->year . '-' . $item->month . '-' . $offset_overdue));
+            $offset_overdue = '02';
+            $due_time = strtotime("+1 month", strtotime($item->year . '-' . $item->month . '-' . $offset_overdue . ' 23:59'));
             return $due_time < time();;     
         };
 
