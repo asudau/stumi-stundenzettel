@@ -88,7 +88,7 @@
                 <th data-sort="false" style='width:10%'>Vertragsende</th>
                 <th data-sort="false" style='width:10%'>Stunden lt. Vertrag</th>
                 <th data-sort="false" style='width:10%'>Stundenkonto (exkl. <?= date('M', time()) ?>)</th>
-                <th data-sort="false" style='width:10%'>Resturlaub/Urlaubsanspruch <?= date('Y', time()) ?></th>                
+<!--                <th data-sort="false" style='width:10%'>Resturlaub/Urlaubsanspruch <?= date('Y', time()) ?></th>                -->
                 <th data-sort="false" style='width:10%'>Verantwortliche/r MA</th>
             </tr>
         </thead>
@@ -100,7 +100,7 @@
                     <td><?= date('d.m.Y', $contract->contract_end) ?></td>
                     <td><?= htmlready($contract->contract_hours) ?></td>
                     <td><?= htmlready(StundenzettelTimesheet::stundenzettel_strftimespan($contract->getWorktimeBalance())) ?></td>
-                    <td><?= htmlready(StundenzettelTimesheet::stundenzettel_strftimespan($contract->getRemainingVacation(date('Y', time())))) ?>/<?= htmlready($contract->getVacationEntitlement(date('Y', time()))) ?></td>
+<!--                    <td><?= htmlready(StundenzettelTimesheet::stundenzettel_strftimespan($contract->getRemainingVacation(date('Y', time())))) ?>/<?= htmlready($contract->getVacationEntitlement(date('Y', time()))) ?></td>-->
                     <td><?= htmlready(User::findOneByUser_Id($contract->supervisor)->username) ?></td>
                 </tr>
             <? endforeach ?>
