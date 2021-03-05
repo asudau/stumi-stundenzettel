@@ -37,7 +37,7 @@
                     <td><?= htmlready($contract->contract_hours) ?></td>
                     <td><?= htmlready($contract->default_workday_time) ?></td>
                     <td><?= htmlready(StundenzettelTimesheet::stundenzettel_strftimespan($contract->getWorktimeBalance())) ?></td>
-                    <td><?= htmlready(StundenzettelTimesheet::stundenzettel_strftimespan($contract->getClaimedVacation(date('Y', time()))))?></td>
+                    <td><?= htmlready(StundenzettelTimesheet::stundenzettel_strftimespan($contract->getClaimedVacation(date('Y'))))?></td>
                     <td><?= htmlready(StundenzettelTimesheet::stundenzettel_strftimespan($contract->getRemainingVacation(date('Y'))))?></td>
                     <td><?= htmlready($contract->getVacationEntitlement(date('Y')))?></td>
                     <td><?= htmlready(StundenzettelTimesheet::stundenzettel_strftimespan($contract->getRemainingVacation(date('Y')-1)))?></td>
@@ -88,7 +88,7 @@
                 <th data-sort="false" style='width:10%'>Vertragsende</th>
                 <th data-sort="false" style='width:10%'>Stunden lt. Vertrag</th>
                 <th data-sort="false" style='width:10%'>Stundenkonto (exkl. <?= strftime('%B') ?>)</th>
-<!--                <th data-sort="false" style='width:10%'>Resturlaub/Urlaubsanspruch <?= date('Y', time()) ?></th>                -->
+<!--                <th data-sort="false" style='width:10%'>Resturlaub/Urlaubsanspruch <?= date('Y') ?></th>                -->
                 <th data-sort="false" style='width:10%'>Verantwortliche/r MA</th>
             </tr>
         </thead>
@@ -100,7 +100,7 @@
                     <td><?= date('d.m.Y', $contract->contract_end) ?></td>
                     <td><?= htmlready($contract->contract_hours) ?></td>
                     <td><?= htmlready(StundenzettelTimesheet::stundenzettel_strftimespan($contract->getWorktimeBalance())) ?></td>
-<!--                    <td><?= htmlready(StundenzettelTimesheet::stundenzettel_strftimespan($contract->getRemainingVacation(date('Y', time())))) ?>/<?= htmlready($contract->getVacationEntitlement(date('Y', time()))) ?></td>-->
+<!--                    <td><?= htmlready(StundenzettelTimesheet::stundenzettel_strftimespan($contract->getRemainingVacation(date('Y')))) ?>/<?= htmlready($contract->getVacationEntitlement(date('Y'))) ?></td>-->
                     <td><?= htmlready(User::findOneByUser_Id($contract->supervisor)->username) ?></td>
                 </tr>
             <? endforeach ?>
