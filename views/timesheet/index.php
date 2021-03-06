@@ -63,7 +63,9 @@
                     <td><?= ($timesheet->month_completed) ? htmlready(StundenzettelTimesheet::stundenzettel_strftimespan($timesheet->timesheet_balance)) : '(ausstehend)' ?></td>
                     <td>
                         <?= Icon::create($status_infos['finished']['icon'], $status_infos[$timesheet->getCurrentState('finished', 'stumi') . '_icon_role'], ['title' =>  $status_infos['finished'][$timesheet->getCurrentState('finished', 'stumi') . '_tooltip']] )?>
+                        <!--
                         <?= Icon::create($status_infos['approved']['icon'], $status_infos[$timesheet->getCurrentState('approved', 'stumi') . '_icon_role'], ['title' =>  $status_infos['approved'][$timesheet->getCurrentState('approved', 'stumi') . '_tooltip']] )?>
+                        -->
                         <?= Icon::create($status_infos['received']['icon'], $status_infos[$timesheet->getCurrentState('received', 'stumi') . '_icon_role'], ['title' =>  $status_infos['received'][$timesheet->getCurrentState('received', 'stumi') . '_tooltip']] )?>
                         <?= Icon::create($status_infos['complete']['icon'], $status_infos[$timesheet->getCurrentState('complete', 'stumi') . '_icon_role'], ['title' =>  $status_infos['complete'][$timesheet->getCurrentState('complete', 'stumi') . '_tooltip']] )?>
                     </td>
