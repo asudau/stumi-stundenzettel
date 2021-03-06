@@ -194,7 +194,7 @@ class TimesheetController extends StudipController {
                             'disabled' => "disabled"]
                     );
             }
-            if (true) {
+            if ($this->timesheet->finished) {
                 $actions->addLink(
                     _('PDF-zum Ausdruck generieren'),
                     PluginEngine::getLink($this->plugin, [], 'timesheet/pdf/' . $timesheet_id ),
@@ -331,8 +331,8 @@ class TimesheetController extends StudipController {
         if($timesheet){
             $timesheet->finished = true;
             $timesheet->store();
-            PageLayout::postMessage(MessageBox::success(_("Stundenzettel wurde eingereicht und kann nun nicht mehr bearbeitet werden.")));
-            $this->redirect('timesheet/index');
+            PageLayout::postMessage(MessageBox::success(_("Bitte denke daran den Stundenzettel zusätzlich ausgedruckt und unterschrieben Deinem/Deiner Vorgesetzten vorzulegen.")));
+            $this->redirect('timesheet/timesheet/' . $timesheet->id);
         } else {
             PageLayout::postMessage(MessageBox::error(_("Fehler: kein Stundenzettel gefunden.")));
             $this->redirect('timesheet/index');

@@ -49,6 +49,7 @@
                 <th data-sort="false" style='width:10%'>davon Urlaub</th>
                 <th data-sort="false" style='width:10%'>Überstunden</th>
                 <th data-sort="false" style='width:10%'>Status</th>
+                <th style='width:10%'>Aktionen</th>
             </tr>
         </thead>
         <tbody>
@@ -65,6 +66,13 @@
                         <?= Icon::create($status_infos['approved']['icon'], $status_infos[$timesheet->getCurrentState('approved', 'stumi') . '_icon_role'], ['title' =>  $status_infos['approved'][$timesheet->getCurrentState('approved', 'stumi') . '_tooltip']] )?>
                         <?= Icon::create($status_infos['received']['icon'], $status_infos[$timesheet->getCurrentState('received', 'stumi') . '_icon_role'], ['title' =>  $status_infos['received'][$timesheet->getCurrentState('received', 'stumi') . '_tooltip']] )?>
                         <?= Icon::create($status_infos['complete']['icon'], $status_infos[$timesheet->getCurrentState('complete', 'stumi') . '_icon_role'], ['title' =>  $status_infos['complete'][$timesheet->getCurrentState('complete', 'stumi') . '_tooltip']] )?>
+                    </td>
+                    <td>
+                        <? if ($timesheet->finished) : ?>
+                        <a href="<?= PluginEngine::getLink($plugin, [], 'timesheet/pdf/' . $timesheet->id ) ?>">
+                            <?= Icon::create('file-pdf', ['title' =>  'PDF zum Ausdruck generieren'] )?>
+                        </a>
+                        <? endif ?>
                     </td>
                 </tr>
                 <? endforeach ?>
