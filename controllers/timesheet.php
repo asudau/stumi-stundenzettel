@@ -339,6 +339,24 @@ class TimesheetController extends StudipController {
         }
     }
     
+    public function unlock_action($timesheet_id)
+    {
+        $timesheet = StundenzettelTimesheet::find($timesheet_id);
+        if ( !$this->adminrole ) {
+            throw new AccessDeniedException(_("Sie haben keine Zugriffsberechtigung"));
+        }
+        
+        if($timesheet){
+            $timesheet->finished = false;
+            $timesheet->store();
+            PageLayout::postMessage(MessageBox::error(_("Sie können diesen Stundenzettel erst wieder einsehen, wenn dieser erneut digital eingereicht wird.")));
+            $this->redirect('timesheet/index/' . $timesheet->contract->id);
+        } else {
+            PageLayout::postMessage(MessageBox::error(_("Fehler: kein Stundenzettel gefunden.")));
+            $this->redirect('timesheet/index');
+        }
+    }
+    
     public function approve_action($timesheet_id)
     {
         $timesheet = StundenzettelTimesheet::find($timesheet_id);

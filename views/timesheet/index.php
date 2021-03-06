@@ -15,6 +15,7 @@
                 <th data-sort="false" style='width:10%'>davon Urlaub</th>
                 <th data-sort="false" style='width:10%'>Überstunden</th>
                 <th data-sort="false" style='width:10%'>Status</th>
+                <th data-sort="false" style='width:10%'>Aktionen</th>
             </tr>
         </thead>
         <tbody>
@@ -35,6 +36,13 @@
                         <?= Icon::create($status_infos['approved']['icon'], $status_infos[$timesheet->getCurrentState('approved', $role) . '_icon_role'], ['title' =>  $status_infos['approved'][$timesheet->getCurrentState('approved', $role) . '_tooltip']] )?>
                         <?= Icon::create($status_infos['received']['icon'], $status_infos[$timesheet->getCurrentState('received', $role) . '_icon_role'], ['title' =>  $status_infos['received'][$timesheet->getCurrentState('received', $role) . '_tooltip']] )?>
                         <?= Icon::create($status_infos['complete']['icon'], $status_infos[$timesheet->getCurrentState('complete', $role) . '_icon_role'], ['title' =>  $status_infos['complete'][$timesheet->getCurrentState('complete', $role) . '_tooltip']] )?>
+                    </td>
+                    <td>
+                        <? if ($timesheet->finished) : ?>
+                        <a href="<?= PluginEngine::getLink($plugin, [], 'timesheet/unlock/' . $timesheet->id ) ?>" data-confirm="Einreichen Rückgängig machen? Der Stumi kann diesen Stundnezettel dann wieder bearbeiten und Sie haben erst wieder Zugriff wenn dieser erneut eingereicht wurde.">
+                            <?= Icon::create('lock-unlocked', ['title' =>  'Stundenzettel wieder zur Bearbeitung durch Stumi freigeben'] )?>
+                        </a>
+                        <? endif ?>
                     </td>
                 </tr>
                 <? endforeach ?>
