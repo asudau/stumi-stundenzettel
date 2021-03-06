@@ -180,7 +180,7 @@ class TimesheetController extends StudipController {
             if (!$this->timesheet->finished) {
                 $actions->addLink(
                         _('Stundenzettel einreichen'),
-                        PluginEngine::getLink($this->plugin, [], 'timesheet/send/' . $timesheet_id ),
+                        PluginEngine::getUrl($this->plugin, [], 'timesheet/send/' . $timesheet_id ),
                         Icon::create('share', 'new'),
                         ['title' => 'Achtung, anschließend keine Bearbeitung mehr möglich!',
                             'data-confirm' => 'Bearbeitung abschließen und Stundenzettel offiziell einreichen?']
@@ -188,7 +188,7 @@ class TimesheetController extends StudipController {
             } else {
                 $actions->addLink(
                         _('Stundenzettel wurde eingereicht'),
-                        PluginEngine::getLink($this->plugin, [], 'timesheet/timesheet/' . $timesheet_id ),
+                        PluginEngine::getUrl($this->plugin, [], 'timesheet/timesheet/' . $timesheet_id ),
                         Icon::create('lock-locked', 'new'),
                         ['title' => 'Keine Bearbeitung mehr möglich!',
                             'disabled' => "disabled"]
@@ -197,7 +197,7 @@ class TimesheetController extends StudipController {
             if ($this->timesheet->finished) {
                 $actions->addLink(
                     _('PDF-zum Ausdruck generieren'),
-                    PluginEngine::getLink($this->plugin, [], 'timesheet/pdf/' . $timesheet_id ),
+                    PluginEngine::getUrl($this->plugin, [], 'timesheet/pdf/' . $timesheet_id ),
                     Icon::create('file-pdf')
                     //,['onclick'=>"return validateFormSaved()"]
                 );
