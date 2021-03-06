@@ -11,7 +11,7 @@ use Studip\Button, Studip\LinkButton;
     <p>Fachbereich/Organisationseinheit: <b><?= htmlready(Institute::find($contract->inst_id)->name) ?></b></p>
 
     <p>Monat/Jahr: 
-        <form name="month_select" method="post"  action="<?= $controller->url_for('timesheet/select/' . htmlready($contract->id)) ?>">
+        <form name="month_select" method="post"  action="<?= $controller->link_for('timesheet/select/' . $contract->id) ?>">
             <select name ='month' onchange="this.form.submit()">
                 <? foreach ($plugin->getMonths() as $entry_value): ?>
                     <option <?= ($month == $entry_value) ? 'selected' : '' ?> value="<?=htmlready($entry_value)?>"><?= htmlready($entry_value) ?></option>
@@ -26,7 +26,7 @@ use Studip\Button, Studip\LinkButton;
     </p>
     
 <? elseif ($stumirole || $timesheet->finished): ?>
-    
+    <h2><?= strftime("%B", mktime(0, 0, 0, $timesheet->month, 10)) . ' ' . $timesheet->year;  ?> </h2>
     <p>Name, Vorname: <b><?= htmlready(User::find($timesheet->contract->user_id)->nachname) ?>, <?= htmlready(User::find($timesheet->contract->user_id)->vorname) ?></b></p>
     <p>Fachbereich/Organisationseinheit: <b><?= htmlready(Institute::find($inst_id)->name) ?></b></p>
     <p>Monatsarbeitszeit laut Arbeitsvertrag: <b><?= htmlready($timesheet->contract->contract_hours) ?> Stunden </b></p>

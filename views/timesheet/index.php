@@ -10,7 +10,7 @@
     <table id='stumi-timesheet-entries' class="sortable-table default">
         <thead>
             <tr>
-                <th data-sort="text" style='width:10%'>Monat/Jahr</th>
+                <th data-sort="false" style='width:10%'>Monat/Jahr</th>
                 <th data-sort="false" style='width:10%'>Stunden</th>
                 <th data-sort="false" style='width:10%'>davon Urlaub</th>
                 <th data-sort="false" style='width:10%'>Überstunden</th>
@@ -21,7 +21,11 @@
             <? if ($timesheets) : ?>
                 <? foreach ($timesheets as $timesheet): ?>
                 <tr>  
-                    <td><a href='<?=$this->controller->url_for('timesheet/timesheet/' . htmlready($timesheet->id)) ?>' title='Stundenzettel editieren'><?= htmlready($timesheet->month) ?>/<?= htmlready($timesheet->year) ?></a>
+                    <td>
+                        <a href='<?=$this->controller->url_for('timesheet/timesheet/' . htmlready($timesheet->id)) ?>' title='Stundenzettel editieren'>
+                            <?= strftime("%B", mktime(0, 0, 0, $timesheet->month, 10)) ?>
+                            <?= htmlready($timesheet->year) ?>
+                        </a>
                     </td>
                     <td><?= ($timesheet->sum) ? htmlready(StundenzettelTimesheet::stundenzettel_strftimespan($timesheet->sum)) : '0:00' ?> / <?= htmlready($timesheet->contract->contract_hours) ?></td>
                     <td><?= ($timesheet->vacation) ? htmlready(StundenzettelTimesheet::stundenzettel_strftimespan($timesheet->vacation)) : '0:00' ?></td>
@@ -56,7 +60,11 @@
             <? if ($timesheets) : ?>
                 <? foreach ($timesheets as $timesheet): ?>
                 <tr>  
-                    <td><a href='<?=$this->controller->url_for('timesheet/timesheet/' . htmlready($timesheet->id)) ?>' title='Stundenzettel editieren'><?= htmlready($timesheet->month) ?>/<?= htmlready($timesheet->year) ?></a>
+                    <td>
+                        <a href='<?=$this->controller->url_for('timesheet/timesheet/' . htmlready($timesheet->id)) ?>' title='Stundenzettel editieren'>
+                            <?= strftime("%B", mktime(0, 0, 0, $timesheet->month, 10)) ?>
+                            <?= htmlready($timesheet->year) ?>
+                        </a>
                     </td>
                     <td><?= ($timesheet->sum) ? StundenzettelTimesheet::stundenzettel_strftimespan($timesheet->sum) : '0:00' ?> / <?= htmlready($timesheet->contract->contract_hours) ?></td>
                     <td><?= ($timesheet->vacation) ? htmlready(StundenzettelTimesheet::stundenzettel_strftimespan($timesheet->vacation)) : '0:00' ?></td>
