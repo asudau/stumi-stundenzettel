@@ -104,6 +104,18 @@ class Stundenzettel extends StudipPlugin implements SystemPlugin
         return RolePersistence::isAssignedRole($GLOBALS['user']->user_id, \Stundenzettelverwaltung\STUNDENVERWALTUNG_ROLE);
     }
     
+    public function getAdminInstIds () {
+        $roles = RolePersistence::getAllRoles();
+        foreach($roles as $role) {
+            if($role->getRolename() == \Stundenzettelverwaltung\STUNDENVERWALTUNG_ROLE) {
+                $role_id = $role->getRoleid();
+            }
+        }
+        $inst_ids = RolePersistence::getAssignedRoleInstitutes($GLOBALS['user']->user_id, $role_id);
+        //keine leeren Einträge
+        return array_filter($inst_ids);
+    }
+    
     public function hasStumiContract ()
     {
         return StundenzettelContract::findByUser_id($GLOBALS['user']->user_id);

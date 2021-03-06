@@ -50,24 +50,21 @@ class IndexController extends StudipController {
             $search_user->addNeedle(_('Name'), 'search_user', true, null, null, $this->search);
             Sidebar::get()->addWidget($search_user);
             
-            //get institutes for the user
-            foreach($user->institute_memberships->pluck('institut_id') as $inst_id){
-                $this->inst_id[] = $inst_id;
-            }
-            if (sizeof($this->inst_id) == 0) { //local testing with root
-                $this->inst_id[] = '477d184367f48cc210f74bb4f779c7b7';
-            } else { //TODO temporäre direkte Zuweisung der Einrichtung virtUOS, muss später dynamisch erfolgen
-                $this->inst_id[] = '355217603013d7675d68951087429924';
-            }
+            //get institutes for the admin-user
+            $this->inst_ids = $this->plugin->getAdminInstIds();
+            $this->inst_data = array();
         
             //get all stumis and contracts
-            $groups = Statusgruppen::findBySQL('`name` LIKE ? AND `range_id` = ?', ['%Studentische%', $this->inst_id[0]]);
-            foreach ($groups as $group) {
-                foreach ($group->members as $member) {
-                    $stumi = User::find($member->user_id);
-                    if (!$this->search || strpos(strtolower($stumi->username . ' ' . $stumi->vorname . ' ' . $stumi->nachname), strtolower($this->search))) {
-                        $this->stumis[] = $stumi;
-                        $this->stumi_contracts[$member->user_id] = StundenzettelContract::findBySQL('`user_id` = ? AND `inst_id` = ?', [$member->user_id, $this->inst_id[0]]);
+            //TODO get groups for each institute by configured group_name
+            foreach ($this->inst_ids as $inst_id) {
+                $groups = Statusgruppen::findBySQL('`name` LIKE ? AND `range_id` = ?', ['%Studentische%', $inst_id]);
+                foreach ($groups as $group) {
+                    foreach ($group->members as $member) {
+                        $stumi = User::find($member->user_id);
+                        if (!$this->search || strpos(strtolower($stumi->username . ' ' . $stumi->vorname . ' ' . $stumi->nachname), strtolower($this->search))) {
+                            $this->inst_data[$inst_id]->stumis[] = $stumi;
+                            $this->inst_data[$inst_id]->stumi_contracts[$member->user_id] = StundenzettelContract::findBySQL('`user_id` = ? AND `inst_id` = ?', [$member->user_id, $inst_id]);
+                        }
                     }
                 }
             }

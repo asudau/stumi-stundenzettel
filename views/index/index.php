@@ -1,82 +1,88 @@
 <div>
     
 <? if ($adminrole || $supervisorrole) : ?>    
-    <h2> <?= htmlready(Institute::find($inst_id[0])->name) ?>: <?= sizeof($stumis) ?> Studentische MitarbeiterInnen </h2>
+    <? foreach ($inst_ids as $inst_id) : ?>
+        <? if ($adminrole) : ?>
+            <h2> <?= htmlready(Institute::find($inst_id)->name) ?>: <?= sizeof($inst_data[$inst_id]->stumis) ?> Studentische MitarbeiterInnen </h2>
+        <? else : ?>
+            <h2> Studentische MitarbeiterInnen </h2>
+        <? endif ?>
 
-    <table id='stumi-contract-entries' class="sortable-table default">
-        <thead>
-            <tr>
-                <th data-sort="text" style='width:10%'>Nachname, Vorname</th>
-                <th data-sort="htmldata" style='width:10%'>Vertrags- <br>beginn</th>
-                <th data-sort="htmldata" style='width:10%'>Vertrags- <br>ende</th>
-                <th data-sort="digit" style='width:10%'>Monats- </br>stunden</th>
-                <th data-sort="digit" style='width:5%'>Tagessatz</th>
-                <th data-sort="digit" style='width:10%'>Stundenkonto</br>(exkl. <?= strftime('%B') ?>)</th>
-                <th data-sort="false" style='width:10%'>Urlaub in Anspruch genommen <?= date('Y') ?></th>
-                <th data-sort="digit" style='width:10%'>Resturlaub</br><?= date('Y') ?></th>
-                <th data-sort="false" style='width:10%'>Urlaubsanspruch</br><?= date('Y') ?></th>
-                <th data-sort="digit" style='width:10%'>aktueller</br>Resturlaub</br><?= date('Y')-1 ?></th>
-                <th data-sort="false" style='width:10%'>Verantwortliche/r MA</th>
-                <th>Aktionen</th>
-            </tr>
-        </thead>
-        <tbody>
-        <? foreach ($stumis as $stumi): ?>
-            <? if ($stumi_contracts[$stumi->user_id]) : ?>
-                <? foreach ($stumi_contracts[$stumi->user_id] as $contract): ?>
-                <tr>  
-                    <td><a href='<?=$this->controller->url_for('timesheet/index/' . htmlready($contract->id)) ?>' title='Stundenzettel einsehen'><?= htmlready($stumi->nachname) ?>, <?= htmlready($stumi->vorname) ?></a>
-                    </td>
-                    <td data-sort-value="<?= $contract->contract_begin ?>"><?= date('d.m.Y', $contract->contract_begin) ?>
-                        <? if ($contract->begin_digital_recording_month && $contract->begin_digital_recording_year) : ?>
-                            <?= Icon::create('info-circle', Icon::ROLE_CLICKABLE,  
-                                    ['title' => 'Beginn der elektronischen Erfassung: ' . $contract->begin_digital_recording_month . '/' . $contract->begin_digital_recording_year ]);?>
-                        <? endif ?>
-                    </td>
-                    <td data-sort-value="<?= $contract->contract_end ?>"><?= date('d.m.Y', $contract->contract_end) ?></td>
-                    <td><?= htmlready($contract->contract_hours) ?></td>
-                    <td><?= htmlready($contract->default_workday_time) ?></td>
-                    <td><?= htmlready(StundenzettelTimesheet::stundenzettel_strftimespan($contract->getWorktimeBalance())) ?></td>
-                    <td><?= htmlready(StundenzettelTimesheet::stundenzettel_strftimespan($contract->getClaimedVacation(date('Y'))))?></td>
-                    <td><?= htmlready(StundenzettelTimesheet::stundenzettel_strftimespan($contract->getRemainingVacation(date('Y'))))?></td>
-                    <td><?= htmlready($contract->getVacationEntitlement(date('Y')))?></td>
-                    <td><?= htmlready(StundenzettelTimesheet::stundenzettel_strftimespan($contract->getRemainingVacation(date('Y')-1)))?></td>
-                    <td><?= htmlready(User::findOneByUser_Id($contract->supervisor)->username) ?></td>
-                    <td>
-                        <? if ($adminrole) : ?>
-                            <a data-confirm='Eintrag löschen?' href='<?=$this->controller->url_for('index/delete/' . htmlready($contract->id)) ?>' title='Eintrag löschen' ><?=Icon::create('trash')?></a>
-                            <a  href='<?=$this->controller->url_for('index/edit/' . htmlready($contract->id)) ?>' title='Vertragsdaten bearbeiten' data-dialog='size=auto'><?=Icon::create('edit')?></a>
-                            <a  href='<?=$this->controller->url_for('index/add_contract_begin_data/' . htmlready($contract->id)) ?>' title='Zeitpunkt für Beginn digitaler Erfassung defnieren' data-dialog='size=auto'><?=Icon::create('date')?></a>
-                            <a  href='<?=$this->controller->url_for('index/edit/'. htmlready($contract->id) . '/1') ?>' title='Folgevertrag anlegen' data-dialog='size=auto'><?=Icon::create('add')?></a>
-                            <? endif ?>
-                    </td>
-
+        <table id='stumi-contract-entries' class="sortable-table default">
+            <thead>
+                <tr>
+                    <th data-sort="text" style='width:10%'>Nachname, Vorname</th>
+                    <th data-sort="htmldata" style='width:10%'>Vertrags- <br>beginn</th>
+                    <th data-sort="htmldata" style='width:10%'>Vertrags- <br>ende</th>
+                    <th data-sort="digit" style='width:10%'>Monats- </br>stunden</th>
+                    <th data-sort="digit" style='width:5%'>Tagessatz</th>
+                    <th data-sort="digit" style='width:10%'>Stundenkonto</br>(exkl. <?= strftime('%B') ?>)</th>
+                    <th data-sort="false" style='width:10%'>Urlaub in Anspruch genommen <?= date('Y') ?></th>
+                    <th data-sort="digit" style='width:10%'>Resturlaub</br><?= date('Y') ?></th>
+                    <th data-sort="false" style='width:10%'>Urlaubsanspruch</br><?= date('Y') ?></th>
+                    <th data-sort="digit" style='width:10%'>aktueller</br>Resturlaub</br><?= date('Y')-1 ?></th>
+                    <th data-sort="false" style='width:10%'>Verantwortliche/r MA</th>
+                    <th>Aktionen</th>
                 </tr>
-                <? endforeach ?>
+            </thead>
+            <tbody>
+            <? foreach ($inst_data[$inst_id]->stumis as $stumi): ?>
+                <? if ($inst_data[$inst_id]->stumi_contracts[$stumi->user_id]) : ?>
+                    <? foreach ($inst_data[$inst_id]->stumi_contracts[$stumi->user_id] as $contract): ?>
+                    <tr>  
+                        <td><a href='<?=$this->controller->url_for('timesheet/index/' . htmlready($contract->id)) ?>' title='Stundenzettel einsehen'><?= htmlready($stumi->nachname) ?>, <?= htmlready($stumi->vorname) ?></a>
+                        </td>
+                        <td data-sort-value="<?= $contract->contract_begin ?>"><?= date('d.m.Y', $contract->contract_begin) ?>
+                            <? if ($contract->begin_digital_recording_month && $contract->begin_digital_recording_year) : ?>
+                                <?= Icon::create('info-circle', Icon::ROLE_CLICKABLE,  
+                                        ['title' => 'Beginn der elektronischen Erfassung: ' . $contract->begin_digital_recording_month . '/' . $contract->begin_digital_recording_year ]);?>
+                            <? endif ?>
+                        </td>
+                        <td data-sort-value="<?= $contract->contract_end ?>"><?= date('d.m.Y', $contract->contract_end) ?></td>
+                        <td><?= htmlready($contract->contract_hours) ?></td>
+                        <td><?= htmlready($contract->default_workday_time) ?></td>
+                        <td><?= htmlready(StundenzettelTimesheet::stundenzettel_strftimespan($contract->getWorktimeBalance())) ?></td>
+                        <td><?= htmlready(StundenzettelTimesheet::stundenzettel_strftimespan($contract->getClaimedVacation(date('Y'))))?></td>
+                        <td><?= htmlready(StundenzettelTimesheet::stundenzettel_strftimespan($contract->getRemainingVacation(date('Y'))))?></td>
+                        <td><?= htmlready($contract->getVacationEntitlement(date('Y')))?></td>
+                        <td><?= htmlready(StundenzettelTimesheet::stundenzettel_strftimespan($contract->getRemainingVacation(date('Y')-1)))?></td>
+                        <td><?= htmlready(User::findOneByUser_Id($contract->supervisor)->username) ?></td>
+                        <td>
+                            <? if ($adminrole) : ?>
+                                <a data-confirm='Eintrag löschen?' href='<?=$this->controller->url_for('index/delete/' . htmlready($contract->id)) ?>' title='Eintrag löschen' ><?=Icon::create('trash')?></a>
+                                <a  href='<?=$this->controller->url_for('index/edit/' . htmlready($contract->id)) ?>' title='Vertragsdaten bearbeiten' data-dialog='size=auto'><?=Icon::create('edit')?></a>
+                                <a  href='<?=$this->controller->url_for('index/add_contract_begin_data/' . htmlready($contract->id)) ?>' title='Zeitpunkt für Beginn digitaler Erfassung defnieren' data-dialog='size=auto'><?=Icon::create('date')?></a>
+                                <a  href='<?=$this->controller->url_for('index/edit/'. htmlready($contract->id) . '/1') ?>' title='Folgevertrag anlegen' data-dialog='size=auto'><?=Icon::create('add')?></a>
+                                <? endif ?>
+                        </td>
 
-           <? else : ?>
-                <tr> 
-                    <td><?= htmlready($stumi->nachname) ?>, <?= htmlready($stumi->vorname) ?>
-                    </td>
-                    <td> -- </td>
-                    <td> -- </td>
-                    <td> -- </td>
-                    <td> -- </td>
-                    <td> -- </td>
-                    <td> -- </td>
-                    <td> -- </td>
-                    <td> -- </td>
-                    <td> -- </td>
-                    <td>
-                       <a  href='<?=$this->controller->url_for('index/new/'. htmlready($inst_id[0]) . '/' . htmlready($stumi->user_id)) ?>' title='Vertrag hinzufügen' data-dialog='size=auto'><?=Icon::create('add')?></a>
-                    </td>
                     </tr>
+                    <? endforeach ?>
 
-            <? endif ?>
-        <? endforeach ?>
+               <? elseif ($adminrole) : ?>
+                    <tr> 
+                        <td><?= htmlready($stumi->nachname) ?>, <?= htmlready($stumi->vorname) ?>
+                        </td>
+                        <td> -- </td>
+                        <td> -- </td>
+                        <td> -- </td>
+                        <td> -- </td>
+                        <td> -- </td>
+                        <td> -- </td>
+                        <td> -- </td>
+                        <td> -- </td>
+                        <td> -- </td>
+                        <td>
+                           <a  href='<?=$this->controller->url_for('index/new/'. htmlready($inst_id) . '/' . htmlready($stumi->user_id)) ?>' title='Vertrag hinzufügen' data-dialog='size=auto'><?=Icon::create('add')?></a>
+                        </td>
+                        </tr>
 
-        </tbody>
-    </table>
+                <? endif ?>
+            <? endforeach ?>
+
+            </tbody>
+        </table>
+    <? endforeach ?>
     
 <? elseif ($stumirole) : ?>
     <h2> Meine Verträge </h2>
