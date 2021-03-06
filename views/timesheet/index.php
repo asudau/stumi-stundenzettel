@@ -22,7 +22,7 @@
                 <? foreach ($timesheets as $timesheet): ?>
                 <tr>  
                     <td>
-                        <a href='<?=$this->controller->url_for('timesheet/timesheet/' . htmlready($timesheet->id)) ?>' title='Stundenzettel editieren'>
+                        <a href='<?=$this->controller->link_for('timesheet/timesheet/' . $timesheet->id) ?>' title='Stundenzettel editieren'>
                             <?= strftime("%B", mktime(0, 0, 0, $timesheet->month, 10)) ?>
                             <?= htmlready($timesheet->year) ?>
                         </a>
@@ -61,7 +61,7 @@
                 <? foreach ($timesheets as $timesheet): ?>
                 <tr>  
                     <td>
-                        <a href='<?=$this->controller->url_for('timesheet/timesheet/' . htmlready($timesheet->id)) ?>' title='Stundenzettel editieren'>
+                        <a href='<?=$this->controller->link_for('timesheet/timesheet/' . $timesheet->id) ?>' title='Stundenzettel editieren'>
                             <?= strftime("%B", mktime(0, 0, 0, $timesheet->month, 10)) ?>
                             <?= htmlready($timesheet->year) ?>
                         </a>

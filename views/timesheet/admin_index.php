@@ -21,17 +21,17 @@
                     <? $timesheet_last_month = $timesheets[$contract->id]['last_month']; ?>
                     <? $timesheet_next_month = $timesheets[$contract->id]['next_month']; ?>
                     <td>
-                        <a href='<?=$this->controller->url_for('timesheet/index/' . htmlready($contract->id)) ?>' title='Stundenzettel einsehen'><?= htmlready($contract->stumi->nachname) ?>, <?= htmlready($contract->stumi->vorname) ?></a>
+                        <a href='<?=$this->controller->link_for('timesheet/index/' . $contract->id) ?>' title='Stundenzettel einsehen'><?= htmlready($contract->stumi->nachname) ?>, <?= htmlready($contract->stumi->vorname) ?></a>
                     </td>
                     <td><?= htmlready(StundenzettelTimesheet::stundenzettel_strftimespan($contract->getWorktimeBalance())) ?></td>
                     <td data-sort-value= <?= htmlready($timesheet_last_month->int_status) ?> >  
                         <? if ($timesheet_last_month) : ?>
                         <?= Icon::create($status_infos['finished']['icon'], $status_infos[$timesheet_last_month->getCurrentState('finished', 'admin') . '_icon_role'], ['title' =>  $status_infos['finished'][$timesheet_last_month->getCurrentState('finished', 'admin') . '_tooltip']] )?>
                         <?= Icon::create($status_infos['approved']['icon'], $status_infos[$timesheet_last_month->getCurrentState('approved', 'admin') . '_icon_role'], ['title' =>  $status_infos['approved'][$timesheet_last_month->getCurrentState('approved', 'admin') . '_tooltip']] )?>
-                        <a href='<?=$this->controller->url_for('timesheet/received/' . htmlready($timesheet_last_month->id)) ?>' title='Vorliegen bestätigen'>
+                        <a href='<?=$this->controller->link_for('timesheet/received/' . $timesheet_last_month->id) ?>' title='Vorliegen bestätigen'>
                             <?= Icon::create($status_infos['received']['icon'], $status_infos[$timesheet_last_month->getCurrentState('received', 'admin') . '_icon_role'], ['title' =>  $status_infos['received'][$timesheet_last_month->getCurrentState('received', 'admin') . '_tooltip']] )?>
                         </a>
-                        <a href='<?=$this->controller->url_for('timesheet/complete/' . htmlready($timesheet_last_month->id)) ?>' title='Vorgang abschließen'>
+                        <a href='<?=$this->controller->link_for('timesheet/complete/' . $timesheet_last_month->id) ?>' title='Vorgang abschließen'>
                             <?= Icon::create($status_infos['complete']['icon'], $status_infos[$timesheet_last_month->getCurrentState('complete', 'admin') . '_icon_role'], ['title' =>  $status_infos['complete'][$timesheet_last_month->getCurrentState('complete', 'admin') . '_tooltip']] )?>
                         </a>
                             <? endif ?>

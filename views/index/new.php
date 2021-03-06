@@ -3,7 +3,7 @@
 use Studip\Button, Studip\LinkButton;
 ?>
 
-<form class='default' method="post" action="<?= $controller->url_for('index/save/' . htmlready($inst_id) . '/' . htmlready($stumi->user_id) . '/' . htmlready($contract->id) ) ?>">
+<form class='default' method="post" action="<?= $controller->link_for('index/save/' . $inst_id . '/' . $stumi->user_id . '/' . $contract->id ) ?>">
     <?= CSRFProtection::tokenTag() ?>
     <? if ($following_contract) : ?>
         <input type='hidden' name ='following_contract' value='true' >

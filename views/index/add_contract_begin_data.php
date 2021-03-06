@@ -3,7 +3,7 @@
 use Studip\Button, Studip\LinkButton;
 ?>
 
-<form class='default' method="post" action="<?= $controller->url_for('index/save_contract_begin_data/' . htmlready($contract->id)) ?>">
+<form class='default' method="post" action="<?= $controller->link_for('index/save_contract_begin_data/' . $contract->id) ?>">
     <?= CSRFProtection::tokenTag() ?>
     
     <h2><?= _('Name: ') ?> <?= htmlready($stumi->vorname)?> <?= htmlready($stumi->nachname)?></h2>

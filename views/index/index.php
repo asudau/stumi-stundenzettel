@@ -30,7 +30,7 @@
                 <? if ($inst_data[$inst_id]->stumi_contracts[$stumi->user_id]) : ?>
                     <? foreach ($inst_data[$inst_id]->stumi_contracts[$stumi->user_id] as $contract): ?>
                     <tr>  
-                        <td><a href='<?=$this->controller->url_for('timesheet/index/' . htmlready($contract->id)) ?>' title='Stundenzettel einsehen'><?= htmlready($stumi->nachname) ?>, <?= htmlready($stumi->vorname) ?></a>
+                        <td><a href='<?=$this->controller->link_for('timesheet/index/' . $contract->id) ?>' title='Stundenzettel einsehen'><?= htmlready($stumi->nachname) ?>, <?= htmlready($stumi->vorname) ?></a>
                         </td>
                         <td data-sort-value="<?= $contract->contract_begin ?>"><?= date('d.m.Y', $contract->contract_begin) ?>
                             <? if ($contract->begin_digital_recording_month && $contract->begin_digital_recording_year) : ?>
@@ -49,10 +49,10 @@
                         <td><?= htmlready(User::findOneByUser_Id($contract->supervisor)->username) ?></td>
                         <td>
                             <? if ($adminrole) : ?>
-                                <a data-confirm='Eintrag löschen?' href='<?=$this->controller->url_for('index/delete/' . htmlready($contract->id)) ?>' title='Eintrag löschen' ><?=Icon::create('trash')?></a>
-                                <a  href='<?=$this->controller->url_for('index/edit/' . htmlready($contract->id)) ?>' title='Vertragsdaten bearbeiten' data-dialog='size=auto'><?=Icon::create('edit')?></a>
-                                <a  href='<?=$this->controller->url_for('index/add_contract_begin_data/' . htmlready($contract->id)) ?>' title='Zeitpunkt für Beginn digitaler Erfassung defnieren' data-dialog='size=auto'><?=Icon::create('date')?></a>
-                                <a  href='<?=$this->controller->url_for('index/edit/'. htmlready($contract->id) . '/1') ?>' title='Folgevertrag anlegen' data-dialog='size=auto'><?=Icon::create('add')?></a>
+                                <a data-confirm='Eintrag löschen?' href='<?=$this->controller->link_for('index/delete/' . $contract->id) ?>' title='Eintrag löschen' ><?=Icon::create('trash')?></a>
+                                <a  href='<?=$this->controller->link_for('index/edit/' . $contract->id) ?>' title='Vertragsdaten bearbeiten' data-dialog='size=auto'><?=Icon::create('edit')?></a>
+                                <a  href='<?=$this->controller->link_for('index/add_contract_begin_data/' . $contract->id) ?>' title='Zeitpunkt für Beginn digitaler Erfassung defnieren' data-dialog='size=auto'><?=Icon::create('date')?></a>
+                                <a  href='<?=$this->controller->link_for('index/edit/'. $contract->id . '/1') ?>' title='Folgevertrag anlegen' data-dialog='size=auto'><?=Icon::create('add')?></a>
                                 <? endif ?>
                         </td>
 
@@ -72,8 +72,9 @@
                         <td> -- </td>
                         <td> -- </td>
                         <td> -- </td>
+                        <td> -- </td>
                         <td>
-                           <a  href='<?=$this->controller->url_for('index/new/'. htmlready($inst_id) . '/' . htmlready($stumi->user_id)) ?>' title='Vertrag hinzufügen' data-dialog='size=auto'><?=Icon::create('add')?></a>
+                           <a  href='<?=$this->controller->link_for('index/new/'. $inst_id . '/' . $stumi->user_id) ?>' title='Vertrag hinzufügen' data-dialog='size=auto'><?=Icon::create('add')?></a>
                         </td>
                         </tr>
 

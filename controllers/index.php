@@ -43,8 +43,7 @@ class IndexController extends StudipController {
         if ($this->adminrole) {
             
             $this->search = Request::get('search_user')? Request::get('search_user') : '';
-        
-            $search_user = new SearchWidget($this->url_for('index/'));
+            $search_user = new SearchWidget($this->link_for('index'));
             $search_user->setTitle('Nutzer suchen');
             
             $search_user->addNeedle(_('Name'), 'search_user', true, null, null, $this->search);
@@ -81,13 +80,6 @@ class IndexController extends StudipController {
                     $this->stumi_contracts[$contract->user_id] = StundenzettelContract::findBySQL('`user_id` = ? AND `supervisor` = ?', [$contract->user_id, User::findCurrent()->user_id]);
                 }
             }   
-            //setup navigation
-//            $views = new ViewsWidget();
-//            $views->addLink(_('Übersicht über Studentische MitarbeiterInnen'),
-//                            $this->url_for('index'))
-//                  ->setActive($action === 'index');
-//            
-//            Sidebar::get()->addWidget($views);
             
         }
         
@@ -225,24 +217,6 @@ class IndexController extends StudipController {
     public function institute_settings_action(){
         $groups = Statusgruppen::findByRangeID($inst_id);
         
-    }
-    
-    // customized #url_for for plugins
-    public function url_for($to = '')
-    {
-        $args = func_get_args();
-
-        # find params
-        $params = array();
-        if (is_array(end($args))) {
-            $params = array_pop($args);
-        }
-
-        # urlencode all but the first argument
-        $args = array_map('urlencode', $args);
-        $args[0] = $to;
-
-        return PluginEngine::getURL($this->dispatcher->plugin, $params, join('/', $args));
     }
     
 }

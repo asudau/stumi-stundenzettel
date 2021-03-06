@@ -32,7 +32,7 @@ use Studip\Button, Studip\LinkButton;
     <p>Monatsarbeitszeit laut Arbeitsvertrag: <b><?= htmlready($timesheet->contract->contract_hours) ?> Stunden </b></p>
     <p>Diesen Monat erfasst: <b> <?= htmlready(StundenzettelTimesheet::stundenzettel_strftimespan($timesheet->sum)) ?> Stunden </b></p>
     <p>Monat/Jahr: 
-        <form name="month_select" method="post"  action="<?= $controller->url_for('timesheet/select/' . htmlready($timesheet->contract_id)) ?>">
+        <form name="month_select" method="post"  action="<?= $controller->link_for('timesheet/select/' . $timesheet->contract_id) ?>">
             <select name ='month' onchange="this.form.submit()">
                 <? foreach ($plugin->getMonths() as $entry_value): ?>
                     <option <?= ($timesheet->month == $entry_value) ? 'selected' : '' ?> value="<?=htmlready($entry_value)?>"><?= htmlready($entry_value) ?></option>
@@ -47,7 +47,7 @@ use Studip\Button, Studip\LinkButton;
     </p> 
 
 
-<form id="timesheet_form" method="post" class='<?= $adminrole ? 'admin' : '' ?> <?= $timesheet->locked ? 'locked' : '' ?>' action="<?= $controller->url_for('timesheet/save_timesheet', htmlready($timesheet->id)) ?>" class="default collapsable">
+<form id="timesheet_form" method="post" class='<?= $adminrole ? 'admin' : '' ?> <?= $timesheet->locked ? 'locked' : '' ?>' action="<?= $controller->link_for('timesheet/save_timesheet', $timesheet->id) ?>" class="default collapsable">
     <?= CSRFProtection::tokenTag() ?>
     <div style="overflow:scroll;">
         <table class='sortable-table default' style='width: auto;'>
@@ -230,9 +230,9 @@ use Studip\Button, Studip\LinkButton;
 <? endif ?>  
     
 <? if ($supervisorrole && $timesheet->finished) : ?>
-    <?= LinkButton::create(_('Korrektheit bestätigen'), $controller->url_for('timesheet/approve/' . htmlready($timesheet->id)) ) ?>
+    <?= LinkButton::create(_('Korrektheit bestätigen'), $controller->link_for('timesheet/approve/' . $timesheet->id) ) ?>
 <? elseif ($adminrole && $timesheet->finished) : ?>
-    <?= LinkButton::create(_('Eingang bestätigen'), $controller->url_for('timesheet/received/' . htmlready($timesheet->id)) ) ?>
+    <?= LinkButton::create(_('Eingang bestätigen'), $controller->link_for('timesheet/received/' . $timesheet->id) ) ?>
 <? endif ?>    
 
 
