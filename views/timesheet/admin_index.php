@@ -28,7 +28,8 @@
                         <? if ($timesheet_last_month) : ?>
                         <?= Icon::create($status_infos['finished']['icon'], $status_infos[$timesheet_last_month->getCurrentState('finished', 'admin') . '_icon_role'], ['title' =>  $status_infos['finished'][$timesheet_last_month->getCurrentState('finished', 'admin') . '_tooltip']] )?>
                         <?= Icon::create($status_infos['approved']['icon'], $status_infos[$timesheet_last_month->getCurrentState('approved', 'admin') . '_icon_role'], ['title' =>  $status_infos['approved'][$timesheet_last_month->getCurrentState('approved', 'admin') . '_tooltip']] )?>
-                        <a href='<?=$this->controller->link_for('timesheet/received/' . $timesheet_last_month->id) ?>' title='Vorliegen bestätigen'>
+                        <a href='<?=$this->controller->link_for('timesheet/received/' . $timesheet_last_month->id) ?>' 
+                           title= <?= ($timesheet_last_month->getCurrentState('complete', 'admin')) ? 'Bestätigen für Vorliegen zurückziehen' : 'Vorliegen bestätigen' ?> >
                             <?= Icon::create($status_infos['received']['icon'], $status_infos[$timesheet_last_month->getCurrentState('received', 'admin') . '_icon_role'], ['title' =>  $status_infos['received'][$timesheet_last_month->getCurrentState('received', 'admin') . '_tooltip']] )?>
                         </a>
                         <a href='<?=$this->controller->link_for('timesheet/complete/' . $timesheet_last_month->id) ?>' 

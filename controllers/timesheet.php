@@ -384,9 +384,14 @@ class TimesheetController extends StudipController {
         
         $timesheet = StundenzettelTimesheet::find($timesheet_id);
         if($timesheet && $this->adminrole){
-            $timesheet->received = true;
+            //toggle status
+            $timesheet->received = (($timesheet->getCurrentState('received', 'admin') == 'true') ? false : true); 
             $timesheet->store();
-            PageLayout::postMessage(MessageBox::success(_("Vorliegen in Papierform bestätigt: ") . htmlready($timesheet->contract->stumi->nachname) . '/' . strftime('%B', strtotime("2020-" . $timesheet->month . "-01") )) );
+             if ($timesheet->getCurrentState('received', 'admin') == 'true') {
+                PageLayout::postMessage(MessageBox::success(_("Vorliegen in Papierform bestätigt: ") . htmlready($timesheet->contract->stumi->nachname) . '/' . strftime('%B', strtotime("2020-" . $timesheet->month . "-01") )) );
+            } else {
+                PageLayout::postMessage(MessageBox::success(_("Bestätigung für Vorliegen in Papierform zurückgezogen.")));
+            }
             $this->redirect('timesheet/admin_index/'. $timesheet->contract->id);
         } else {
             PageLayout::postMessage(MessageBox::error(_("Fehler: Sie sind zu dieser aktion nicht berechtigt.")));
