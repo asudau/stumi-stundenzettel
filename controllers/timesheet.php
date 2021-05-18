@@ -402,9 +402,15 @@ class TimesheetController extends StudipController {
         
         $timesheet = StundenzettelTimesheet::find($timesheet_id);
         if($timesheet && $this->adminrole){
-            $timesheet->complete = true;
+            //toggle status
+            $timesheet->complete = (($timesheet->getCurrentState('complete', 'admin') == 'true') ? false : true); 
             $timesheet->store();
-            PageLayout::postMessage(MessageBox::success(_("Vorgang abgeschlossen.")));
+            //TODO echte booleans
+            if ($timesheet->getCurrentState('complete', 'admin') == 'true') {
+                PageLayout::postMessage(MessageBox::success(_("Vorgang abgeschlossen.")));
+            } else {
+                PageLayout::postMessage(MessageBox::success(_("Vorgang wieder geöffnet.")));
+            }
             $this->redirect('timesheet/admin_index/'. $timesheet->contract->id);
         } else {
             PageLayout::postMessage(MessageBox::error(_("Fehler: Sie sind zu dieser aktion nicht berechtigt.")));

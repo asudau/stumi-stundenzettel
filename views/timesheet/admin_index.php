@@ -31,7 +31,8 @@
                         <a href='<?=$this->controller->link_for('timesheet/received/' . $timesheet_last_month->id) ?>' title='Vorliegen bestätigen'>
                             <?= Icon::create($status_infos['received']['icon'], $status_infos[$timesheet_last_month->getCurrentState('received', 'admin') . '_icon_role'], ['title' =>  $status_infos['received'][$timesheet_last_month->getCurrentState('received', 'admin') . '_tooltip']] )?>
                         </a>
-                        <a href='<?=$this->controller->link_for('timesheet/complete/' . $timesheet_last_month->id) ?>' title='Vorgang abschließen'>
+                        <a href='<?=$this->controller->link_for('timesheet/complete/' . $timesheet_last_month->id) ?>' 
+                           title= <?= ($timesheet_last_month->getCurrentState('complete', 'admin')) ? 'Vorgang wieder öffnen' : 'Vorgang abschließen' ?> >
                             <?= Icon::create($status_infos['complete']['icon'], $status_infos[$timesheet_last_month->getCurrentState('complete', 'admin') . '_icon_role'], ['title' =>  $status_infos['complete'][$timesheet_last_month->getCurrentState('complete', 'admin') . '_tooltip']] )?>
                         </a>
                             <? endif ?>
