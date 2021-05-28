@@ -8,7 +8,7 @@
 class CronjobReminderEmail extends Migration
 {
 
-    const FILENAME = 'public/plugins_packages/virtUOS/Stundenzettel/cronjobs/reminder_email.php';
+    const FILENAME = 'public/plugins_packages/virtUOS/Stundenzettel/cronjobs/ReminderEmail.php';
 
     public function description()
     {
@@ -19,9 +19,9 @@ class CronjobReminderEmail extends Migration
     {
         $task_id = CronjobScheduler::registerTask(self::FILENAME, true);
 
-        // Schedule job to run every day at 23:59
+        // Schedule job to run every day at 03:00 o'clock
         if ($task_id) {
-            CronjobScheduler::schedulePeriodic($task_id, -1);  // negative value means "every x minutes"
+            CronjobScheduler::schedulePeriodic($task_id, 0, 3);
         }
     }
 
