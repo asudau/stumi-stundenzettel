@@ -181,7 +181,7 @@ class StundenzettelContract extends \SimpleORMap
         //$contracts = self::findBySQL('contract_begin < ? AND contract_end > ?', [$end_nextmonth, $begin_lastmonth]);
         $all_contracts = self::findBySQL('contract_begin < ? AND contract_end > ?', [$month_end, $month_begin]);
         
-        if (Stundenzettel::hasStumiAdminrole()){
+        if (Stundenzettel::hasStumiAdminrole() || $GLOBALS['perm']->have_perm('admin')){
             return $all_contracts;
         } else {
             foreach ($all_contracts as $contract){
