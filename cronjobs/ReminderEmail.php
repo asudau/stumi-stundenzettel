@@ -21,8 +21,8 @@ class ReminderEmail extends CronJob
 
     public function execute($last_result, $parameters = array())
     {
-        $month = (int) date('m', strtotime('last month'));    // format: 5
-        $year = (int) date('Y', strtotime('last month'));     // format: 2021
+        $month = (int) date('m', strtotime('first day of last month'));    // format: 5
+        $year = (int) date('Y', strtotime('first day of last month'));     // format: 2021
 
         $contracts = StundenzettelContract::getContractsByMonth($month, $year);
         foreach ($contracts as $contract) {
