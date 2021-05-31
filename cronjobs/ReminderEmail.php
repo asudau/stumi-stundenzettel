@@ -28,9 +28,11 @@ class ReminderEmail extends CronJob
         foreach ($contracts as $contract) {
             $timesheet = StundenzettelTimesheet::getContractTimesheet($contract->id, $month, $year);
             if (!$timesheet) {
-                sendMissingTimesheetMail($contract->user_id);
+                self::sendMissingTimesheetMail($contract->user_id);
+                echo 'Erinnerung -anlegen- versendet an ' . User::find($contract->user_id)->username . ' für Zeitraum ' . $month . ' ' . $year;
             } elseif ($timesheet->overdue && !$timesheet->finished) {
-                sendOverdueMail($contract->user_id);
+                echo 'Erinnerung -einreichen- versendet an ' . User::find($contract->user_id)->username . ' für Zeitraum ' . $month . ' ' . $year;
+                self::sendOverdueMail($contract->user_id);
             }
         }
     }
@@ -44,7 +46,7 @@ class ReminderEmail extends CronJob
             . "Vielen Dank. \n\n"
             . "Mit freundlichen Grüßen,\n"
             . "Ihr virtUOS-Team";
-        sendReminderMail($user_id, $subject, $mailtext);
+        self::sendReminderMail($user_id, $subject, $mailtext);
     }
 
     private static function sendOverdueMail($user_id)
@@ -56,7 +58,7 @@ class ReminderEmail extends CronJob
             . "Vielen Dank. \n\n"
             . "Mit freundlichen Grüßen,\n"
             . "Ihr virtUOS-Team";
-        sendReminderMail($user_id, $subject, $mailtext);
+        self::sendReminderMail($user_id, $subject, $mailtext);
     }
 
     private static function sendReminderMail($user_id, $subject, $mailtext)
