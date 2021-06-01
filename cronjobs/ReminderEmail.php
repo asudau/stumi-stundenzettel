@@ -6,6 +6,9 @@
 * @access public
 */
 
+require_once __DIR__ . '/../models/StundenzettelContract.class.php';
+require_once __DIR__ . '/../models/StundenzettelTimesheet.class.php';
+
 class ReminderEmail extends CronJob
 {
 
