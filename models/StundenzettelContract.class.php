@@ -10,6 +10,11 @@
  * @property varchar       $supervisor
  * @property int           $contract_begin
  * @property int           $contract_end
+ * @property int           $last_year_vacation_remaining
+ * @property int           $begin_digital_recording_month
+ * @property int           $begin_digital_recording_year
+ * @property int           $begin_balance
+ * @property int           $begin_vacation_claimed 
  */
 
 class StundenzettelContract extends \SimpleORMap
