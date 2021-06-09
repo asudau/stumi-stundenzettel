@@ -25,7 +25,7 @@ use Studip\Button, Studip\LinkButton;
         </form>
     </p>
     
-<? elseif ($stumirole || $timesheet->finished): ?>
+<? elseif ($stumirole || ($adminrole && $timesheet->finished)): ?>
     <h2><?= strftime("%B", mktime(0, 0, 0, $timesheet->month, 10)) . ' ' . $timesheet->year;  ?> </h2>
     <p>Name, Vorname: <b><?= htmlready(User::find($timesheet->contract->user_id)->nachname) ?>, <?= htmlready(User::find($timesheet->contract->user_id)->vorname) ?></b></p>
     <p>Fachbereich/Organisationseinheit: <b><?= htmlready(Institute::find($inst_id)->name) ?></b></p>
@@ -46,8 +46,8 @@ use Studip\Button, Studip\LinkButton;
         </form>
     </p> 
 
-
-<form id="timesheet_form" method="post" class='<?= $adminrole ? 'admin' : '' ?> <?= $timesheet->locked ? 'locked' : '' ?>' action="<?= $controller->link_for('timesheet/save_timesheet', $timesheet->id) ?>" class="default collapsable">
+<!-- langfristig Formular für admins sperren (class  admin und locked-abfrage) -->
+<form id="timesheet_form" method="post" class='<?= $adminrole ? '' : '' ?> <?= ($timesheet->locked && !$adminrole) ? 'locked' : '' ?>' action="<?= $controller->link_for('timesheet/save_timesheet', $timesheet->id) ?>" class="default collapsable">
     <?= CSRFProtection::tokenTag() ?>
     <div style="overflow:scroll;">
         <table class='sortable-table default' style='width: auto;'>
@@ -221,19 +221,21 @@ use Studip\Button, Studip\LinkButton;
                 </tr>
         </table>
     </div>
-    <? if ($stumirole) : ?>
+    <? if ($stumirole || $adminrole) : ?>
         <footer id='timesheet_submit' data-dialog-button>
             <?= Button::create(_('Übernehmen')) ?>
         </footer>
     <? endif ?>  
 </form>
-<? endif ?>  
+
     
 <? if ($supervisorrole && $timesheet->finished) : ?>
     <?= LinkButton::create(_('Korrektheit bestätigen'), $controller->link_for('timesheet/approve/' . $timesheet->id) ) ?>
 <? elseif ($adminrole && $timesheet->finished) : ?>
     <?= LinkButton::create(_('Eingang bestätigen'), $controller->link_for('timesheet/received/' . $timesheet->id) ) ?>
 <? endif ?>    
+
+<? endif ?>  
 
 
 <style>
