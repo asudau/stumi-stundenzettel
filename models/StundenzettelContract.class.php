@@ -295,7 +295,7 @@ class StundenzettelContract extends \SimpleORMap
                 //falls Resturlaub nicht reicht, übrigen Urlaub vom Anspruch in diesem Jahr abziehen
                 //positiver Rest verfällt ab April
                 if ($remaining_claimed_vacation < 0) {
-                    $claimed_vacation -= abs($remaining_claimed_vacation);
+                    $claimed_vacation += abs($remaining_claimed_vacation);
                 }
                 //Urlaub bis März diesen Jahres wurde oben bereits verrechnet
                 $claimed_vacation = $claimed_vacation - $this->getClaimedVacation($year, $month = 3);
