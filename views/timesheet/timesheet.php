@@ -223,7 +223,13 @@ use Studip\Button, Studip\LinkButton;
     </div>
     <? if ($stumirole || $adminrole) : ?>
         <footer id='timesheet_submit' data-dialog-button>
-            <?= Button::create(_('Übernehmen')) ?>
+            <? if ($stumirole) : ?>
+                <?= Studip\Button::create(_('Übernehmen')) ?>
+            <? else: ?>
+                <?= Studip\Button::create(_('Übernehmen'), 'save', [
+                    'data-confirm' => _('Sind Sie sicher, dass Sie die Eingaben Überschreiben wollen!?'),
+                ]) ?>
+            <? endif ?>
         </footer>
     <? endif ?>  
 </form>
