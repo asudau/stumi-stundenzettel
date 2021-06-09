@@ -31,13 +31,18 @@ class ReminderEmail extends CronJob
 
         $contracts = StundenzettelContract::getContractsByMonth($month, $year);
         foreach ($contracts as $contract) {
-            $timesheet = StundenzettelTimesheet::getContractTimesheet($contract->id, $month, $year);
-            if (!$timesheet) {
-                self::sendMissingTimesheetMail($contract->user_id);
-                echo 'Erinnerung -anlegen- versendet an ' . User::find($contract->user_id)->username . ' für Zeitraum ' . $month . ' ' . $year;
-            } elseif ($timesheet->overdue && !$timesheet->finished) {
-                echo 'Erinnerung -einreichen- versendet an ' . User::find($contract->user_id)->username . ' für Zeitraum ' . $month . ' ' . $year;
-                self::sendOverdueMail($contract->user_id);
+            
+            $no_recording_required = ($contract->begin_digital_recording_year == $year) && ($month < $contract->begin_digital_recording_month);
+            
+            if (!$no_recording_required){
+                $timesheet = StundenzettelTimesheet::getContractTimesheet($contract->id, $month, $year);
+                if (!$timesheet) {
+                    self::sendMissingTimesheetMail($contract->user_id);
+                    echo 'Erinnerung -anlegen- versendet an ' . User::find($contract->user_id)->username . ' für Zeitraum ' . $month . ' ' . $year;
+                } elseif ($timesheet->overdue && !$timesheet->finished) {
+                    echo 'Erinnerung -einreichen- versendet an ' . User::find($contract->user_id)->username . ' für Zeitraum ' . $month . ' ' . $year;
+                    self::sendOverdueMail($contract->user_id);
+                }
             }
         }
     }
