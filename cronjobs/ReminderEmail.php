@@ -8,6 +8,8 @@
 
 require_once __DIR__ . '/../models/StundenzettelContract.class.php';
 require_once __DIR__ . '/../models/StundenzettelTimesheet.class.php';
+require_once __DIR__ . '/../models/StundenzettelRecord.class.php';
+require_once __DIR__ . '/../Stundenzettel.class.php';
 
 class ReminderEmail extends CronJob
 {
@@ -42,7 +44,7 @@ class ReminderEmail extends CronJob
 
     private static function sendMissingTimesheetMail($user_id)
     {
-        $subject = 'Erinnerung: Bitte nutzen Sie den digitalen virtUOS-Stundenzettel';
+        $subject = 'Erinnerung: Abgabe überfällig - Bitte nutzen Sie den digitalen virtUOS-Stundenzettel';
         $mailtext = "Sie erhalten diese automatisch generierte E-Mail, da Sie im letzten Monat beim virtUOS angestellt waren "
             . "und bisher noch keinen Stundenzettel im Stundenzettel-Plugin in Stud.IP angelegt haben.\n"
             . "Bitte holen Sie dies schnellstmöglich nach und füllen diesen entsprechend mit Ihren Arbeitszeiten aus.\n"
