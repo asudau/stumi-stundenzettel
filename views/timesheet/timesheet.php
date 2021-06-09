@@ -170,7 +170,7 @@ use Studip\Button, Studip\LinkButton;
                                   min="<?= date('Y-m-d', strtotime($date)) ?>" max="<?= date('Y-m-d', strtotime('+1 week', strtotime($date))) ?>" 
                                   <?= (!$is_editable)? 'readonly' : ''?> 
                                   class ='entry_mktime empty_date' 
-                                  name ='entry_mktime[<?= $i ?>]' value='' >
+                                  name ='entry_mktime[<?= $i ?>]' value='<?= ($holiday) ? date('Y-m-d', strtotime($date)) : '' ?>' >
                         </td>
                         <td>
                             
