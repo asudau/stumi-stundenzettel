@@ -268,7 +268,13 @@ class StundenzettelContract extends \SimpleORMap
         $dezimal_entitlement = $this->contract_hours * $this->monthWithVacationEntitlement($year) * 0.077; 
         $entitlement_hours = floor($dezimal_entitlement);
         $entitlement_minutes = ($dezimal_entitlement - $entitlement_hours) * 60;
-        return sprintf("%02s", $entitlement_hours) . ':' . sprintf("%02s", round($entitlement_minutes) ); //round($entitlement_minutes, 3)
+        
+        if ($entitlement_minutes/60 >= 0.5) {
+            $entitlement_hours += 1;
+            $entitlement_minutes = 0;
+        }
+        
+        return sprintf("%02s:%02s", $entitlement_hours, round($entitlement_minutes)) ; //round($entitlement_minutes, 3)
     }
     
     
