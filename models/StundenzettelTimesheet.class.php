@@ -207,7 +207,7 @@ class StundenzettelTimesheet extends \SimpleORMap
     }
     
     function calculate_sum(){
-        if (!$this->locked){
+        //if (!$this->locked){
             $records = StundenzettelRecord::findByTimesheet_Id($this->id);
             $sum = 0;
             foreach ($records as $record){
@@ -215,7 +215,7 @@ class StundenzettelTimesheet extends \SimpleORMap
             }
             $this->sum = $sum;
             $this->store();
-        }
+        //}
     }
     
     //wird für vacation Berechnung noch benutzt
