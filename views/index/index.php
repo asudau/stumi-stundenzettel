@@ -20,7 +20,7 @@
                     <th data-sort="false" style='width:10%'>Urlaub in Anspruch genommen <?= date('Y') ?></th>
                     <th data-sort="digit" style='width:10%'>Resturlaub</br><?= date('Y') ?></th>
                     <th data-sort="false" style='width:10%'>Urlaubsanspruch</br><?= date('Y') ?></th>
-                    <th data-sort="digit" style='width:10%'>aktueller</br>Resturlaub</br><?= date('Y')-1 ?></th>
+                    <th data-sort="digit" style='width:10%'>Resturlaub</br><?= date('Y')-1 ?></br>zu Jahresbeginn</th>
                     <th data-sort="false" style='width:10%'>Verantwortliche/r MA</th>
                     <th>Aktionen</th>
                 </tr>
@@ -45,7 +45,7 @@
                         <td><?= htmlready(StundenzettelTimesheet::stundenzettel_strftimespan($contract->getClaimedVacation(date('Y'))))?></td>
                         <td><?= htmlready(StundenzettelTimesheet::stundenzettel_strftimespan($contract->getRemainingVacation(date('Y'))))?></td>
                         <td><?= htmlready($contract->getVacationEntitlement(date('Y')))?></td>
-                        <td><?= htmlready(StundenzettelTimesheet::stundenzettel_strftimespan($contract->getRemainingVacation(date('Y')-1)))?></td>
+                        <td><?= htmlready(StundenzettelTimesheet::stundenzettel_strftimespan($contract->getRemainingVacationAtEndOfYear(date('Y')-1)))?></td>
                         <td><?= htmlready(User::findOneByUser_Id($contract->supervisor)->username) ?></td>
                         <td>
                             <? if ($adminrole) : ?>

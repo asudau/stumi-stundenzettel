@@ -276,31 +276,52 @@ class StundenzettelContract extends \SimpleORMap
     {
         $claimed_vacation = $this->getClaimedVacation($year);
         //Urlaub der mit Resturlaub aus dem Vorjahr verrechnet werden kann wird in diesem Jahr nicht abgezogen
-        if ($year-1 >=  date('Y', $this->contract_begin) && $this->getRemainingVacation($year-1)) {
-            $remaining_claimed_vacation = $this->getRemainingVacation($year-1) - $this->getClaimedVacation($year, $month = 3);
-            //falls Resturlaub nicht reicht, übrigen Urlaub vom Anspruch in diesem Jahr abziehen
-            //positiver Rest verfällt ab April
-            if ($remaining_claimed_vacation < 0) {
-                $claimed_vacation -= abs($remaining_claimed_vacation);
+        
+        //TODO falls manuell Daten zum Resturlaub des letzten Jahres angegeben wurden werden diese für das entsprechende Jahr genutzt, unhabhängig von sonstigen
+        //Vertragsdaten
+        if ($this->begin_digital_recording_year == ($year + 1)) {
+            $remaining_vacation = $this->last_year_vacation_remaining;
+        } else {
+        
+            
+            if ($year-1 >=  date('Y', $this->contract_begin) && $this->getRemainingVacation($year-1) ) {
+                $remaining_claimed_vacation = $this->getRemainingVacation($year-1) - $this->getClaimedVacation($year, $month = 3);
+                //falls Resturlaub nicht reicht, übrigen Urlaub vom Anspruch in diesem Jahr abziehen
+                //positiver Rest verfällt ab April
+                if ($remaining_claimed_vacation < 0) {
+                    $claimed_vacation -= abs($remaining_claimed_vacation);
+                }
+                //Urlaub bis März diesen Jahres wurde oben bereits verrechnet
+                $claimed_vacation = $claimed_vacation - $this->getClaimedVacation($year, $month = 3);
             }
-            //Urlaub bis März diesen Jahres wurde oben bereits verrechnet
-            $claimed_vacation = $claimed_vacation - $this->getClaimedVacation($year, $month = 3);
-        }
-        
-        $remaining_vacation = StundenzettelTimesheet::stundenzettel_strtotimespan($this->getVacationEntitlement($year)) - $claimed_vacation;
-        
-        //Urlaub aus den ersten drei Monaten des Folgejahrs kann bei Bedarf verrechnet werden
-        if ($remaining_vacation > 0) {
-            $remaining_vacation = $remaining_vacation - $this->getClaimedVacation($year+1, $month = 3);
-            //falls Resturlaub nicht für die drei ersten Monate des Folgejahres reicht, gilt er als aufgebraucht
-            if ($remaining_vacation < 0) {
-                return 0;
+
+            $remaining_vacation = StundenzettelTimesheet::stundenzettel_strtotimespan($this->getVacationEntitlement($year)) - $claimed_vacation;
+
+            //Urlaub aus den ersten drei Monaten des Folgejahrs kann bei Bedarf verrechnet werden
+            if ($remaining_vacation > 0) {
+                $remaining_vacation = $remaining_vacation - $this->getClaimedVacation($year+1, $month = 3);
+                //falls Resturlaub nicht für die drei ersten Monate des Folgejahres reicht, gilt er als aufgebraucht
+                if ($remaining_vacation < 0) {
+                    return 0;
+                }
             }
         }
 
         return $remaining_vacation;
     }
     
+    function getRemainingVacationAtEndOfYear($year)
+    {
+        if ($this->begin_digital_recording_year == ($year + 1)) {
+            $remaining_vacation_end_of_year = $this->last_year_vacation_remaining;
+        } else {
+            $remaining_vacation_end_of_year = StundenzettelTimesheet::stundenzettel_strtotimespan($this->getVacationEntitlement($year)) - $this->getClaimedVacation($year);
+        }
+        return $remaining_vacation_end_of_year;
+    }
+    
+    //default: Urlaub aus allen monatn des Jahres
+    //falls $month gesetzt ist: Urlaub bis einschließlich zum Moat $month (für Verrechnung von Resturlaub innrhab des erlaubten Zeitrahmens)
     function getClaimedVacation($year, $month = 12)
     {
         //$timesheets = StundenzettelTimesheet::findBySQL('`contract_id` = ? AND `year` = ?', [$this->id, $year]);

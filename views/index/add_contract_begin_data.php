@@ -25,12 +25,17 @@ use Studip\Button, Studip\LinkButton;
     
     <label>
         <?= _('Bereits beanspruchter Urlaub im laufenden Jahr:') ?>
-        <input type='text' pattern="<?= $balance_pattern ?>" required name="vacation_claimed" placeholder='hh:mm' value='<?= ($contract->begin_vacation_claimed) ? htmlready(StundenzettelTimesheet::stundenzettel_strftimespan($contract->begin_vacation_claimed)) : ''?>'>
+        <input type='text' pattern="<?= $balance_pattern ?>" required name="vacation_claimed" placeholder='hh:mm' value='<?= ($contract->begin_vacation_claimed) ? htmlready(StundenzettelTimesheet::stundenzettel_strftimespan($contract->begin_vacation_claimed)) : '00:00'?>'>
+    </label>
+    
+    <label>
+        <?= _('Verbleibender Resturlaub aus dem vorigen Jahr zum 01.01. diesen Jahres:') ?>
+        <input type='text' pattern="<?= $balance_pattern ?>" required name="begin_last_year_vacation_remainig" placeholder='hh:mm' value='<?= ($contract->last_year_vacation_remaining) ? htmlready(StundenzettelTimesheet::stundenzettel_strftimespan($contract->last_year_vacation_remaining)) : '00:00'?>'>
     </label>
     
     <label>
         <?= _('Stundenkonto zu Beginn der digitalen Aufzeichnung:') ?>
-        <input type='text' pattern="<?= $balance_pattern ?>" required name="balance" placeholder='(-)hh:mm' value='<?= ($contract->begin_balance) ? htmlready(StundenzettelTimesheet::stundenzettel_strftimespan($contract->begin_balance)) : ''?>'>
+        <input type='text' pattern="<?= $balance_pattern ?>" required name="balance" placeholder='(-)hh:mm' value='<?= ($contract->begin_balance) ? htmlready(StundenzettelTimesheet::stundenzettel_strftimespan($contract->begin_balance)) : '00:00'?>'>
     </label>    
 
     <footer data-dialog-button>

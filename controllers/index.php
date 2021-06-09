@@ -203,6 +203,7 @@ class IndexController extends StudipController {
         $contract->begin_digital_recording_year = Request::get('begin_year');
         $contract->begin_vacation_claimed = StundenzettelTimesheet::stundenzettel_strtotimespan(Request::get('vacation_claimed'));
         $contract->begin_balance = StundenzettelTimesheet::stundenzettel_strtotimespan(Request::get('balance'));
+        $contract->last_year_vacation_remaining = StundenzettelTimesheet::stundenzettel_strtotimespan(Request::get('begin_last_year_vacation_remainig'));
         
         if($contract->store()){
             PageLayout::postMessage(MessageBox::success(_("Vertragsdaten gespeichert"))); 
