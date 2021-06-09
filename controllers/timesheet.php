@@ -161,8 +161,8 @@ class TimesheetController extends StudipController {
         $this->records = StundenzettelRecord::findByTimesheet_Id($timesheet_id, 'ORDER BY day ASC');
         
         if($this->timesheet->locked || $this->adminrole) {
-            if($this->supervisorrole) {
-                if ($this->timesheet->finished ){
+            if($this->supervisorrole || $this->adminrole) {
+                if ($this->timesheet->finished && !$this->adminrole){
                     PageLayout::postMessage(MessageBox::info(_("Bearbeitung gesperrt. Sie sind nicht berechtigt Änderungen vorzunehmen"))); 
                 } else {
                     PageLayout::postMessage(MessageBox::info(_("Digitaler Stundenzettel wurde noch nicht eingereicht.")));
