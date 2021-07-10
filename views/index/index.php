@@ -1,6 +1,6 @@
 <div>
     
-<? if ($adminrole || $supervisorrole) : ?>    
+<? if ($adminrole) : ?>    
     <? foreach ($inst_ids as $inst_id) : ?>
         <? if ($adminrole) : ?>
             <h2> <?= htmlready(Institute::find($inst_id)->name) ?>: <?= sizeof($inst_data[$inst_id]->stumis) ?> Studentische MitarbeiterInnen </h2>
@@ -85,6 +85,51 @@
         </table>
     <? endforeach ?>
     
+<? elseif ( $supervisorrole ) : ?>
+    <h2> Vertragsdaten Hilfskräfte </h2>
+        <table id='stumi-contract-entries' class="sortable-table default">
+            <thead>
+                <tr>
+                    <th data-sort="text" style='width:10%'>Nachname, Vorname</th>
+                    <th data-sort="htmldata" style='width:10%'>Vertrags- <br>beginn</th>
+                    <th data-sort="htmldata" style='width:10%'>Vertrags- <br>ende</th>
+                    <th data-sort="digit" style='width:10%'>Monats- </br>stunden</th>
+                    <th data-sort="digit" style='width:5%'>Tagessatz</th>
+                    <th data-sort="digit" style='width:10%'>Stundenkonto</br>(exkl. <?= strftime('%B') ?>)</th>
+                    <th data-sort="false" style='width:10%'>Urlaub in Anspruch genommen <?= date('Y') ?></th>
+                    <th data-sort="digit" style='width:10%'>Resturlaub</br><?= date('Y') ?></th>
+                    <th data-sort="false" style='width:10%'>Urlaubsanspruch</br><?= date('Y') ?></th>
+                    <th data-sort="digit" style='width:10%'>Resturlaub</br><?= date('Y')-1 ?></br>zu Jahresbeginn</th>
+                </tr>
+            </thead>
+            <tbody>
+            <? foreach ($stumis as $stumi): ?>
+                <? foreach ($stumi_contracts[$stumi->user_id] as $contract): ?>
+                <tr>  
+                    <td><a href='<?=$this->controller->link_for('timesheet/index/' . $contract->id) ?>' title='Stundenzettel einsehen'><?= htmlready($stumi->nachname) ?>, <?= htmlready($stumi->vorname) ?></a>
+                    </td>
+                    <td data-sort-value="<?= $contract->contract_begin ?>"><?= date('d.m.Y', $contract->contract_begin) ?>
+                        <? if ($contract->begin_digital_recording_month && $contract->begin_digital_recording_year) : ?>
+                            <?= Icon::create('info-circle', Icon::ROLE_CLICKABLE,  
+                                    ['title' => 'Beginn der elektronischen Erfassung: ' . $contract->begin_digital_recording_month . '/' . $contract->begin_digital_recording_year ]);?>
+                        <? endif ?>
+                    </td>
+                    <td data-sort-value="<?= $contract->contract_end ?>"><?= date('d.m.Y', $contract->contract_end) ?></td>
+                    <td><?= htmlready($contract->contract_hours) ?></td>
+                    <td><?= htmlready($contract->default_workday_time) ?></td>
+                    <td><?= htmlready(StundenzettelTimesheet::stundenzettel_strftimespan($contract->getWorktimeBalance())) ?></td>
+                    <td><?= htmlready(StundenzettelTimesheet::stundenzettel_strftimespan($contract->getClaimedVacation(date('Y'))))?></td>
+                    <td><?= htmlready(StundenzettelTimesheet::stundenzettel_strftimespan($contract->getRemainingVacation(date('Y'))))?></td>
+                    <td><?= htmlready($contract->getVacationEntitlement(date('Y')))?></td>
+                    <td><?= htmlready(StundenzettelTimesheet::stundenzettel_strftimespan($contract->getRemainingVacationAtEndOfYear(date('Y')-1)))?></td>
+
+                </tr>
+                <? endforeach ?>
+            <? endforeach ?>
+            </tbody>
+        </table>
+                    
+
 <? elseif ($stumirole) : ?>
     <h2> Meine Verträge </h2>
     <table id='stumi-contract-entries' class="sortable-table default">

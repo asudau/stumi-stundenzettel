@@ -160,18 +160,13 @@ class TimesheetController extends StudipController {
         $this->user_id = $this->timesheet->contract->user_id;
         $this->records = StundenzettelRecord::findByTimesheet_Id($timesheet_id, 'ORDER BY day ASC');
         
-        if($this->timesheet->locked || $this->adminrole) {
-            if($this->supervisorrole || $this->adminrole) {
-                if ($this->timesheet->finished && !$this->adminrole){
-                    PageLayout::postMessage(MessageBox::info(_("Bearbeitung gesperrt. Sie sind nicht berechtigt Änderungen vorzunehmen"))); 
-                } else {
-                    PageLayout::postMessage(MessageBox::info(_("Digitaler Stundenzettel wurde noch nicht eingereicht.")));
-                }
-                
-            } else if(!$this->adminrole) {
-                PageLayout::postMessage(MessageBox::info(_("Der Stundenzettel wurde bereits eingereicht und kann nicht mehr bearbeitet werden. Sollten Änderungen nötig sein, kontaktiere deine/n zuständigen Ansprechpartner/in.")));
-            }
-        }
+        if($this->timesheet->locked && $this->stumirole) {
+             PageLayout::postMessage(MessageBox::info(_("Der Stundenzettel wurde bereits eingereicht und kann nicht mehr bearbeitet werden. Sollten Änderungen nötig sein, kontaktiere deine/n zuständigen Ansprechpartner/in.")));
+        } else if(($this->supervisorrole || $this->supervisorrole) && !$this->timesheet->finished) {
+            PageLayout::postMessage(MessageBox::info(_("Digitaler Stundenzettel wurde noch nicht eingereicht.")));
+        } else if ($this->timesheet->finished && !$this->adminrole){
+            PageLayout::postMessage(MessageBox::info(_("Bearbeitung gesperrt. Sie sind nicht berechtigt Änderungen vorzunehmen"))); 
+        } 
         
         if($this->stumirole){
             $actions = new ActionsWidget();
@@ -212,10 +207,11 @@ class TimesheetController extends StudipController {
     {
         
         $timesheet = StundenzettelTimesheet::find($timesheet_id);
-        if ( !($timesheet->contract->user_id == User::findCurrent()->user_id) && !$this->adminrole ) {
+        if ( !($timesheet->can_edit(User::findCurrent())) && !$this->adminrole ) {
             throw new AccessDeniedException(_("Sie haben keine Zugriffsberechtigung"));
         }
         
+        //überflüssige Zeile?
          if (!$timesheet->locked || $this->adminrole) {
              
             $record_ids_array = Request::getArray('record_id');

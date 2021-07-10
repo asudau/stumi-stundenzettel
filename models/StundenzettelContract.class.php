@@ -159,6 +159,12 @@ class StundenzettelContract extends \SimpleORMap
         }
     }
     
+    function can_read($user){
+        if ($this->user_id == $user->user_id || $this->supervisor == $user->user_id) {
+            return true;
+        }   
+    }
+    
     static function getCurrentContractId($user_id)
     {
         $contracts = self::findByUser_id($user_id);

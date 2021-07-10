@@ -25,7 +25,7 @@ use Studip\Button, Studip\LinkButton;
         </form>
     </p>
     
-<? elseif ($stumirole || ($adminrole && $timesheet->finished)): ?>
+<? elseif ($timesheet->can_read(User::findCurrent())): ?>
     <h2><?= strftime("%B", mktime(0, 0, 0, $timesheet->month, 10)) . ' ' . $timesheet->year;  ?> </h2>
     <p>Name, Vorname: <b><?= htmlready(User::find($timesheet->contract->user_id)->nachname) ?>, <?= htmlready(User::find($timesheet->contract->user_id)->vorname) ?></b></p>
     <p>Fachbereich/Organisationseinheit: <b><?= htmlready(Institute::find($inst_id)->name) ?></b></p>

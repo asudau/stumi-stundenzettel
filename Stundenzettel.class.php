@@ -127,6 +127,8 @@ class Stundenzettel extends StudipPlugin implements SystemPlugin
         return StundenzettelContract::findBySupervisor($GLOBALS['user']->user_id);
     }
     
+    
+    //TODO gehört in die Models
     public function can_access_contract_timesheets($contract_id)
     {
         $contract = StundenzettelContract::find($contract_id);
@@ -137,6 +139,7 @@ class Stundenzettel extends StudipPlugin implements SystemPlugin
         }
     }
     
+    //TODO gehört in die Models
     public function can_access_timesheet($timesheet_id) 
     {
         $timesheet = StundenzettelTimesheet::find($timesheet_id);

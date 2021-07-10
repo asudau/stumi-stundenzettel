@@ -206,6 +206,21 @@ class StundenzettelTimesheet extends \SimpleORMap
       
     }
     
+    function can_edit($user){
+         if (($this->contract->user_id == $user->user_id) && !$this->locked){
+             return true;
+         } else return false;
+    }
+    
+    function can_read($user){
+        if ($this->contract->can_read($user)) {
+            if ($this->contract->user_id == $user->user_id ||
+                    (($this->contract->supervisor == $user->user_id) && $this->finished)) {
+                return true;
+            }           
+        }
+    }
+    
     function calculate_sum(){
         //if (!$this->locked){
             $records = StundenzettelRecord::findByTimesheet_Id($this->id);
