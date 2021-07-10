@@ -103,7 +103,7 @@ class TimesheetController extends StudipController {
         $contract = StundenzettelContract::find($contract_id);
         $this->timesheet = StundenzettelTimesheet::getContractTimesheet($contract_id, $month, $year);
         if (!$this->timesheet && $this->stumirole) {
-            if ($contract->monthWithinRecordingTime($month, $year)) {
+            if ($contract->monthPartOfContract($month, $year) && $contract->monthWithinRecordingTime($month, $year)) {
             //if ( (intval($contract->contract_begin) < strtotime($year . '-' . $month . '-28')) && (strtotime($year . '-' . $month . '-01') < intval($contract->contract_end)) ) {
                 $timesheet = new StundenzettelTimesheet();
                 $timesheet->month = $month;
