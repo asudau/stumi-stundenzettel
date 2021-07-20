@@ -212,6 +212,7 @@ class StundenzettelTimesheet extends \SimpleORMap
          } else return false;
     }
     
+    //TODO InstAdmin identifizieren und Zugriff erlauben
     function can_read($user){
         if ($this->contract->can_read($user)) {
             if ($this->contract->user_id == $user->user_id ||

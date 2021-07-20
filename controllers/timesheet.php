@@ -152,7 +152,7 @@ class TimesheetController extends StudipController {
         
         if($this->timesheet->locked && $this->stumirole) {
              PageLayout::postMessage(MessageBox::info(_("Der Stundenzettel wurde bereits eingereicht und kann nicht mehr bearbeitet werden. Sollten Änderungen nötig sein, kontaktiere deine/n zuständigen Ansprechpartner/in.")));
-        } else if(($this->supervisorrole || $this->supervisorrole) && !$this->timesheet->finished) {
+        } else if(($this->supervisorrole || $this->adminrole) && !$this->timesheet->finished) {
             PageLayout::postMessage(MessageBox::info(_("Digitaler Stundenzettel wurde noch nicht eingereicht.")));
         } else if ($this->timesheet->finished && !$this->adminrole){
             PageLayout::postMessage(MessageBox::info(_("Bearbeitung gesperrt. Sie sind nicht berechtigt Änderungen vorzunehmen"))); 
