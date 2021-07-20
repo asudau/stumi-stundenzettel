@@ -62,28 +62,18 @@ class TimesheetController extends StudipController {
             throw new AccessDeniedException(_("Sie haben keine Zugriffsberechtigung."));
         }
         Navigation::activateItem('tools/stundenzettelverwaltung/timesheets');
-        
-        //if its later than the 18.th of current month
-        if (strftime('%e') > 18) {
-            $this->next_month = strftime('%B', strtotime("+1 month"));
-            $this->last_month = strftime('%B');
-            $this->next_month_num = strftime('%m', strtotime("+1 month"));
-            $this->next_month_year = strftime('%Y', strtotime("+1 month"));
-            $this->last_month_num = strftime('%m');
-            $this->last_month_year = strftime('%Y');
+        if (Request::get('month')) {
+            $this->month = Request::get('month');
+            $this->year = Request::get('year');
         } else {
-            $this->next_month = strftime('%B');
-            $this->last_month = strftime('%B', strtotime("-1 month"));
-            $this->next_month_num = strftime('%m');
-            $this->next_month_year = strftime('%Y');
-            $this->last_month_num = strftime('%m', strtotime("-1 month"));
-            $this->last_month_year = strftime('%Y', strtotime("-1 month"));
+            $this->month = strftime('%m', strtotime("-1 month"));
+            $this->year = strftime('%Y', strtotime("-1 month"));
         }
-        $this->contracts = StundenzettelContract::getContractsByMonth($this->last_month_num, $this->last_month_year);
+        
+        $this->contracts = StundenzettelContract::getContractsByMonth($this->month, $this->year);
         
         foreach ($this->contracts as $contract) {
-            $this->timesheets[$contract->id]['last_month'] = StundenzettelTimesheet::getContractTimesheet($contract->id, $this->last_month_num, $this->last_month_year);
-            $this->timesheets[$contract->id]['next_month'] = StundenzettelTimesheet::getContractTimesheet($contract->id, $this->next_month_num, $this->next_month_year);
+            $this->timesheets[$contract->id] = StundenzettelTimesheet::getContractTimesheet($contract->id, $this->month, $this->year);
         }
         
         $this->status_infos = StundenzettelContract::getStaus_array();

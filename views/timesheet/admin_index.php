@@ -1,16 +1,28 @@
 <div>
 
 <? if ($adminrole || $supervisorrole) : ?>    
-    <h2>Status aktuelle Stundenzettel  </h2>
-
+    <h2>Status Stundenzettel <?= strftime("%B", mktime(0, 0, 0, $month, 10)) ?> <?= $year ?>  </h2>
+    <p>Monat/Jahr: 
+        <form name="month_select" method="post"  action="<?= $controller->link_for('timesheet/admin_index/') ?>">
+            <select name ='month' onchange="this.form.submit()">
+                <? foreach ($plugin->getMonths() as $entry_value): ?>
+                    <option <?= ($month == $entry_value) ? 'selected' : '' ?> value="<?=htmlready($entry_value)?>"><?= htmlready($entry_value) ?></option>
+                <? endforeach ?>
+            </select>
+            <select  name ='year' onchange="this.form.submit()">
+                <? foreach ($plugin->getYears() as $entry_value): ?>
+                    <option <?= ($year == $entry_value) ? 'selected' : '' ?> value="<?=htmlready($entry_value)?>"><?= htmlready($entry_value) ?></option>
+                <? endforeach ?>
+            </select>
+        </form>
+    </p>
 
     <table id='stumi-timesheet-entries' class="sortable-table default">
         <thead>
             <tr>
                 <th data-sort="text" style='width:10%'>Nachname, Vorname</th>
                 <th data-sort="false" style='width:10%'>Stundenkonto</th>
-                <th data-sort="htmldata" style='width:10%'>Status</br>Stundenzettel</br><?= htmlready($last_month)?> </th>
-                <th data-sort="htmldata" style='width:10%'>Status</br>Stundenzettel</br><?= htmlready($next_month)?></th>
+                <th data-sort="htmldata" style='width:10%'>Status</br>Stundenzettel</br><?= strftime("%B", mktime(0, 0, 0, $month, 10))?> </th>
                 <th data-sort="false" style='width:10%'>Aktionen</th>
             </tr>
         </thead>
@@ -18,42 +30,31 @@
             <? if ($contracts) : ?>
                 <? foreach ($contracts as $contract): ?>
                 <tr>  
-                    <? $timesheet_last_month = $timesheets[$contract->id]['last_month']; ?>
-                    <? $timesheet_next_month = $timesheets[$contract->id]['next_month']; ?>
+                    <? $timesheet = $timesheets[$contract->id]; ?>
                     <td>
                         <a href='<?=$this->controller->link_for('timesheet/index/' . $contract->id) ?>' title='Stundenzettel einsehen'><?= htmlready($contract->stumi->nachname) ?>, <?= htmlready($contract->stumi->vorname) ?></a>
                     </td>
                     <td><?= htmlready(StundenzettelTimesheet::stundenzettel_strftimespan($contract->getWorktimeBalance())) ?></td>
-                    <td data-sort-value= <?= htmlready($timesheet_last_month->int_status) ?> >  
-                        <? if ($timesheet_last_month) : ?>
-                        <?= Icon::create($status_infos['finished']['icon'], $status_infos[$timesheet_last_month->getCurrentState('finished', 'admin') . '_icon_role'], ['title' =>  $status_infos['finished'][$timesheet_last_month->getCurrentState('finished', 'admin') . '_tooltip']] )?>
-                        <?= Icon::create($status_infos['approved']['icon'], $status_infos[$timesheet_last_month->getCurrentState('approved', 'admin') . '_icon_role'], ['title' =>  $status_infos['approved'][$timesheet_last_month->getCurrentState('approved', 'admin') . '_tooltip']] )?>
-                        <a href='<?=$this->controller->link_for('timesheet/received/' . $timesheet_last_month->id) ?>' 
-                           title= <?= ($timesheet_last_month->getCurrentState('complete', 'admin')) ? 'Bestätigen für Vorliegen zurückziehen' : 'Vorliegen bestätigen' ?> >
-                            <?= Icon::create($status_infos['received']['icon'], $status_infos[$timesheet_last_month->getCurrentState('received', 'admin') . '_icon_role'], ['title' =>  $status_infos['received'][$timesheet_last_month->getCurrentState('received', 'admin') . '_tooltip']] )?>
-                        </a>
-                        <a href='<?=$this->controller->link_for('timesheet/complete/' . $timesheet_last_month->id) ?>' 
-                           title= <?= ($timesheet_last_month->getCurrentState('complete', 'admin')) ? 'Vorgang wieder öffnen' : 'Vorgang abschließen' ?> >
-                            <?= Icon::create($status_infos['complete']['icon'], $status_infos[$timesheet_last_month->getCurrentState('complete', 'admin') . '_icon_role'], ['title' =>  $status_infos['complete'][$timesheet_last_month->getCurrentState('complete', 'admin') . '_tooltip']] )?>
-                        </a>
-                            <? endif ?>
-                    </td>
-                    <td data-sort-value= <?= htmlready($timesheet_next_month->int_status) ?>>  
-                        <? if ($timesheet_next_month->int_status) : ?>
-                            <? if ($timesheet_next_month) : ?>
-                            <?= Icon::create($status_infos['finished']['icon'], $status_infos[$timesheet_next_month->getCurrentState('finished', 'admin') . '_icon_role'], ['title' =>  $status_infos['finished'][$timesheet_next_month->getCurrentState('finished', 'admin') . '_tooltip']] )?>      
-                            <?= Icon::create($status_infos['approved']['icon'], $status_infos[$timesheet_next_month->getCurrentState('approved', 'admin') . '_icon_role'], ['title' =>  $status_infos['approved'][$timesheet_next_month->getCurrentState('approved', 'admin') . '_tooltip']] )?> 
-                            <?= Icon::create($status_infos['received']['icon'], $status_infos[$timesheet_next_month->getCurrentState('received', 'admin') . '_icon_role'], ['title' =>  $status_infos['received'][$timesheet_next_month->getCurrentState('received', 'admin') . '_tooltip']] )?> 
-                            <?= Icon::create($status_infos['complete']['icon'], $status_infos[$timesheet_next_month->getCurrentState('complete', 'admin') . '_icon_role'], ['title' =>  $status_infos['complete'][$timesheet_next_month->getCurrentState('complete', 'admin') . '_tooltip']] )?>
-                            <? endif ?>
-                        <? elseif ($timesheet_next_month): ?>
-                            <?= Icon::create($status_infos['finished']['icon'], $status_infos['false_icon_role'], ['title' =>  $status_infos['finished'][$timesheet_next_month->getCurrentState('finished', 'admin') . '_tooltip']] )?>      
-                            <?= Icon::create($status_infos['approved']['icon'], $status_infos['false_icon_role'], ['title' =>  $status_infos['approved'][$timesheet_next_month->getCurrentState('approved', 'admin') . '_tooltip']] )?> 
-                            <?= Icon::create($status_infos['received']['icon'], $status_infos['false_icon_role'], ['title' =>  $status_infos['received'][$timesheet_next_month->getCurrentState('received', 'admin') . '_tooltip']] )?> 
-                            <?= Icon::create($status_infos['complete']['icon'], $status_infos['false_icon_role'], ['title' =>  $status_infos['complete'][$timesheet_next_month->getCurrentState('complete', 'admin') . '_tooltip']] )?>
-                        
+                    <td data-sort-value= <?= htmlready($timesheet->int_status) ?> >  
+                        <? if ($timesheet) : ?>
+                            <?= Icon::create($status_infos['finished']['icon'], $status_infos[$timesheet->getCurrentState('finished', 'admin') . '_icon_role'], ['title' =>  $status_infos['finished'][$timesheet->getCurrentState('finished', 'admin') . '_tooltip']] )?>
+                            <?= Icon::create($status_infos['approved']['icon'], $status_infos[$timesheet->getCurrentState('approved', 'admin') . '_icon_role'], ['title' =>  $status_infos['approved'][$timesheet->getCurrentState('approved', 'admin') . '_tooltip']] )?>
+                            <a href='<?=$this->controller->link_for('timesheet/received/' . $timesheet->id) ?>' 
+                               title= <?= ($timesheet->getCurrentState('complete', 'admin')) ? 'Bestätigen für Vorliegen zurückziehen' : 'Vorliegen bestätigen' ?> >
+                                <?= Icon::create($status_infos['received']['icon'], $status_infos[$timesheet->getCurrentState('received', 'admin') . '_icon_role'], ['title' =>  $status_infos['received'][$timesheet->getCurrentState('received', 'admin') . '_tooltip']] )?>
+                            </a>
+                            <a href='<?=$this->controller->link_for('timesheet/complete/' . $timesheet->id) ?>' 
+                               title= <?= ($timesheet->getCurrentState('complete', 'admin')) ? 'Vorgang wieder öffnen' : 'Vorgang abschließen' ?> >
+                                <?= Icon::create($status_infos['complete']['icon'], $status_infos[$timesheet->getCurrentState('complete', 'admin') . '_icon_role'], ['title' =>  $status_infos['complete'][$timesheet->getCurrentState('complete', 'admin') . '_tooltip']] )?>
+                            </a>
+                        <? else : ?>
+                            <?= Icon::create($status_infos['finished']['icon'], Icon::ROLE_INACTIVE, ['title' => 'Stundenzettel noch nicht angelegt'])?>
+                            <?= Icon::create($status_infos['approved']['icon'], Icon::ROLE_INACTIVE, ['title' =>  'Stundenzettel noch nicht angelegt'] )?>
+                                <?= Icon::create($status_infos['received']['icon'], Icon::ROLE_INACTIVE, ['title' =>  'Stundenzettel noch nicht angelegt'] )?>
+                                <?= Icon::create($status_infos['complete']['icon'], Icon::ROLE_INACTIVE, ['title' =>  'Stundenzettel noch nicht angelegt'] )?>
                         <? endif ?>
                     </td>
+                    <td></td>
                 </tr>
                 <? endforeach ?>
             <? endif ?>
