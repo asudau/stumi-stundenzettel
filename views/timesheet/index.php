@@ -40,7 +40,7 @@
                     <td>
                         <? if ($timesheet->finished) : ?>
                         <a href="<?= PluginEngine::getLink($plugin, [], 'timesheet/unlock/' . $timesheet->id ) ?>" data-confirm="Einreichen Rückgängig machen? Der Stumi kann diesen Stundnezettel dann wieder bearbeiten und Sie haben erst wieder Zugriff wenn dieser erneut eingereicht wurde.">
-                            <?= Icon::create('lock-unlocked', ['title' =>  'Stundenzettel wieder zur Bearbeitung durch Stumi freigeben'] )?>
+                            <?= Icon::create('rotate-left', ['title' =>  'Stundenzettel wieder zur Bearbeitung durch Stumi freigeben'] )?>
                         </a>
                         <? endif ?>
                     </td>
