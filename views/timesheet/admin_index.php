@@ -56,7 +56,7 @@
                                 </a>
                             <? endif ?>
                             <a href='<?=$this->controller->link_for('timesheet/received/' . $timesheet->id) ?>' 
-                                title='<?= ($timesheet->getCurrentState('complete', 'admin') == 'true') ? "Bestätigen für Vorliegen zurückziehen" : "Vorliegen bestätigen" ?>' >
+                                title='<?= ($timesheet->getCurrentState('received', 'admin') == 'true') ? "Bestätigen für Vorliegen zurückziehen" : "Vorliegen bestätigen" ?>' >
                                 <?= Icon::create($status_infos['received']['icon']) ?>
                             </a>
                             <a href='<?=$this->controller->link_for('timesheet/complete/' . $timesheet->id) ?>' 
