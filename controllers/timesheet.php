@@ -332,8 +332,12 @@ class TimesheetController extends StudipController {
             throw new AccessDeniedException(_("Sie haben keine Zugriffsberechtigung"));
         }
         
+        //sämtliche Bestätigungsvorgänge verlieren Gültgkeit, wenn der Stundenzettel zur Veränderung durch Hilfskraft freigegeben wird
         if($timesheet){
             $timesheet->finished = false;
+            $timesheet->approved = false;
+            $timesheet->received = false;
+            $timesheet->complete = false;
             $timesheet->store();
             PageLayout::postMessage(MessageBox::error(_("Sie können diesen Stundenzettel erst wieder einsehen, wenn dieser erneut digital eingereicht wird.")));
             $this->redirect('timesheet/index/' . $timesheet->contract->id);
