@@ -56,11 +56,11 @@
                                 </a>
                             <? endif ?>
                             <a href='<?=$this->controller->link_for('timesheet/received/' . $timesheet->id) ?>' 
-                                title='<?= ($timesheet->getCurrentState('received', 'admin') == 'true') ? "Bestätigen für Vorliegen zurückziehen" : "Vorliegen bestätigen" ?>' >
+                                title='<?= ($timesheet->received) ? "Bestätigen für Vorliegen zurückziehen" : "Vorliegen bestätigen" ?>' >
                                 <?= Icon::create($status_infos['received']['icon']) ?>
                             </a>
                             <a href='<?=$this->controller->link_for('timesheet/complete/' . $timesheet->id) ?>' 
-                                title='<?= ($timesheet->getCurrentState('complete', 'admin') == 'true') ? 'Vorgang wieder öffnen' : 'Vorgang abschließen' ?>' >
+                                title='<?= ($timesheet->complete) ? 'Vorgang wieder öffnen' : 'Vorgang abschließen' ?>' >
                                 <?= Icon::create($status_infos['complete']['icon']) ?>
                             </a>
                         <? elseif ($supervisorrole && $timesheet) : ?>
@@ -68,11 +68,16 @@
                                 <a href="<?= PluginEngine::getLink($plugin, [], 'timesheet/unlock/' . $timesheet->id ) ?>" data-confirm="Einreichen Rückgängig machen? Der Stumi kann diesen Stundnezettel dann wieder bearbeiten und Sie haben erst wieder Zugriff wenn dieser erneut eingereicht wurde.">
                                     <?= Icon::create('rotate-left', ['title' =>  'Einreichen rückgängig machen'] )?>
                                 </a>
+                                <a href='<?=$this->controller->link_for('timesheet/approved/' . $timesheet->id) ?>' 
+                                    title='<?= ($timesheet->approved) ? "Bestätigung der Korrektheit zurückziehen" : "Korrektheit der Angaben bestätigen" ?>' >
+                                    <?= Icon::create($status_infos['approved']['icon']) ?>
+                                </a>
                             <? endif ?>
-                            <a href='<?=$this->controller->link_for('timesheet/approved/' . $timesheet->id) ?>' 
-                                title='<?= ($timesheet->getCurrentState('approved', 'supervisor') == 'true') ? "Korrektheit der Angaben bestätigen" : "Bestätigung der Korrektheit zurückziehen" ?>' >
-                                <?= Icon::create($status_infos['approved']['icon']) ?>
-                            </a>
+                            <a data-dialog="title='eMail an Hilfskraft';size=1000x800;" 
+                               href="<?=$this->controller->url_for('index/mail')?>" 
+                               title="eMail an Hilfskraft">
+                                    <?= Icon::create('mail') ?>
+                                </a>
                         <? endif ?>
                     </td>
                 </tr>
