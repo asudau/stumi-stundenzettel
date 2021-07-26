@@ -49,6 +49,11 @@
                         <? endif ?>
                     </td>
                     <td>
+                        <a data-dialog="title='eMail an Hilfskraft';size=1000x800;" 
+                            href="<?=$this->controller->link_for('index/mail/' . $contract->user_id)?>" 
+                            title="eMail an Hilfskraft">
+                            <?= Icon::create('mail') ?>
+                        </a>
                         <? if ($adminrole && $timesheet) : ?>
                             <? if ($timesheet->finished) : ?>
                                 <a href="<?= PluginEngine::getLink($plugin, [], 'timesheet/unlock/' . $timesheet->id ) ?>" data-confirm="Einreichen Rückgängig machen? Der Stumi kann diesen Stundnezettel dann wieder bearbeiten und Sie haben erst wieder Zugriff wenn dieser erneut eingereicht wurde.">
@@ -73,11 +78,6 @@
                                     <?= Icon::create($status_infos['approved']['icon']) ?>
                                 </a>
                             <? endif ?>
-                            <a data-dialog="title='eMail an Hilfskraft';size=1000x800;" 
-                               href="<?=$this->controller->url_for('index/mail')?>" 
-                               title="eMail an Hilfskraft">
-                                    <?= Icon::create('mail') ?>
-                                </a>
                         <? endif ?>
                     </td>
                 </tr>

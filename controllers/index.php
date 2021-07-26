@@ -220,4 +220,41 @@ class IndexController extends StudipController {
         
     }
     
+    public function mail_action($user_id){
+        $user = User::find($user_id);
+        $this->empfaengermail = $user->email;
+        $this->empfaenger = sprintf('%s %s', $user->vorname, $user->nachname);
+    }
+    
+    public function send_form_action($empfaenger_mail){
+        
+        if ( !$this->adminrole && !$this->supervisorrole) {
+            throw new AccessDeniedException(_("Sie haben keine Zugriffsberechtigung"));
+        }
+        
+        if (Request::get('message_body')){
+            $mailtext   = Studip\Markup::purifyHtml(Request::get('message_body'));
+            $betreff    = '[Stundenzettel] ' . Studip\Markup::purifyHtml(Request::get('message_subject'));
+            $mail       = new StudipMail();
+            $success    = $mail->addRecipient($empfaenger)
+                 ->addRecipient(User::findCurrent()->email, 'cc')
+                 ->setReplyToEmail( User::findCurrent()->email)
+                 ->setSenderEmail( User::findCurrent()->email)
+                 ->setSenderName( User::findCurrent()->vorname . ' ' . User::findCurrent()->nachname )
+                 ->setSubject($betreff)
+                 ->setBodyHtml($mailtext)
+                 ->setBodyHtml(strip_tags($mailtext))  
+                 ->send();
+            
+        } if ($success){
+            $message = MessageBox::success(_('eMail wurde versendet! Eine Kopie ging in CC an Sie..'));
+            PageLayout::postMessage($message);
+        } else {
+            $message = MessageBox::error(_('Da ist was schief gegangen, Ihre Mail konnte nicht versendet werden.'));
+            PageLayout::postMessage($message);
+        }
+        $this->response->add_header('X-Dialog-Close', '1');
+        $this->redirect('timesheet/admin_index');
+    }
+    
 }
