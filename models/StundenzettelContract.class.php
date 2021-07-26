@@ -260,13 +260,14 @@ class StundenzettelContract extends \SimpleORMap
     //unterscheidet sich von monthPartOfContract, weil der offizielle Aufzeichnungsbeginn vom Vertragsbeginn abweichen kann
     function monthWithinRecordingTime($month, $year)
     {
-        if ($this->begin_digital_recording_month && $this->begin_digital_recording_year) {    
-            if (($year == $this->begin_digital_recording_year && $month < $this->begin_digital_recording_month) ||
-                  $year < $this->begin_digital_recording_year  ){
-                return false;
-            } else return true;
-        } else return true;
-        
+        if ($this->monthPartOfContract($month, $year)) {
+            if ($this->begin_digital_recording_month && $this->begin_digital_recording_year) {    
+                if (($year == $this->begin_digital_recording_year && $month < $this->begin_digital_recording_month) ||
+                      $year < $this->begin_digital_recording_year  ){
+                    return false; //im Vertragszeitraum und vor konfiguriertem Aufzeichnungbeginn
+                } else return true; //im Vertragszeitraum und nach konfiguriertem Aufzeichnungbeginn
+            } else return true; //im Vertragszeitraum und kein späterer Aufzeichnungbeginn konfiguriert
+        } else return false; //außerhalb Vertragszeitraums 
     }
     
     function getVacationEntitlement($year)
