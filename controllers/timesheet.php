@@ -298,6 +298,10 @@ class TimesheetController extends StudipController {
             throw new AccessDeniedException(_("Sie haben keine Zugriffsberechtigung"));
         }
         
+        if (!$timesheet->finished) {
+            throw new AccessDeniedException(_("Stundenzettel wurde noch nicht eingereicht!"));
+        }
+        
         if($timesheet){
             $timesheet->build_pdf();
             $this->render_nothing();
