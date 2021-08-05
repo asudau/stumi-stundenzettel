@@ -209,7 +209,7 @@ class StundenzettelTimesheet extends \SimpleORMap
     {
         $user = User::find($this->contract->user_id);
         $supervisor = User::find($this->contract->supervisor);
-        $sender = "sekretariat-virtuos@uni-osnabrueck.de";
+        $sender = "studip@uni-osnabrueck.de";
         $subject = sprintf('%s %s hat den Stundenzettel für den Monat %s eingereicht', $user->vorname, $user->nachname, strftime("%B", mktime(0, 0, 0, $this->month, 10)) );
         $mailtext = "Bitte verifizieren Sie die Angaben unter "
             . $GLOBALS['ABSOLUTE_URI_STUDIP'] . "plugins.php/stundenzettel/timesheet/timesheet/" . $this->id . "\n\n"
@@ -218,7 +218,7 @@ class StundenzettelTimesheet extends \SimpleORMap
         $mail       = new StudipMail();
         $success    = $mail->addRecipient($supervisor->email)
              ->setSenderEmail( $sender )
-             ->setSenderName( 'StudIP' )
+             ->setSenderName( 'Stud.IP' )
              ->setSubject($subject)
              ->setBodyHtml($mailtext)
              ->setBodyHtml(strip_tags($mailtext))  
