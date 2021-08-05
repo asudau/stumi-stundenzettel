@@ -141,7 +141,6 @@ class StundenzettelTimesheet extends \SimpleORMap
     {
         global $STUDIP_BASE_PATH, $TMP_PATH;
         require_once $STUDIP_BASE_PATH.'/vendor/tcpdf/tcpdf.php';
-        //require_once $STUDIP_BASE_PATH.'/public/plugins_packages/elan-ev/Zertifikats_Plugin/models/zertifikatpdf.class.php';
         $line_height = 3;
         
         // create new PDF document
@@ -204,6 +203,27 @@ class StundenzettelTimesheet extends \SimpleORMap
         $fileid = time();   
         $pdf->Output( 'Stundenzettel_' . $this->month . '-' . $this->year . '_' . User::find($this->contract->user_id)->nachname . '.pdf', 'D');
       
+    }
+    
+    function send_finished_mail()
+    {
+        $user = User::find($this->contract->user_id);
+        $supervisor = User::find($this->contract->supervisor);
+        $sender = "sekretariat-virtuos@uni-osnabrueck.de";
+        $subject = sprintf('%s %s hat den Stundenzettel für den Monat %s eingereicht', $user->vorname, $user->nachname, strftime("%B", mktime(0, 0, 0, $this->month, 10)) );
+        $mailtext = "Bitte verifizieren Sie die Angaben unter "
+            . $GLOBALS['ABSOLUTE_URI_STUDIP'] . "plugins.php/stundenzettel/timesheet/timesheet/" . $this->id . "\n\n"
+            . "Vielen Dank. \n\n";
+        $betreff    = '[Stundenzettel] ' . $subject;
+        $mail       = new StudipMail();
+        $success    = $mail->addRecipient($supervisor->email)
+             ->setSenderEmail( $sender )
+             ->setSenderName( 'StudIP' )
+             ->setSubject($subject)
+             ->setBodyHtml($mailtext)
+             ->setBodyHtml(strip_tags($mailtext))  
+             ->send();
+        return $success;
     }
     
     function can_edit($user){

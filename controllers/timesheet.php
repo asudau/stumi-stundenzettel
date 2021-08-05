@@ -321,6 +321,7 @@ class TimesheetController extends StudipController {
         if($timesheet){
             $timesheet->finished = true;
             $timesheet->store();
+            $timesheet->send_finished_mail();
             PageLayout::postMessage(MessageBox::success(_("Bitte denke daran den Stundenzettel zusätzlich ausgedruckt und unterschrieben Deinem/Deiner Vorgesetzten vorzulegen.")));
             $this->redirect('timesheet/timesheet/' . $timesheet->id);
         } else {
