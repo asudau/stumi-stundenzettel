@@ -54,15 +54,17 @@ class IndexController extends StudipController {
             $this->inst_data = array();
         
             //get all stumis and contracts
-            //TODO get groups for each institute by configured group_name
             foreach ($this->inst_ids as $inst_id) {
-                $groups = Statusgruppen::findBySQL('`name` LIKE ? AND `range_id` = ?', ['%Studentische%', $inst_id]);
-                foreach ($groups as $group) {
+                $settings = StundenzettelInstituteSetting::find($inst_id);
+                if ($settings) {
+                    $this->groups[$inst_id] = $settings->stumi_statusgroups;
+                }
+                foreach ($this->groups[$inst_id] as $group) {
                     foreach ($group->members as $member) {
                         $stumi = User::find($member->user_id);
                         if (!$this->search || strpos(strtolower($stumi->username . ' ' . $stumi->vorname . ' ' . $stumi->nachname), strtolower($this->search))) {
-                            $this->inst_data[$inst_id]->stumis[] = $stumi;
-                            $this->inst_data[$inst_id]->stumi_contracts[$member->user_id] = StundenzettelContract::findBySQL('`user_id` = ? AND `inst_id` = ?', [$member->user_id, $inst_id]);
+                            $this->inst_data[$inst_id][$group->id]->stumis[] = $stumi;
+                            $this->inst_data[$inst_id][$group->id]->stumi_contracts[$member->user_id] = StundenzettelContract::findBySQL('`user_id` = ? AND `inst_id` = ?', [$member->user_id, $inst_id]);
                         }
                     }
                 }
@@ -215,9 +217,44 @@ class IndexController extends StudipController {
   
     }
     
-    public function institute_settings_action(){
-        $groups = Statusgruppen::findByRangeID($inst_id);
+    public function edit_institute_settings_action($inst_id)
+    {
+        if ( !$this->plugin->isInstAdmin($inst_id) ) {
+            throw new AccessDeniedException(_("Sie haben keine Zugriffsberechtigung"));
+        }
+        $this->groups = Statusgruppen::findByRange_ID($inst_id);
         
+        $settings = StundenzettelInstituteSetting::find($inst_id);
+        if ($settings) {
+            $this->stumi_group_ids = $settings->hilfskraft_statusgruppen;
+            $this->inst_mail = $settings->inst_mail;
+        }
+        
+        $this->inst_id = $inst_id;
+        
+    }
+    
+    public function save_institute_settings_action($inst_id)
+    {
+        if ( !$this->plugin->isInstAdmin($inst_id)) {
+            throw new AccessDeniedException(_("Sie haben keine Zugriffsberechtigung"));
+        }
+        $settings = StundenzettelInstituteSetting::find($inst_id);
+        
+        if (!$settings ){
+            $settings = new StundenzettelInstituteSetting($inst_id);
+        }
+        
+        $settings->inst_mail = Request::get('email');
+        $settings->hilfskraft_statusgruppen = implode(',', Request::getArray('statusgruppen'));
+        
+        if($settings->store()){
+            PageLayout::postMessage(MessageBox::success(_("Konfiguration gespeichert"))); 
+        } else {
+            PageLayout::postMessage(MessageBox::error(_("Daten konnten nicht gespeichert werden"))); 
+        }
+        
+        $this->redirect('index/');       
     }
     
     public function mail_action($user_id){

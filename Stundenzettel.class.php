@@ -46,7 +46,7 @@ class Stundenzettel extends StudipPlugin implements SystemPlugin
 
         $item = new Navigation(_('Stundenzettel verwalten'), PluginEngine::getURL($this, array(), 'timesheet/admin_index'));
         $navigation->addSubNavigation('timesheets', $item);
-
+        
         Navigation::addItem('tools/stundenzettelverwaltung', $navigation);  
     }
     
@@ -105,7 +105,8 @@ class Stundenzettel extends StudipPlugin implements SystemPlugin
         return RolePersistence::isAssignedRole($GLOBALS['user']->user_id, \Stundenzettelverwaltung\STUNDENVERWALTUNG_ROLE);
     }
     
-    public function getAdminInstIds () {
+    public function getAdminInstIds () 
+    {
         $roles = RolePersistence::getAllRoles();
         foreach($roles as $role) {
             if($role->getRolename() == \Stundenzettelverwaltung\STUNDENVERWALTUNG_ROLE) {
@@ -115,6 +116,11 @@ class Stundenzettel extends StudipPlugin implements SystemPlugin
         $inst_ids = RolePersistence::getAssignedRoleInstitutes($GLOBALS['user']->user_id, $role_id);
         //keine leeren Einträge
         return array_filter($inst_ids);
+    }
+    
+    public function isInstAdmin($inst_id) 
+    {
+        return in_array($inst_id, $this->getAdminInstIds () );
     }
     
     public function hasStumiContract ()
