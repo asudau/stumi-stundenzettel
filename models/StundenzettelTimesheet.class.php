@@ -226,6 +226,20 @@ class StundenzettelTimesheet extends \SimpleORMap
         return $success;
     }
     
+    function send_mail($betreff, $empfaenger_mail, $mailtext)
+    {
+        $sender = "studip@uni-osnabrueck.de";
+        $mail       = new StudipMail();
+        $success    = $mail->addRecipient($empfaenger_mail)
+             ->setSenderEmail( $sender )
+             ->setSenderName( 'Stud.IP' )
+             ->setSubject($betreff)
+             ->setBodyHtml($mailtext)
+             ->setBodyHtml(strip_tags($mailtext))  
+             ->send();
+        return $success;
+    }
+    
     function can_edit($user){
          if (($this->contract->user_id == $user->user_id) && !$this->locked){
              return true;
