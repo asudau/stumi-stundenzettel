@@ -2,17 +2,19 @@
     
 <? if ($adminrole) : ?>    
     <? foreach ($inst_ids as $inst_id) : ?>
+        <? if ($adminrole) : ?>
+           <h2> 
+               <a  href='<?=$this->controller->link_for('index/edit_institute_settings/' . $inst_id) ?>' title='Konfiguration bearbeiten' data-dialog='size=auto'>
+                   <?=Icon::create('edit')?>
+               </a>              
+               <?= htmlready(Institute::find($inst_id)->name) ?> </h2>
+       <? else : ?>
+           <h2> Studentische MitarbeiterInnen </h2>
+       <? endif ?>
         <? foreach ($groups[$inst_id] as $group) : ?>
-            <? if ($adminrole) : ?>
-                <h2> 
-                    <a  href='<?=$this->controller->link_for('index/edit_institute_settings/' . $inst_id) ?>' title='Konfiguration bearbeiten' data-dialog='size=auto'>
-                        <?=Icon::create('edit')?>
-                    </a>              
-                    <?= htmlready(Institute::find($inst_id)->name) ?>: <?= sizeof($inst_data[$inst_id][$group->id]->stumis) ?> <?= $group->name ?> </h2>
-            <? else : ?>
-                <h2> Studentische MitarbeiterInnen </h2>
-            <? endif ?>
-
+        
+            <h3><?= $group->name ?></h3>
+                    
             <table id='stumi-contract-entries' class="sortable-table default">
                 <thead>
                     <tr>
