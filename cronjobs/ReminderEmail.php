@@ -37,44 +37,53 @@ class ReminderEmail extends CronJob
             if (!$no_recording_required){
                 $timesheet = StundenzettelTimesheet::getContractTimesheet($contract->id, $month, $year);
                 if (!$timesheet) {
-                    self::sendMissingTimesheetMail($contract->user_id);
+                    self::sendMissingTimesheetMail($contract->id, $month, $year);
                     //echo 'Erinnerung -anlegen- versendet an ' . User::find($contract->user_id)->username . ' für Zeitraum ' . $month . ' ' . $year;
                 } elseif ($timesheet->overdue && !$timesheet->finished) {
                     //echo 'Erinnerung -einreichen- versendet an ' . User::find($contract->user_id)->username . ' für Zeitraum ' . $month . ' ' . $year;
-                    self::sendOverdueMail($contract->user_id);
+                    self::sendOverdueMail($contract->id, $month, $year);
                 }
             }
         }
     }
 
-    private static function sendMissingTimesheetMail($user_id)
+    private static function sendMissingTimesheetMail($contract_id, $month, $year)
     {
-        $subject = 'Erinnerung: Abgabe überfällig - Bitte nutzen Sie den digitalen virtUOS-Stundenzettel';
-        $mailtext = "Sie erhalten diese automatisch generierte E-Mail, da Sie im letzten Monat beim virtUOS angestellt waren "
-            . "und bisher noch keinen Stundenzettel im Stundenzettel-Plugin in Stud.IP angelegt haben.\n"
-            . "Bitte holen Sie dies schnellstmöglich nach und füllen diesen entsprechend mit Ihren Arbeitszeiten aus.\n"
+        $contract = StundenzettelContract::find($contract_id);
+        $user_id = $contract->user_id;
+        $subject = sprintf('Erinnerung: Abgabe für %s überfällig - Bitte nutzen Sie den digitalen Stundenzettel', strftime("%B", mktime(0, 0, 0, $month, 10)));
+        $mailtext = "Sie erhalten diese automatisch generierte E-Mail, da Sie im letzten Monat als Hilfskraft an der Universität Osnabrück angestellt waren "
+            . "und bisher noch keinen Stundenzettel in Stud.IP angelegt und eingereicht haben.\n"
+            . "Bitte tragen Sie unter\n"
+            .  $GLOBALS['ABSOLUTE_URI_STUDIP'] . sprintf("plugins.php/stundenzettel/timesheet/select/%s/%s/%s\n\n", $contract_id, $month, $year)
+            . "\n unverzüglich Ihre Arbeitszeiten ein und reichen Sie den digitalen Stundenzettel ein.\n"
             . "Vielen Dank. \n\n"
             . "Mit freundlichen Grüßen,\n"
             . "Ihr virtUOS-Team";
-        self::sendReminderMail($user_id, $subject, $mailtext);
+        self::sendReminderMail($user_id, $subject, $mailtext, $contract_id);
     }
 
-    private static function sendOverdueMail($user_id)
+    private static function sendOverdueMail($contract_id, $month, $year)
     {
-        $subject = 'Erinnerung: Abgabe Ihres virtUOS-Stundenzettels';
-        $mailtext = "Sie erhalten diese automatisch generierte E-Mail, da Sie im letzten Monat beim virtUOS angestellt waren "
-            . "und Ihren Stundenzettel im Stundenzettel-Plugin in Stud.IP bisher noch nicht abgegeben haben.\n"
-            . "Bitte holen Sie dies schnellstmöglich nach sobald Sie Ihre Arbeitszeiten entprechend eingetragen haben.\n"
-            . "Vielen Dank. \n\n"
+        $contract = StundenzettelContract::find($contract_id);
+        $user_id = $contract->user_id;
+        $subject = sprintf('Erinnerung: Abgabe Ihres Stundenzettels für %s', strftime("%B", mktime(0, 0, 0, $this->month, 10)));
+        $mailtext = "Sie erhalten diese automatisch generierte E-Mail, da Sie im letzten Monat als Hilfskraft an der Universität Osnabrück angestellt waren "
+            . "und Ihren digitalen Stundenzettel in Stud.IP bisher noch nicht abgegeben haben.\n"
+            . "Bitte holen Sie dies unverzüglich nach, sobald Sie Ihre Arbeitszeiten entprechend eingetragen haben:\n"
+            .  $GLOBALS['ABSOLUTE_URI_STUDIP'] . sprintf("plugins.php/stundenzettel/timesheet/select/%s/%s/%s\n\n", $contract_id, $month, $year)
+            . "\n Vielen Dank. \n\n"
             . "Mit freundlichen Grüßen,\n"
             . "Ihr virtUOS-Team";
-        self::sendReminderMail($user_id, $subject, $mailtext);
+        self::sendReminderMail($user_id, $subject, $mailtext, $contract_id);
     }
 
     private static function sendReminderMail($user_id, $subject, $mailtext)
     {
             $recipient = User::find($user_id)->email;
-            $sender = "sekretariat-virtuos@uni-osnabrueck.de";
+            $contract = StundenzettelContract::find($contract_id);
+            $settings = StundenzettelInstituteSetting::find($contract->inst_id);
+            $sender = $settings->inst_mail;
 
             $mail = new StudipMail();
             return $mail->addRecipient($recipient)
