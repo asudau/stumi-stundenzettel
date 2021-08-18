@@ -9,6 +9,7 @@
 require_once __DIR__ . '/../models/StundenzettelContract.class.php';
 require_once __DIR__ . '/../models/StundenzettelTimesheet.class.php';
 require_once __DIR__ . '/../models/StundenzettelRecord.class.php';
+require_once __DIR__ . '/../models/StundenzettelInstituteSetting.class.php';
 require_once __DIR__ . '/../Stundenzettel.class.php';
 
 class ReminderEmail extends CronJob
