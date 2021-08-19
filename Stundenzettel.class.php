@@ -12,6 +12,7 @@
 require_once 'constants.inc.php';
 require_once 'models/StundenzettelContract.class.php';
 require_once 'models/StundenzettelTimesheet.class.php';
+require_once 'models/StundenzettelInstituteSetting.class.php';
 
 class Stundenzettel extends StudipPlugin implements SystemPlugin
 {
