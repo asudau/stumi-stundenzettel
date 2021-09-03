@@ -68,7 +68,7 @@ class ReminderEmail extends CronJob
     {
         $contract = StundenzettelContract::find($contract_id);
         $user_id = $contract->user_id;
-        $subject = sprintf('Erinnerung: Abgabe Ihres Stundenzettels für %s', strftime("%B", mktime(0, 0, 0, $this->month, 10)));
+        $subject = sprintf('Erinnerung: Abgabe Ihres Stundenzettels für %s', strftime("%B", mktime(0, 0, 0, $month, 10)));
         $mailtext = "Sie erhalten diese automatisch generierte E-Mail, da Sie im letzten Monat als Hilfskraft an der Universität Osnabrück angestellt waren "
             . "und Ihren digitalen Stundenzettel in Stud.IP bisher noch nicht abgegeben haben.\n"
             . "Bitte holen Sie dies unverzüglich nach, sobald Sie Ihre Arbeitszeiten entprechend eingetragen haben:\n"
