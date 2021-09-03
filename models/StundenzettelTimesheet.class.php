@@ -220,8 +220,7 @@ class StundenzettelTimesheet extends \SimpleORMap
              ->setSenderEmail( $sender )
              ->setSenderName( 'Stud.IP' )
              ->setSubject($subject)
-             ->setBodyHtml($mailtext)
-             ->setBodyHtml(strip_tags($mailtext))  
+             ->setBodyText($mailtext)
              ->send();
         return $success;
     }
@@ -238,6 +237,13 @@ class StundenzettelTimesheet extends \SimpleORMap
              ->setBodyHtml(strip_tags($mailtext))  
              ->send();
         return $success;
+    }
+    
+    function is_supervisor($user) 
+    {
+        if ($this->contract->supervisor == $user->user_id){
+             return true;
+         } else return false;
     }
     
     function can_edit($user){
