@@ -46,8 +46,13 @@ class TimesheetController extends StudipController {
              if (!$contract_id) {
                  $contract_id = StundenzettelContract::getSomeContractId($GLOBALS['user']->user_id);
              }
-        }
+        } 
         $this->contract = StundenzettelContract::find($contract_id);
+        if (!$this->contract){
+            throw new AccessDeniedException(_("Kein aktiver Vertrag gefunden."));
+        } else if (!$this->contract->can_read(User::findCurrent())){
+            throw new AccessDeniedException(_("Sie haben keine Zugriffsberechtigung."));
+        }
         $this->timesheets = StundenzettelTimesheet::findByContract_id($contract_id, 'ORDER by `year` ASC, `month` ASC'); 
         $this->stumi = User::find($this->contract->user_id);
         
