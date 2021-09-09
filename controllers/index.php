@@ -37,7 +37,7 @@ class IndexController extends StudipController {
 
     public function index_action()
     {
-        Navigation::activateItem('tools/stundenzettelverwaltung/index');
+        Navigation::activateItem('contents/stundenzettelverwaltung/index');
         $user = User::findCurrent();
 
         if ($this->adminrole) {

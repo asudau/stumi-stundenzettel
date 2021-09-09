@@ -48,7 +48,7 @@ class Stundenzettel extends StudipPlugin implements SystemPlugin
         $item = new Navigation(_('Stundenzettel verwalten'), PluginEngine::getURL($this, array(), 'timesheet/admin_index'));
         $navigation->addSubNavigation('timesheets', $item);
         
-        Navigation::addItem('tools/stundenzettelverwaltung', $navigation);  
+        Navigation::addItem('contents/stundenzettelverwaltung', $navigation);  
     }
     
     private function setupStundenzettelNavigation()
@@ -65,7 +65,7 @@ class Stundenzettel extends StudipPlugin implements SystemPlugin
         $item = new Navigation(_('Vertragsübersicht'), PluginEngine::getURL($this, array(), 'index'));
         $navigation->addSubNavigation('index', $item);
 
-        Navigation::addItem('tools/stundenzettelverwaltung', $navigation);  
+        Navigation::addItem('contents/stundenzettelverwaltung', $navigation);  
     }
     
     private function setupSupervisorNavigation()
@@ -79,7 +79,7 @@ class Stundenzettel extends StudipPlugin implements SystemPlugin
         $item = new Navigation(_('Stundenzettel verwalten'), PluginEngine::getURL($this, array(), 'timesheet/admin_index'));
         $navigation->addSubNavigation('timesheets', $item);
 
-        Navigation::addItem('tools/stundenzettelverwaltung', $navigation);  
+        Navigation::addItem('contents/stundenzettelverwaltung', $navigation);  
     }
     
     public function getCommentOptions ()
