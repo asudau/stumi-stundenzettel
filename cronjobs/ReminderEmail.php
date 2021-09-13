@@ -79,7 +79,7 @@ class ReminderEmail extends CronJob
         self::sendReminderMail($user_id, $subject, $mailtext, $contract_id);
     }
 
-    private static function sendReminderMail($user_id, $subject, $mailtext)
+    private static function sendReminderMail($user_id, $subject, $mailtext, $contract_id)
     {
             $recipient = User::find($user_id)->email;
             $contract = StundenzettelContract::find($contract_id);
