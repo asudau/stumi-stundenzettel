@@ -121,7 +121,7 @@ class Stundenzettel extends StudipPlugin implements SystemPlugin
     
     public function isInstAdmin($inst_id) 
     {
-        return in_array($inst_id, $this->getAdminInstIds () );
+        return in_array($inst_id, self::getAdminInstIds () );
     }
     
     public function hasStumiContract ()

@@ -160,7 +160,7 @@ class StundenzettelContract extends \SimpleORMap
     }
     
     function can_read($user){
-        if ($this->user_id == $user->user_id || $this->supervisor == $user->user_id) {
+        if ($this->user_id == $user->user_id || $this->supervisor == $user->user_id || Stundenzettel::isInstAdmin($this->inst_id)) {
             return true;
         }   
     }
@@ -192,11 +192,13 @@ class StundenzettelContract extends \SimpleORMap
         //$contracts = self::findBySQL('contract_begin < ? AND contract_end > ?', [$end_nextmonth, $begin_lastmonth]);
         $all_contracts = self::findBySQL('contract_begin < ? AND contract_end > ?', [$month_end, $month_begin]);
         
-        if (Stundenzettel::hasStumiAdminrole() || $GLOBALS['perm']->have_perm('admin')){
+        if ( $GLOBALS['perm']->have_perm('admin')){
             return $all_contracts;
         } else {
             foreach ($all_contracts as $contract){
-                if ($contract->user_id == User::findCurrent()->user_id || $contract->supervisor == User::findCurrent()->user_id){
+                if ($contract->user_id == User::findCurrent()->user_id || 
+                $contract->supervisor == User::findCurrent()->user_id ||
+                Stundenzettel::isInstAdmin($contract->inst_id) ){
                     $contracts[] = $contract;
                 }
             }
